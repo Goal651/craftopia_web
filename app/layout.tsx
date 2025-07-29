@@ -2,17 +2,20 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { Header } from "@/components/layout/header"
-import { Footer } from "@/components/layout/footer"
+import { ThemeProvider } from "@/components/theme-provider"
 import { CartProvider } from "@/contexts/cart-context"
 import { AuthProvider } from "@/contexts/auth-context"
-import { Toaster } from "@/components/ui/toaster"
+import { Header } from "@/components/layout/header"
+import { Footer } from "@/components/layout/footer"
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Artful - Discover Extraordinary Artworks",
-  description: "Discover and collect extraordinary artworks from talented artists around the world.",
+  title: "Artisan Gallery - Elena Vasquez Collection",
+  description:
+    "Discover contemporary artworks by Elena Vasquez. Original paintings, digital art, sculptures, and photography.",
+  keywords: "art, gallery, contemporary, paintings, Elena Vasquez, artwork, original art",
     generator: 'v0.dev'
 }
 
@@ -22,18 +25,18 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <AuthProvider>
-          <CartProvider>
-            <div className="min-h-screen flex flex-col">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <AuthProvider>
+            <CartProvider>
               <Header />
-              <main className="flex-1">{children}</main>
+              <main className="min-h-screen">{children}</main>
               <Footer />
-            </div>
-            <Toaster />
-          </CartProvider>
-        </AuthProvider>
+              <Toaster />
+            </CartProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

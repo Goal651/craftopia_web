@@ -2,86 +2,82 @@
 
 import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
-import type { User } from "@/types"
-import { sampleUsers } from "@/lib/data"
 
-interface AuthState {
-  user: User | null
-  isLoading: boolean
+interface User {
+  id: string
+  name: string
+  email: string
+  role: "user" | "admin"
 }
 
-interface AuthContextType extends AuthState {
+interface AuthContextType {
+  user: User | null
   login: (email: string, password: string) => Promise<boolean>
   logout: () => void
   isAdmin: () => boolean
+  loading: boolean
 }
 
-const AuthContext = createContext<AuthContextType | null>(null)
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<AuthState>({
-    user: null,
-    isLoading: true,
-  })
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  // Check for existing session on mount
   useEffect(() => {
-    const savedUser = localStorage.getItem("artful-user")
-    if (savedUser) {
-      try {
-        const user = JSON.parse(savedUser)
-        setState({ user, isLoading: false })
-      } catch (error) {
-        console.error("Error loading user from localStorage:", error)
-        setState({ user: null, isLoading: false })
+    // Check for saved user in localStorage
+    try {
+      const savedUser = localStorage.getItem("artisan-user")
+      if (savedUser) {
+        setUser(JSON.parse(savedUser))
       }
-    } else {
-      setState({ user: null, isLoading: false })
+    } catch (error) {
+      console.error("Error loading user from localStorage:", error)
     }
+    setLoading(false)
   }, [])
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    // Simple authentication - in production, this would be handled by your backend
-    const user = sampleUsers.find((u) => u.email === email)
-
-    if (user && password === "password123") {
-      setState({ user, isLoading: false })
-      localStorage.setItem("artful-user", JSON.stringify(user))
+    // Mock authentication - replace with real API call
+    if (email === "admin@artisan.com" && password === "admin123") {
+      const adminUser: User = {
+        id: "1",
+        name: "Admin User",
+        email: "admin@artisan.com",
+        role: "admin",
+      }
+      setUser(adminUser)
+      localStorage.setItem("artisan-user", JSON.stringify(adminUser))
+      return true
+    } else if (email === "user@artisan.com" && password === "user123") {
+      const regularUser: User = {
+        id: "2",
+        name: "Regular User",
+        email: "user@artisan.com",
+        role: "user",
+      }
+      setUser(regularUser)
+      localStorage.setItem("artisan-user", JSON.stringify(regularUser))
       return true
     }
-
     return false
   }
 
   const logout = () => {
-    setState({ user: null, isLoading: false })
-    localStorage.removeItem("artful-user")
+    setUser(null)
+    localStorage.removeItem("artisan-user")
   }
 
   const isAdmin = () => {
-    return state.user?.role === "admin"
+    return user?.role === "admin"
   }
 
-  return (
-    <AuthContext.Provider
-      value={{
-        ...state,
-        login,
-        logout,
-        isAdmin,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={{ user, login, logout, isAdmin, loading }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {
   const context = useContext(AuthContext)
-  if (!context) {
+  if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider")
   }
   return context

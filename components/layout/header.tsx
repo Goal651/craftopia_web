@@ -1,10 +1,31 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import { ShoppingCart, Search, User, Menu, LogOut, Settings } from "lucide-react"
+import { usePathname } from "next/navigation"
+import { useTheme } from "next-themes"
+import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { useCart } from "@/contexts/cart-context"
+import { useAuth } from "@/contexts/auth-context"
+import {
+  ShoppingCart,
+  User,
+  Menu,
+  X,
+  Palette,
+  Search,
+  Sun,
+  Moon,
+  LogOut,
+  Settings,
+  UserCircle,
+  Home,
+  ImageIcon,
+  Info,
+  Mail,
+} from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,127 +33,331 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useCart } from "@/contexts/cart-context"
-import { useAuth } from "@/contexts/auth-context"
-import { useState } from "react"
 
 export function Header() {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const { theme, setTheme } = useTheme()
   const { state } = useCart()
   const { user, logout, isAdmin } = useAuth()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
+
+  // Safe calculation of item count with fallback
+  const itemCount = state?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0
+
+  useEffect(() => {
+    setMounted(true)
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  const navItems = [
+    { href: "/", label: "Home", icon: Home },
+    { href: "/artworks", label: "Collection", icon: ImageIcon },
+    { href: "/about", label: "About", icon: Info },
+    { href: "/contact", label: "Contact", icon: Mail },
+  ]
+
+  if (!mounted) {
+    return null
+  }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">A</span>
-            </div>
-            <span className="font-bold text-xl">Artful</span>
-          </Link>
-
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/artworks" className="text-sm font-medium hover:text-primary transition-colors">
-              Browse Art
+    <>
+      {/* Desktop Header */}
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          isScrolled ? "glass-effect shadow-lg" : "bg-transparent"
+        } hidden md:block`}
+      >
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-3 group">
+              <motion.div
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
+                className="w-10 h-10 gradient-gold rounded-full flex items-center justify-center"
+              >
+                <Palette className="w-5 h-5 text-white" />
+              </motion.div>
+              <div>
+                <h1 className="text-xl font-semibold text-foreground group-hover:text-gold transition-colors">
+                  Artisan Gallery
+                </h1>
+                <p className="text-xs text-muted-foreground">Elena Vasquez Collection</p>
+              </div>
             </Link>
-            <Link href="/categories" className="text-sm font-medium hover:text-primary transition-colors">
-              Categories
-            </Link>
-            <Link href="/artists" className="text-sm font-medium hover:text-primary transition-colors">
-              Artists
-            </Link>
-          </nav>
-        </div>
 
-        <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center space-x-2">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input type="search" placeholder="Search artworks..." className="pl-8 w-64" />
-            </div>
-          </div>
+            {/* Desktop Navigation */}
+            <nav className="flex items-center space-x-8">
+              {navItems.map((item) => (
+                <Link key={item.href} href={item.href} className="relative group">
+                  <span
+                    className={`text-sm font-medium transition-colors ${
+                      pathname === item.href ? "text-gold" : "text-foreground hover:text-gold"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                  <motion.div
+                    className="absolute -bottom-1 left-0 h-0.5 bg-gold"
+                    initial={{ width: 0 }}
+                    animate={{ width: pathname === item.href ? "100%" : 0 }}
+                    whileHover={{ width: "100%" }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </Link>
+              ))}
+            </nav>
 
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            <Menu className="h-5 w-5" />
-          </Button>
+            {/* Right Side Actions */}
+            <div className="flex items-center space-x-4">
+              {/* Theme Toggle */}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="hover:bg-accent"
+              >
+                {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </Button>
 
-          <Link href="/cart">
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingCart className="h-5 w-5" />
-              {state.items.length > 0 && (
-                <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
-                  {state.items.reduce((sum, item) => sum + item.quantity, 0)}
-                </Badge>
-              )}
-            </Button>
-          </Link>
+              {/* Search */}
+              <Button variant="ghost" size="icon" className="hover:bg-accent">
+                <Search className="w-5 h-5" />
+              </Button>
 
-          {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <User className="h-5 w-5" />
+              {/* Cart */}
+              <Link href="/cart">
+                <Button variant="ghost" size="icon" className="relative hover:bg-accent">
+                  <ShoppingCart className="w-5 h-5" />
+                  <AnimatePresence>
+                    {itemCount > 0 && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        className="absolute -top-2 -right-2"
+                      >
+                        <Badge className="bg-gold text-white text-xs px-1.5 py-0.5 min-w-[20px] h-5 flex items-center justify-center">
+                          {itemCount}
+                        </Badge>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <div className="flex items-center justify-start gap-2 p-2">
-                  <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-medium">{user.name}</p>
-                    <p className="text-xs text-muted-foreground">{user.email}</p>
-                    <Badge variant="secondary" className="w-fit text-xs">
-                      {user.role}
-                    </Badge>
-                  </div>
-                </div>
-                <DropdownMenuSeparator />
-                {isAdmin() && (
-                  <>
-                    <DropdownMenuItem asChild>
-                      <Link href="/admin">
-                        <Settings className="mr-2 h-4 w-4" />
-                        Admin Dashboard
+              </Link>
+
+              {/* User Menu */}
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="hover:bg-accent">
+                      <div className="w-8 h-8 gradient-gold rounded-full flex items-center justify-center">
+                        <User className="w-4 h-4 text-white" />
+                      </div>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-64 p-2 glass-effect border-2">
+                    <div className="flex items-center justify-start gap-3 p-3 rounded-lg bg-gradient-to-r from-pastel-rose/20 to-pastel-lavender/20">
+                      <div className="h-10 w-10 gradient-gold rounded-full flex items-center justify-center">
+                        <User className="h-5 w-5 text-white" />
+                      </div>
+                      <div className="flex flex-col space-y-1 leading-none">
+                        <p className="font-semibold">{user.name}</p>
+                        <p className="text-xs text-muted-foreground">{user.email}</p>
+                        <Badge variant="secondary" className="w-fit text-xs mt-1">
+                          {user.role}
+                        </Badge>
+                      </div>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild className="cursor-pointer">
+                      <Link href="/profile">
+                        <UserCircle className="mr-3 h-4 w-4" />
+                        Profile
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                  </>
-                )}
-                <DropdownMenuItem onClick={logout}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Button asChild>
-              <Link href="/login">Sign In</Link>
-            </Button>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="md:hidden border-t bg-background">
-          <div className="container py-4 space-y-4">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input type="search" placeholder="Search artworks..." className="pl-8" />
+                    {isAdmin() && (
+                      <>
+                        <DropdownMenuItem asChild className="cursor-pointer">
+                          <Link href="/admin">
+                            <Settings className="mr-3 h-4 w-4" />
+                            Admin Dashboard
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
+                    <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-600">
+                      <LogOut className="mr-3 h-4 w-4" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Link href="/login">
+                  <Button className="gradient-gold text-white hover:opacity-90 transition-opacity">Sign In</Button>
+                </Link>
+              )}
             </div>
-            <nav className="flex flex-col space-y-2">
-              <Link href="/artworks" className="text-sm font-medium hover:text-primary transition-colors py-2">
-                Browse Art
-              </Link>
-              <Link href="/categories" className="text-sm font-medium hover:text-primary transition-colors py-2">
-                Categories
-              </Link>
-              <Link href="/artists" className="text-sm font-medium hover:text-primary transition-colors py-2">
-                Artists
-              </Link>
-            </nav>
           </div>
         </div>
-      )}
-    </header>
+      </motion.header>
+
+      {/* Mobile Header */}
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          isScrolled ? "glass-effect shadow-lg" : "bg-transparent"
+        } md:hidden`}
+      >
+        <div className="px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Mobile Logo */}
+            <Link href="/" className="flex items-center space-x-2">
+              <div className="w-8 h-8 gradient-gold rounded-full flex items-center justify-center">
+                <Palette className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-lg font-semibold text-foreground">Artisan</span>
+            </Link>
+
+            {/* Mobile Actions */}
+            <div className="flex items-center space-x-2">
+              {/* Cart */}
+              <Link href="/cart">
+                <Button variant="ghost" size="icon" className="relative touch-target">
+                  <ShoppingCart className="w-5 h-5" />
+                  {itemCount > 0 && (
+                    <Badge className="absolute -top-1 -right-1 bg-gold text-white text-xs px-1 min-w-[16px] h-4 flex items-center justify-center">
+                      {itemCount}
+                    </Badge>
+                  )}
+                </Button>
+              </Link>
+
+              {/* Mobile Menu Toggle */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="touch-target"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="glass-effect border-t border-border"
+            >
+              <div className="px-4 py-6 space-y-4">
+                {/* Navigation */}
+                <nav className="space-y-2">
+                  {navItems.map((item, index) => (
+                    <motion.div
+                      key={item.href}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Link
+                        href={item.href}
+                        className={`flex items-center gap-3 p-3 rounded-lg transition-colors touch-target ${
+                          pathname === item.href ? "bg-gold/20 text-gold" : "text-foreground hover:bg-accent"
+                        }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <item.icon className="w-5 h-5" />
+                        <span className="font-medium">{item.label}</span>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </nav>
+
+                {/* User Section */}
+                <div className="pt-4 border-t border-border">
+                  {user ? (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-pastel-rose/20 to-pastel-lavender/20">
+                        <div className="w-10 h-10 gradient-gold rounded-full flex items-center justify-center">
+                          <User className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-semibold">{user.name}</p>
+                          <p className="text-xs text-muted-foreground">{user.email}</p>
+                        </div>
+                      </div>
+
+                      <Link
+                        href="/profile"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors touch-target"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <UserCircle className="w-5 h-5" />
+                        <span>Profile</span>
+                      </Link>
+
+                      {isAdmin() && (
+                        <Link
+                          href="/admin"
+                          className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors touch-target"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          <Settings className="w-5 h-5" />
+                          <span>Admin Dashboard</span>
+                        </Link>
+                      )}
+
+                      <button
+                        onClick={() => {
+                          logout()
+                          setIsMobileMenuOpen(false)
+                        }}
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors text-red-600 w-full touch-target"
+                      >
+                        <LogOut className="w-5 h-5" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <Link href="/login" className="block" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button className="w-full gradient-gold text-white mobile-button">Sign In</Button>
+                    </Link>
+                  )}
+                </div>
+
+                {/* Theme Toggle */}
+                <div className="pt-4 border-t border-border">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                    className="w-full justify-start gap-3 touch-target"
+                  >
+                    {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                    <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
+    </>
   )
 }
