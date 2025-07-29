@@ -2,12 +2,14 @@
 
 import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
+import { toast } from "sonner"
 
 interface User {
   id: string
   name: string
   email: string
-  role: "user" | "admin"
+  role: "admin" | "user"
+  avatar?: string
 }
 
 interface AuthContextType {
@@ -15,64 +17,89 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>
   logout: () => void
   isAdmin: () => boolean
-  loading: boolean
+  isLoading: boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+// Mock users for demo
+const mockUsers: User[] = [
+  {
+    id: "1",
+    name: "Admin User",
+    email: "admin@artgallery.com",
+    role: "admin",
+  },
+  {
+    id: "2",
+    name: "John Doe",
+    email: "john@example.com",
+    role: "user",
+  },
+]
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     // Check for saved user in localStorage
     try {
-      const savedUser = localStorage.getItem("artisan-user")
+      const savedUser = localStorage.getItem("art-gallery-user")
       if (savedUser) {
         setUser(JSON.parse(savedUser))
       }
     } catch (error) {
       console.error("Error loading user from localStorage:", error)
+    } finally {
+      setIsLoading(false)
     }
-    setLoading(false)
   }, [])
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Mock authentication - replace with real API call
-    if (email === "admin@artisan.com" && password === "admin123") {
-      const adminUser: User = {
-        id: "1",
-        name: "Admin User",
-        email: "admin@artisan.com",
-        role: "admin",
-      }
-      setUser(adminUser)
-      localStorage.setItem("artisan-user", JSON.stringify(adminUser))
+    setIsLoading(true)
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    const foundUser = mockUsers.find((u) => u.email === email)
+
+    if (foundUser && password === "password") {
+      setUser(foundUser)
+      localStorage.setItem("art-gallery-user", JSON.stringify(foundUser))
+      toast.success(`Welcome back, ${foundUser.name}!`)
+      setIsLoading(false)
       return true
-    } else if (email === "user@artisan.com" && password === "user123") {
-      const regularUser: User = {
-        id: "2",
-        name: "Regular User",
-        email: "user@artisan.com",
-        role: "user",
-      }
-      setUser(regularUser)
-      localStorage.setItem("artisan-user", JSON.stringify(regularUser))
-      return true
+    } else {
+      toast.error("Invalid email or password")
+      setIsLoading(false)
+      return false
     }
-    return false
   }
 
   const logout = () => {
     setUser(null)
-    localStorage.removeItem("artisan-user")
+    localStorage.removeItem("art-gallery-user")
+    toast.success("Logged out successfully")
   }
 
   const isAdmin = () => {
     return user?.role === "admin"
   }
 
-  return <AuthContext.Provider value={{ user, login, logout, isAdmin, loading }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        isAdmin,
+        isLoading,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function useAuth() {

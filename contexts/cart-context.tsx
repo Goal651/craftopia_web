@@ -2,8 +2,9 @@
 
 import type React from "react"
 import { createContext, useContext, useReducer, useEffect } from "react"
+import { toast } from "sonner"
 
-export interface CartItem {
+interface CartItem {
   id: string
   title: string
   artist: string
@@ -32,75 +33,103 @@ const initialState: CartState = {
   itemCount: 0,
 }
 
-function calculateTotals(items: CartItem[]): { total: number; itemCount: number } {
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
-  return { total, itemCount }
-}
-
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "ADD_ITEM": {
       const existingItem = state.items.find((item) => item.id === action.payload.id)
 
       if (existingItem) {
-        if (existingItem.quantity >= action.payload.stock) {
+        if (existingItem.quantity >= existingItem.stock) {
+          toast.error("Cannot add more items - insufficient stock")
           return state
         }
 
         const updatedItems = state.items.map((item) =>
           item.id === action.payload.id ? { ...item, quantity: item.quantity + 1 } : item,
         )
-        const { total, itemCount } = calculateTotals(updatedItems)
-        return { items: updatedItems, total, itemCount }
+
+        const newState = {
+          ...state,
+          items: updatedItems,
+        }
+
+        return {
+          ...newState,
+          total: calculateTotal(newState.items),
+          itemCount: calculateItemCount(newState.items),
+        }
       } else {
-        const newItem = { ...action.payload, quantity: 1 }
-        const updatedItems = [...state.items, newItem]
-        const { total, itemCount } = calculateTotals(updatedItems)
-        return { items: updatedItems, total, itemCount }
+        const newItem: CartItem = { ...action.payload, quantity: 1 }
+        const newState = {
+          ...state,
+          items: [...state.items, newItem],
+        }
+
+        return {
+          ...newState,
+          total: calculateTotal(newState.items),
+          itemCount: calculateItemCount(newState.items),
+        }
       }
     }
 
     case "REMOVE_ITEM": {
-      const updatedItems = state.items.filter((item) => item.id !== action.payload)
-      const { total, itemCount } = calculateTotals(updatedItems)
-      return { items: updatedItems, total, itemCount }
+      const newState = {
+        ...state,
+        items: state.items.filter((item) => item.id !== action.payload),
+      }
+
+      return {
+        ...newState,
+        total: calculateTotal(newState.items),
+        itemCount: calculateItemCount(newState.items),
+      }
     }
 
     case "UPDATE_QUANTITY": {
       if (action.payload.quantity <= 0) {
-        const updatedItems = state.items.filter((item) => item.id !== action.payload.id)
-        const { total, itemCount } = calculateTotals(updatedItems)
-        return { items: updatedItems, total, itemCount }
+        return cartReducer(state, { type: "REMOVE_ITEM", payload: action.payload.id })
       }
 
-      const updatedItems = state.items.map((item) => {
-        if (item.id === action.payload.id) {
-          if (action.payload.quantity > item.stock) {
-            return item
-          }
-          return { ...item, quantity: action.payload.quantity }
-        }
-        return item
-      })
-      const { total, itemCount } = calculateTotals(updatedItems)
-      return { items: updatedItems, total, itemCount }
+      const item = state.items.find((item) => item.id === action.payload.id)
+      if (item && action.payload.quantity > item.stock) {
+        toast.error("Cannot add more items - insufficient stock")
+        return state
+      }
+
+      const updatedItems = state.items.map((item) =>
+        item.id === action.payload.id ? { ...item, quantity: action.payload.quantity } : item,
+      )
+
+      const newState = {
+        ...state,
+        items: updatedItems,
+      }
+
+      return {
+        ...newState,
+        total: calculateTotal(newState.items),
+        itemCount: calculateItemCount(newState.items),
+      }
     }
 
     case "CLEAR_CART":
       return initialState
 
     case "LOAD_CART":
-      return {
-        ...action.payload,
-        items: action.payload.items || [],
-        total: action.payload.total || 0,
-        itemCount: action.payload.itemCount || 0,
-      }
+      return action.payload
 
     default:
       return state
   }
+}
+
+function calculateTotal(items: CartItem[]): number {
+  return items.reduce((total, item) => total + item.price * item.quantity, 0)
+}
+
+function calculateItemCount(items: CartItem[]): number {
+  return items.reduce((count, item) => count + item.quantity, 0)
 }
 
 interface CartContextType {
@@ -121,19 +150,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Load cart from localStorage on mount
   useEffect(() => {
     try {
-      const savedCart = localStorage.getItem("artisan-cart")
+      const savedCart = localStorage.getItem("art-gallery-cart")
       if (savedCart) {
         const parsedCart = JSON.parse(savedCart)
-        if (parsedCart && typeof parsedCart === "object") {
-          dispatch({
-            type: "LOAD_CART",
-            payload: {
-              items: parsedCart.items || [],
-              total: parsedCart.total || 0,
-              itemCount: parsedCart.itemCount || 0,
-            },
-          })
-        }
+        dispatch({ type: "LOAD_CART", payload: parsedCart })
       }
     } catch (error) {
       console.error("Error loading cart from localStorage:", error)
@@ -143,7 +163,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     try {
-      localStorage.setItem("artisan-cart", JSON.stringify(state))
+      localStorage.setItem("art-gallery-cart", JSON.stringify(state))
     } catch (error) {
       console.error("Error saving cart to localStorage:", error)
     }
@@ -151,10 +171,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = (item: Omit<CartItem, "quantity">) => {
     dispatch({ type: "ADD_ITEM", payload: item })
+    toast.success("Added to cart")
   }
 
   const removeItem = (id: string) => {
     dispatch({ type: "REMOVE_ITEM", payload: id })
+    toast.success("Removed from cart")
   }
 
   const updateQuantity = (id: string, quantity: number) => {
@@ -163,14 +185,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = () => {
     dispatch({ type: "CLEAR_CART" })
+    toast.success("Cart cleared")
   }
 
   const isInCart = (id: string) => {
-    return state.items?.some((item) => item.id === id) || false
+    return state.items.some((item) => item.id === id)
   }
 
   const getItemQuantity = (id: string) => {
-    const item = state.items?.find((item) => item.id === id)
+    const item = state.items.find((item) => item.id === id)
     return item ? item.quantity : 0
   }
 

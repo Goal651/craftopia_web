@@ -72,26 +72,26 @@ export function Header() {
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled ? "glass-effect shadow-lg" : "bg-transparent"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full ${
+          isScrolled ? "glass-effect shadow-lg" : "bg-black/50"
         } hidden md:block`}
       >
-        <div className="container mx-auto px-4">
+        <div className="w-full px-6">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-3 group">
               <motion.div
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
-                className="w-10 h-10 gradient-gold rounded-full flex items-center justify-center"
+                className="w-10 h-10 gradient-blue rounded-full flex items-center justify-center"
               >
                 <Palette className="w-5 h-5 text-white" />
               </motion.div>
               <div>
-                <h1 className="text-xl font-semibold text-foreground group-hover:text-gold transition-colors">
+                <h1 className="text-xl font-semibold text-white group-hover:text-blue-400 transition-colors">
                   Artisan Gallery
                 </h1>
-                <p className="text-xs text-muted-foreground">Elena Vasquez Collection</p>
+                <p className="text-xs text-gray-400">Elena Vasquez Collection</p>
               </div>
             </Link>
 
@@ -101,13 +101,13 @@ export function Header() {
                 <Link key={item.href} href={item.href} className="relative group">
                   <span
                     className={`text-sm font-medium transition-colors ${
-                      pathname === item.href ? "text-gold" : "text-foreground hover:text-gold"
+                      pathname === item.href ? "text-blue-400" : "text-white hover:text-blue-400"
                     }`}
                   >
                     {item.label}
                   </span>
                   <motion.div
-                    className="absolute -bottom-1 left-0 h-0.5 bg-gold"
+                    className="absolute -bottom-1 left-0 h-0.5 bg-blue-500"
                     initial={{ width: 0 }}
                     animate={{ width: pathname === item.href ? "100%" : 0 }}
                     whileHover={{ width: "100%" }}
@@ -124,19 +124,23 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="hover:bg-accent"
+                className="hover:bg-white/10 text-gray-300 hover:text-white"
               >
                 {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </Button>
 
               {/* Search */}
-              <Button variant="ghost" size="icon" className="hover:bg-accent">
+              <Button variant="ghost" size="icon" className="hover:bg-white/10 text-gray-300 hover:text-white">
                 <Search className="w-5 h-5" />
               </Button>
 
               {/* Cart */}
               <Link href="/cart">
-                <Button variant="ghost" size="icon" className="relative hover:bg-accent">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative hover:bg-white/10 text-gray-300 hover:text-white"
+                >
                   <ShoppingCart className="w-5 h-5" />
                   <AnimatePresence>
                     {itemCount > 0 && (
@@ -146,7 +150,7 @@ export function Header() {
                         exit={{ scale: 0 }}
                         className="absolute -top-2 -right-2"
                       >
-                        <Badge className="bg-gold text-white text-xs px-1.5 py-0.5 min-w-[20px] h-5 flex items-center justify-center">
+                        <Badge className="bg-blue-500 text-white text-xs px-1.5 py-0.5 min-w-[20px] h-5 flex items-center justify-center">
                           {itemCount}
                         </Badge>
                       </motion.div>
@@ -159,27 +163,27 @@ export function Header() {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="hover:bg-accent">
-                      <div className="w-8 h-8 gradient-gold rounded-full flex items-center justify-center">
+                    <Button variant="ghost" size="icon" className="hover:bg-white/10">
+                      <div className="w-8 h-8 gradient-blue rounded-full flex items-center justify-center">
                         <User className="w-4 h-4 text-white" />
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-64 p-2 glass-effect border-2">
-                    <div className="flex items-center justify-start gap-3 p-3 rounded-lg bg-gradient-to-r from-pastel-rose/20 to-pastel-lavender/20">
-                      <div className="h-10 w-10 gradient-gold rounded-full flex items-center justify-center">
+                  <DropdownMenuContent align="end" className="w-64 p-2 glass-effect border-2 border-gray-600">
+                    <div className="flex items-center justify-start gap-3 p-3 rounded-lg bg-gray-800/50">
+                      <div className="h-10 w-10 gradient-blue rounded-full flex items-center justify-center">
                         <User className="h-5 w-5 text-white" />
                       </div>
                       <div className="flex flex-col space-y-1 leading-none">
-                        <p className="font-semibold">{user.name}</p>
-                        <p className="text-xs text-muted-foreground">{user.email}</p>
-                        <Badge variant="secondary" className="w-fit text-xs mt-1">
+                        <p className="font-semibold text-white">{user.name}</p>
+                        <p className="text-xs text-gray-400">{user.email}</p>
+                        <Badge variant="secondary" className="w-fit text-xs mt-1 bg-gray-700 text-gray-300">
                           {user.role}
                         </Badge>
                       </div>
                     </div>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild className="cursor-pointer">
+                    <DropdownMenuSeparator className="bg-gray-600" />
+                    <DropdownMenuItem asChild className="cursor-pointer text-gray-300 hover:text-white">
                       <Link href="/profile">
                         <UserCircle className="mr-3 h-4 w-4" />
                         Profile
@@ -187,16 +191,16 @@ export function Header() {
                     </DropdownMenuItem>
                     {isAdmin() && (
                       <>
-                        <DropdownMenuItem asChild className="cursor-pointer">
+                        <DropdownMenuItem asChild className="cursor-pointer text-gray-300 hover:text-white">
                           <Link href="/admin">
                             <Settings className="mr-3 h-4 w-4" />
                             Admin Dashboard
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator className="bg-gray-600" />
                       </>
                     )}
-                    <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-600">
+                    <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-400 hover:text-red-300">
                       <LogOut className="mr-3 h-4 w-4" />
                       Sign Out
                     </DropdownMenuItem>
@@ -204,7 +208,7 @@ export function Header() {
                 </DropdownMenu>
               ) : (
                 <Link href="/login">
-                  <Button className="gradient-gold text-white hover:opacity-90 transition-opacity">Sign In</Button>
+                  <Button className="gradient-blue text-white hover:opacity-90 transition-opacity">Sign In</Button>
                 </Link>
               )}
             </div>
@@ -216,28 +220,28 @@ export function Header() {
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled ? "glass-effect shadow-lg" : "bg-transparent"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full ${
+          isScrolled ? "glass-effect shadow-lg" : "bg-black/50"
         } md:hidden`}
       >
-        <div className="px-4">
+        <div className="px-4 w-full">
           <div className="flex items-center justify-between h-16">
             {/* Mobile Logo */}
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 gradient-gold rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 gradient-blue rounded-full flex items-center justify-center">
                 <Palette className="w-4 h-4 text-white" />
               </div>
-              <span className="text-lg font-semibold text-foreground">Artisan</span>
+              <span className="text-lg font-semibold text-white">Artisan</span>
             </Link>
 
             {/* Mobile Actions */}
             <div className="flex items-center space-x-2">
               {/* Cart */}
               <Link href="/cart">
-                <Button variant="ghost" size="icon" className="relative touch-target">
+                <Button variant="ghost" size="icon" className="relative touch-target text-gray-300 hover:text-white">
                   <ShoppingCart className="w-5 h-5" />
                   {itemCount > 0 && (
-                    <Badge className="absolute -top-1 -right-1 bg-gold text-white text-xs px-1 min-w-[16px] h-4 flex items-center justify-center">
+                    <Badge className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs px-1 min-w-[16px] h-4 flex items-center justify-center">
                       {itemCount}
                     </Badge>
                   )}
@@ -248,7 +252,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="touch-target"
+                className="touch-target text-gray-300 hover:text-white"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -264,7 +268,7 @@ export function Header() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="glass-effect border-t border-border"
+              className="glass-effect border-t border-gray-600 w-full"
             >
               <div className="px-4 py-6 space-y-4">
                 {/* Navigation */}
@@ -279,7 +283,7 @@ export function Header() {
                       <Link
                         href={item.href}
                         className={`flex items-center gap-3 p-3 rounded-lg transition-colors touch-target ${
-                          pathname === item.href ? "bg-gold/20 text-gold" : "text-foreground hover:bg-accent"
+                          pathname === item.href ? "bg-blue-500/20 text-blue-400" : "text-white hover:bg-white/10"
                         }`}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
@@ -291,22 +295,22 @@ export function Header() {
                 </nav>
 
                 {/* User Section */}
-                <div className="pt-4 border-t border-border">
+                <div className="pt-4 border-t border-gray-600">
                   {user ? (
                     <div className="space-y-2">
-                      <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-pastel-rose/20 to-pastel-lavender/20">
-                        <div className="w-10 h-10 gradient-gold rounded-full flex items-center justify-center">
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-800/50">
+                        <div className="w-10 h-10 gradient-blue rounded-full flex items-center justify-center">
                           <User className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                          <p className="font-semibold">{user.name}</p>
-                          <p className="text-xs text-muted-foreground">{user.email}</p>
+                          <p className="font-semibold text-white">{user.name}</p>
+                          <p className="text-xs text-gray-400">{user.email}</p>
                         </div>
                       </div>
 
                       <Link
                         href="/profile"
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors touch-target"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 transition-colors touch-target text-gray-300 hover:text-white"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <UserCircle className="w-5 h-5" />
@@ -316,7 +320,7 @@ export function Header() {
                       {isAdmin() && (
                         <Link
                           href="/admin"
-                          className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors touch-target"
+                          className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 transition-colors touch-target text-gray-300 hover:text-white"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           <Settings className="w-5 h-5" />
@@ -329,7 +333,7 @@ export function Header() {
                           logout()
                           setIsMobileMenuOpen(false)
                         }}
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors text-red-600 w-full touch-target"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 transition-colors text-red-400 hover:text-red-300 w-full touch-target"
                       >
                         <LogOut className="w-5 h-5" />
                         <span>Sign Out</span>
@@ -337,17 +341,17 @@ export function Header() {
                     </div>
                   ) : (
                     <Link href="/login" className="block" onClick={() => setIsMobileMenuOpen(false)}>
-                      <Button className="w-full gradient-gold text-white mobile-button">Sign In</Button>
+                      <Button className="w-full gradient-blue text-white mobile-button">Sign In</Button>
                     </Link>
                   )}
                 </div>
 
                 {/* Theme Toggle */}
-                <div className="pt-4 border-t border-border">
+                <div className="pt-4 border-t border-gray-600">
                   <Button
                     variant="ghost"
                     onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                    className="w-full justify-start gap-3 touch-target"
+                    className="w-full justify-start gap-3 touch-target text-gray-300 hover:text-white"
                   >
                     {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                     <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>

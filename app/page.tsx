@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useCart } from "@/contexts/cart-context"
-import { ArrowRight, Star, ShoppingCart, Heart, Eye } from "lucide-react"
+import { ArrowRight, Star, ShoppingCart, Heart, Eye, Sparkles, TrendingUp, Users, Award } from "lucide-react"
 
 const featuredArtworks = [
   {
@@ -17,9 +17,11 @@ const featuredArtworks = [
     artist: "Elena Vasquez",
     price: 2500,
     image: "/placeholder.svg?height=400&width=400&text=Ethereal+Dreams",
-    category: "Painting",
+    category: "Abstract",
     stock: 1,
     featured: true,
+    rating: 4.9,
+    likes: 234,
   },
   {
     id: "2",
@@ -30,6 +32,8 @@ const featuredArtworks = [
     category: "Digital Art",
     stock: 3,
     featured: true,
+    rating: 4.8,
+    likes: 189,
   },
   {
     id: "3",
@@ -40,39 +44,88 @@ const featuredArtworks = [
     category: "Sculpture",
     stock: 1,
     featured: true,
+    rating: 5.0,
+    likes: 312,
+  },
+  {
+    id: "4",
+    title: "Ocean Depths",
+    artist: "Elena Vasquez",
+    price: 2200,
+    image: "/placeholder.svg?height=400&width=400&text=Ocean+Depths",
+    category: "Painting",
+    stock: 2,
+    featured: true,
+    rating: 4.7,
+    likes: 156,
+  },
+  {
+    id: "5",
+    title: "Urban Reflections",
+    artist: "Elena Vasquez",
+    price: 1950,
+    image: "/placeholder.svg?height=400&width=400&text=Urban+Reflections",
+    category: "Photography",
+    stock: 5,
+    featured: true,
+    rating: 4.6,
+    likes: 98,
+  },
+  {
+    id: "6",
+    title: "Cosmic Journey",
+    artist: "Elena Vasquez",
+    price: 2800,
+    image: "/placeholder.svg?height=400&width=400&text=Cosmic+Journey",
+    category: "Mixed Media",
+    stock: 1,
+    featured: true,
+    rating: 4.9,
+    likes: 267,
   },
 ]
 
 const categories = [
   {
-    name: "Paintings",
+    name: "Abstract Art",
     count: 24,
-    image: "/placeholder.svg?height=300&width=300&text=Paintings",
-    href: "/artworks?category=paintings",
+    image: "/placeholder.svg?height=300&width=300&text=Abstract+Art",
+    href: "/artworks?category=abstract",
+    color: "from-violet-500 to-purple-600",
   },
   {
     name: "Digital Art",
     count: 18,
     image: "/placeholder.svg?height=300&width=300&text=Digital+Art",
     href: "/artworks?category=digital",
+    color: "from-cyan-500 to-blue-600",
   },
   {
     name: "Sculptures",
     count: 12,
     image: "/placeholder.svg?height=300&width=300&text=Sculptures",
     href: "/artworks?category=sculptures",
+    color: "from-emerald-500 to-teal-600",
   },
   {
     name: "Photography",
     count: 15,
     image: "/placeholder.svg?height=300&width=300&text=Photography",
     href: "/artworks?category=photography",
+    color: "from-orange-500 to-red-600",
   },
+]
+
+const stats = [
+  { label: "Artworks", value: "500+", icon: Sparkles },
+  { label: "Artists", value: "50+", icon: Users },
+  { label: "Collectors", value: "1000+", icon: Award },
+  { label: "Growth", value: "25%", icon: TrendingUp },
 ]
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
-  const { addItem } = useCart()
+  const { addItem, isInCart } = useCart()
 
   useEffect(() => {
     setMounted(true)
@@ -84,75 +137,119 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-pastel-rose/5 to-pastel-lavender/5" />
+      {/* Hero Section with Glassmorphic Design */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-violet-500/20 rounded-full blur-3xl float" />
+          <div className="absolute top-40 right-20 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl float-delayed" />
+          <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl float" />
+        </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <Badge className="mb-6 bg-gold/20 text-gold border-gold/30">Contemporary Art Collection</Badge>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                Elena Vasquez
+        <div className="container-padding relative z-10">
+          <div className="text-center max-w-5xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <Badge className="mb-6 glass px-4 py-2 text-sm font-medium">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Contemporary Art Collection
+              </Badge>
+
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
+                Discover
                 <br />
-                <span className="text-gold">Artisan Gallery</span>
+                <span className="text-gradient-violet">Extraordinary</span>
+                <br />
+                <span className="text-gradient-aqua">Art</span>
               </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Discover extraordinary contemporary artworks that blend traditional techniques with modern innovation
+
+              <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
+                Explore a curated collection of contemporary masterpieces from talented artists around the world. Find
+                the perfect piece to transform your space.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button asChild size="lg" className="gradient-gold text-white hover:opacity-90">
+
+              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <Button asChild size="lg" className="btn-primary text-lg px-8 py-4">
                   <Link href="/artworks">
-                    Explore Collection
+                    Explore Gallery
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg">
+
+                <Button asChild variant="outline" size="lg" className="glass text-lg px-8 py-4 bg-transparent">
                   <Link href="/about">Learn More</Link>
                 </Button>
               </div>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20"
+            >
+              {stats.map((stat, index) => (
+                <div key={stat.label} className="glass-card rounded-2xl p-6 text-center">
+                  <stat.icon className="w-8 h-8 mx-auto mb-3 text-violet-500" />
+                  <div className="text-2xl md:text-3xl font-bold text-gradient-violet mb-1">{stat.value}</div>
+                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                </div>
+              ))}
             </motion.div>
           </div>
         </div>
 
         {/* Floating Art Pieces */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(6)].map((_, i) => (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(8)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-20 h-20 opacity-10"
+              className="absolute w-16 h-16 md:w-24 md:h-24 opacity-10"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
               }}
               animate={{
-                y: [0, -20, 0],
+                y: [0, -30, 0],
                 rotate: [0, 180, 360],
+                scale: [1, 1.1, 1],
               }}
               transition={{
-                duration: 10 + i * 2,
+                duration: 15 + i * 2,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "linear",
               }}
             >
-              <div className="w-full h-full bg-gradient-to-br from-gold/20 to-gold/5 rounded-lg" />
+              <div
+                className={`w-full h-full bg-gradient-to-br ${
+                  i % 2 === 0 ? "from-violet-500/30 to-purple-600/30" : "from-cyan-500/30 to-blue-600/30"
+                } rounded-xl`}
+              />
             </motion.div>
           ))}
         </div>
       </section>
 
       {/* Featured Artworks */}
-      <section className="py-20 bg-gradient-to-b from-background to-muted/20">
-        <div className="container mx-auto px-4">
+      <section className="py-20 lg:py-32">
+        <div className="container-padding">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Artworks</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Handpicked masterpieces that showcase Elena's artistic evolution and creative vision
+            <Badge className="mb-6 glass px-4 py-2">Featured Collection</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Curated <span className="text-gradient-violet">Masterpieces</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Handpicked artworks that showcase exceptional creativity and artistic vision
             </p>
           </motion.div>
 
@@ -163,49 +260,77 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="group"
               >
-                <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border-0 bg-card/50 backdrop-blur-sm">
+                <Card className="glass-card rounded-3xl overflow-hidden border-0 card-hover">
                   <div className="relative overflow-hidden">
                     <Image
                       src={artwork.image || "/placeholder.svg"}
                       alt={artwork.title}
                       width={400}
                       height={400}
-                      className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110"
                     />
+
+                    {/* Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute top-4 right-4 flex gap-2">
-                      <Button
-                        size="icon"
-                        variant="secondary"
-                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      >
+
+                    {/* Action Buttons */}
+                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Button size="icon" className="glass w-10 h-10 hover:bg-white/20" aria-label="Add to wishlist">
                         <Heart className="w-4 h-4" />
                       </Button>
-                      <Button
-                        size="icon"
-                        variant="secondary"
-                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      >
+                      <Button size="icon" className="glass w-10 h-10 hover:bg-white/20" aria-label="Quick view">
                         <Eye className="w-4 h-4" />
                       </Button>
                     </div>
-                    <Badge className="absolute top-4 left-4 bg-gold text-white">{artwork.category}</Badge>
+
+                    {/* Category Badge */}
+                    <Badge className="absolute top-4 left-4 gradient-violet text-white border-0">
+                      {artwork.category}
+                    </Badge>
+
+                    {/* Rating */}
+                    <div className="absolute bottom-4 left-4 flex items-center gap-1 glass px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <span className="text-sm font-medium text-white">{artwork.rating}</span>
+                    </div>
                   </div>
+
                   <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-xl font-semibold group-hover:text-gold transition-colors">{artwork.title}</h3>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-gold text-gold" />
-                        <span className="text-sm text-muted-foreground">4.9</span>
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h3 className="text-xl font-bold mb-1 group-hover:text-violet-600 transition-colors">
+                          {artwork.title}
+                        </h3>
+                        <p className="text-muted-foreground">by {artwork.artist}</p>
+                      </div>
+                      <div className="flex items-center gap-1 text-muted-foreground">
+                        <Heart className="w-4 h-4" />
+                        <span className="text-sm">{artwork.likes}</span>
                       </div>
                     </div>
-                    <p className="text-muted-foreground mb-4">by {artwork.artist}</p>
+
                     <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-gold">${artwork.price.toLocaleString()}</span>
-                      <Button onClick={() => addItem(artwork)} className="gradient-gold text-white hover:opacity-90">
+                      <span className="text-2xl font-bold text-gradient-violet">${artwork.price.toLocaleString()}</span>
+
+                      <Button
+                        onClick={() =>
+                          addItem({
+                            id: artwork.id,
+                            title: artwork.title,
+                            artist: artwork.artist,
+                            price: artwork.price,
+                            image: artwork.image,
+                            stock: artwork.stock,
+                          })
+                        }
+                        disabled={isInCart(artwork.id)}
+                        className={isInCart(artwork.id) ? "btn-secondary" : "btn-primary"}
+                      >
                         <ShoppingCart className="w-4 h-4 mr-2" />
-                        Add to Cart
+                        {isInCart(artwork.id) ? "In Cart" : "Add to Cart"}
                       </Button>
                     </div>
                   </CardContent>
@@ -214,8 +339,8 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="text-center mt-12">
-            <Button asChild variant="outline" size="lg">
+          <div className="text-center mt-16">
+            <Button asChild variant="outline" size="lg" className="glass text-lg px-8 py-4 bg-transparent">
               <Link href="/artworks">
                 View All Artworks
                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -226,41 +351,47 @@ export default function HomePage() {
       </section>
 
       {/* Categories */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
+      <section className="py-20 lg:py-32 bg-gradient-to-b from-transparent to-violet-500/5">
+        <div className="container-padding">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Explore by Category</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <Badge className="mb-6 glass px-4 py-2">Explore Categories</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Art <span className="text-gradient-aqua">Categories</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Discover artworks across different mediums and styles
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {categories.map((category, index) => (
               <motion.div
                 key={category.name}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
               >
                 <Link href={category.href}>
-                  <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 border-0 bg-card/50 backdrop-blur-sm">
+                  <Card className="glass-card rounded-3xl overflow-hidden border-0 card-hover group">
                     <div className="relative overflow-hidden">
                       <Image
                         src={category.image || "/placeholder.svg"}
                         alt={category.name}
                         width={300}
                         height={300}
-                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                        className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
                       />
+                      <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-60`} />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                      <div className="absolute bottom-4 left-4 text-white">
-                        <h3 className="text-xl font-semibold mb-1">{category.name}</h3>
+                      <div className="absolute bottom-6 left-6 text-white">
+                        <h3 className="text-2xl font-bold mb-2">{category.name}</h3>
                         <p className="text-sm opacity-90">{category.count} artworks</p>
                       </div>
                     </div>
@@ -272,55 +403,34 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Artist Spotlight */}
-      <section className="py-20 bg-gradient-to-b from-muted/20 to-background">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <Badge className="mb-6 bg-gold/20 text-gold border-gold/30">Artist Spotlight</Badge>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">Meet Elena Vasquez</h2>
-              <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
-                Elena Vasquez is a contemporary artist whose work explores the intersection of traditional techniques
-                and modern digital innovation. With over 15 years of experience, her pieces have been featured in
-                galleries worldwide.
-              </p>
-              <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-                Her unique approach combines classical painting methods with cutting-edge digital artistry, creating
-                pieces that speak to both traditional art lovers and modern collectors.
-              </p>
-              <Button asChild className="gradient-gold text-white hover:opacity-90">
-                <Link href="/about">
-                  Learn More About Elena
+      {/* CTA Section */}
+      <section className="py-20 lg:py-32">
+        <div className="container-padding">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center glass-strong rounded-3xl p-12 lg:p-20"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Ready to Start Your <span className="text-gradient-violet">Art Journey</span>?
+            </h2>
+            <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+              Join thousands of art enthusiasts who have discovered their perfect pieces through our gallery
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Button asChild size="lg" className="btn-primary text-lg px-8 py-4">
+                <Link href="/artworks">
+                  Browse Collection
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="relative"
-            >
-              <div className="relative overflow-hidden rounded-2xl">
-                <Image
-                  src="/placeholder.svg?height=600&width=500&text=Elena+Vasquez+Portrait"
-                  alt="Elena Vasquez"
-                  width={500}
-                  height={600}
-                  className="w-full h-auto object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-gold/20 to-transparent" />
-              </div>
-              <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-gradient-to-br from-gold to-gold/70 rounded-full flex items-center justify-center">
-                <Star className="w-8 h-8 text-white fill-white" />
-              </div>
-            </motion.div>
-          </div>
+              <Button asChild variant="outline" size="lg" className="glass text-lg px-8 py-4 bg-transparent">
+                <Link href="/contact">Get in Touch</Link>
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>
