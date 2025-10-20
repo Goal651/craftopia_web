@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { MagneticButton } from "@/components/ui/magnetic-button"
+import { CommandPalette } from "@/components/ui/command-palette"
 import { useCart } from "@/contexts/cart-context"
 import { useAuth } from "@/contexts/auth-context"
 import {
@@ -45,8 +47,7 @@ const navigation = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
   const { theme, setTheme } = useTheme()
   const { state } = useCart()
   const { user, logout, isAdmin } = useAuth()
@@ -62,6 +63,19 @@ export function Navbar() {
     // Scroll to top when route changes
     window.scrollTo(0, 0)
   }, [pathname])
+
+  useEffect(() => {
+    // Keyboard shortcut for command palette
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        setCommandPaletteOpen(true)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   if (!mounted) {
     return null
@@ -106,27 +120,13 @@ export function Navbar() {
           ))}
         </div>
 
-        {/* Search Bar */}
-        <AnimatePresence>
-          {searchOpen && (
-            <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 300, opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="relative overflow-hidden"
-            >
-              <Input
-                placeholder="Search artworks..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="glass border-0 focus:ring-2 focus:ring-blue-500/50 text-white placeholder:text-gray-400"
-                autoFocus
-              />
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Search Shortcut Display */}
+        <div className="hidden xl:flex items-center space-x-2 px-3 py-1.5 glass rounded-lg cursor-pointer hover:bg-white/10 transition-colors"
+             onClick={() => setCommandPaletteOpen(true)}>
+          <Search className="w-4 h-4 text-gray-400" />
+          <span className="text-sm text-gray-400">Search...</span>
+          <Badge variant="outline" className="text-xs ml-2">⌘K</Badge>
+        </div>
 
         {/* Actions */}
         <div className="flex items-center space-x-3">
@@ -140,15 +140,15 @@ export function Navbar() {
             {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </Button>
 
-          <Button
+          <MagneticButton
             variant="ghost"
             size="icon"
-            onClick={() => setSearchOpen(!searchOpen)}
-            className="hover:bg-white/10 focus-ring text-gray-300 hover:text-white"
+            onClick={() => setCommandPaletteOpen(true)}
+            className="hover:bg-white/10 focus-ring text-gray-300 hover:text-white xl:hidden"
             aria-label="Search"
           >
             <Search className="w-4 h-4" />
-          </Button>
+          </MagneticButton>
 
           <Button
             variant="ghost"
@@ -212,9 +212,9 @@ export function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild className="btn-primary">
+            <MagneticButton asChild className="btn-primary glow-blue">
               <Link href="/login">Sign In</Link>
-            </Button>
+            </MagneticButton>
           )}
         </div>
       </motion.nav>
@@ -368,6 +368,12 @@ export function Navbar() {
           )}
         </AnimatePresence>
       </motion.nav>
+
+      {/* Command Palette */}
+      <CommandPalette 
+        isOpen={commandPaletteOpen} 
+        onClose={() => setCommandPaletteOpen(false)} 
+      />
     </>
   )
 }

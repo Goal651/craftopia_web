@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { ArtworkImage } from "@/components/ui/artwork-image"
 import { useCart } from "@/contexts/cart-context"
 import { useToast } from "@/hooks/use-toast"
 import { sampleArtworks } from "@/lib/data"
@@ -70,11 +71,14 @@ export default function ArtworkDetailPage() {
           {/* Images */}
           <div className="space-y-4">
             <div className="aspect-square relative overflow-hidden rounded-lg bg-muted">
-              <Image
-                src={artwork.images[selectedImageIndex] || "/placeholder.svg"}
+              <ArtworkImage
+                src={artwork.images[selectedImageIndex]?.includes('/images/') ? undefined : artwork.images[selectedImageIndex]}
                 alt={artwork.title}
-                fill
-                className="object-cover"
+                title={artwork.title}
+                category={artwork.category}
+                width={600}
+                height={600}
+                className="w-full h-full"
                 priority
               />
             </div>
@@ -88,11 +92,14 @@ export default function ArtworkDetailPage() {
                       selectedImageIndex === index ? "border-primary" : "border-transparent"
                     }`}
                   >
-                    <Image
-                      src={image || "/placeholder.svg"}
+                    <ArtworkImage
+                      src={image?.includes('/images/') ? undefined : image}
                       alt={`${artwork.title} view ${index + 1}`}
-                      fill
-                      className="object-cover"
+                      title={`${artwork.title} ${index + 1}`}
+                      category={artwork.category}
+                      width={150}
+                      height={150}
+                      className="w-full h-full"
                     />
                   </button>
                 ))}
@@ -210,11 +217,14 @@ export default function ArtworkDetailPage() {
               {relatedArtworks.map((relatedArtwork) => (
                 <Card key={relatedArtwork.id} className="group overflow-hidden">
                   <div className="relative aspect-square overflow-hidden">
-                    <Image
-                      src={relatedArtwork.images[0] || "/placeholder.svg"}
+                    <ArtworkImage
+                      src={relatedArtwork.images[0]?.includes('/images/') ? undefined : relatedArtwork.images[0]}
                       alt={relatedArtwork.title}
-                      fill
-                      className="object-cover transition-transform group-hover:scale-105"
+                      title={relatedArtwork.title}
+                      category={relatedArtwork.category}
+                      width={300}
+                      height={300}
+                      className="w-full h-full transition-transform group-hover:scale-105"
                     />
                   </div>
                   <CardContent className="p-4">

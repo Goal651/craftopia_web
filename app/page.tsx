@@ -7,7 +7,11 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { MagneticButton } from "@/components/ui/magnetic-button"
+import { Card3D } from "@/components/ui/card-3d"
+import { ArtworkImage } from "@/components/ui/artwork-image"
 import { useCart } from "@/contexts/cart-context"
+import { getArtworkImage, categoryImages } from "@/lib/generate-images"
 import { ArrowRight, Star, ShoppingCart, Heart, Eye, Sparkles, TrendingUp, Users, Award } from "lucide-react"
 
 const featuredArtworks = [
@@ -16,7 +20,7 @@ const featuredArtworks = [
     title: "Ethereal Dreams",
     artist: "Elena Vasquez",
     price: 2500,
-    image: "/placeholder.svg?height=400&width=400&text=Ethereal+Dreams",
+    image: getArtworkImage("1", "Abstract"),
     category: "Abstract",
     stock: 1,
     featured: true,
@@ -28,7 +32,7 @@ const featuredArtworks = [
     title: "Digital Harmony",
     artist: "Elena Vasquez",
     price: 1800,
-    image: "/placeholder.svg?height=400&width=400&text=Digital+Harmony",
+    image: getArtworkImage("2", "Digital Art"),
     category: "Digital Art",
     stock: 3,
     featured: true,
@@ -40,7 +44,7 @@ const featuredArtworks = [
     title: "Sculptural Form",
     artist: "Elena Vasquez",
     price: 3200,
-    image: "/placeholder.svg?height=400&width=400&text=Sculptural+Form",
+    image: getArtworkImage("3", "Sculpture"),
     category: "Sculpture",
     stock: 1,
     featured: true,
@@ -52,7 +56,7 @@ const featuredArtworks = [
     title: "Ocean Depths",
     artist: "Elena Vasquez",
     price: 2200,
-    image: "/placeholder.svg?height=400&width=400&text=Ocean+Depths",
+    image: getArtworkImage("4", "Painting"),
     category: "Painting",
     stock: 2,
     featured: true,
@@ -64,7 +68,7 @@ const featuredArtworks = [
     title: "Urban Reflections",
     artist: "Elena Vasquez",
     price: 1950,
-    image: "/placeholder.svg?height=400&width=400&text=Urban+Reflections",
+    image: getArtworkImage("5", "Photography"),
     category: "Photography",
     stock: 5,
     featured: true,
@@ -76,7 +80,7 @@ const featuredArtworks = [
     title: "Cosmic Journey",
     artist: "Elena Vasquez",
     price: 2800,
-    image: "/placeholder.svg?height=400&width=400&text=Cosmic+Journey",
+    image: getArtworkImage("6", "Mixed Media"),
     category: "Mixed Media",
     stock: 1,
     featured: true,
@@ -89,28 +93,28 @@ const categories = [
   {
     name: "Abstract Art",
     count: 24,
-    image: "/placeholder.svg?height=300&width=300&text=Abstract+Art",
+    image: categoryImages["Abstract Art"],
     href: "/artworks?category=abstract",
     color: "from-violet-500 to-purple-600",
   },
   {
     name: "Digital Art",
     count: 18,
-    image: "/placeholder.svg?height=300&width=300&text=Digital+Art",
+    image: categoryImages["Digital Art"],
     href: "/artworks?category=digital",
     color: "from-cyan-500 to-blue-600",
   },
   {
     name: "Sculptures",
     count: 12,
-    image: "/placeholder.svg?height=300&width=300&text=Sculptures",
+    image: categoryImages["Sculptures"],
     href: "/artworks?category=sculptures",
     color: "from-emerald-500 to-teal-600",
   },
   {
     name: "Photography",
     count: 15,
-    image: "/placeholder.svg?height=300&width=300&text=Photography",
+    image: categoryImages["Photography"],
     href: "/artworks?category=photography",
     color: "from-orange-500 to-red-600",
   },
@@ -158,12 +162,13 @@ export default function HomePage() {
                 Contemporary Art Collection
               </Badge>
 
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
-                Discover
-                <br />
-                <span className="text-gradient-violet">Extraordinary</span>
-                <br />
-                <span className="text-gradient-aqua">Art</span>
+              <h1 className="text-5xl md:text-7xl lg:text-9xl text-hero mb-8">
+                <span className="block">Discover</span>
+                <span className="block text-gradient-blue relative">
+                  Extraordinary
+                  <div className="absolute -top-4 -right-4 w-8 h-8 bg-blue-500/20 rounded-full blur-xl animate-pulse" />
+                </span>
+                <span className="block text-gradient-grey">Art</span>
               </h1>
 
               <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
@@ -172,16 +177,16 @@ export default function HomePage() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                <Button asChild size="lg" className="btn-primary text-lg px-8 py-4">
+                <MagneticButton asChild size="lg" className="btn-primary glow-blue text-lg px-8 py-4">
                   <Link href="/artworks">
                     Explore Gallery
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Link>
-                </Button>
+                </MagneticButton>
 
-                <Button asChild variant="outline" size="lg" className="glass text-lg px-8 py-4 bg-transparent">
+                <MagneticButton asChild variant="outline" size="lg" className="glass-enhanced text-lg px-8 py-4 bg-transparent">
                   <Link href="/about">Learn More</Link>
-                </Button>
+                </MagneticButton>
               </div>
             </motion.div>
 
@@ -203,31 +208,40 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Floating Art Pieces */}
+        {/* Enhanced Floating Particles */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(8)].map((_, i) => (
+          {[...Array(12)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-16 h-16 md:w-24 md:h-24 opacity-10"
+              className="absolute opacity-20"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
+                width: `${16 + Math.random() * 32}px`,
+                height: `${16 + Math.random() * 32}px`,
               }}
               animate={{
-                y: [0, -30, 0],
-                rotate: [0, 180, 360],
-                scale: [1, 1.1, 1],
+                y: [0, -40, 0],
+                x: [0, Math.random() * 20 - 10, 0],
+                rotate: [0, 360],
+                scale: [0.8, 1.2, 0.8],
+                opacity: [0.1, 0.3, 0.1],
               }}
               transition={{
-                duration: 15 + i * 2,
+                duration: 20 + i * 3,
                 repeat: Number.POSITIVE_INFINITY,
-                ease: "linear",
+                ease: "easeInOut",
+                delay: i * 0.5,
               }}
             >
               <div
-                className={`w-full h-full bg-gradient-to-br ${
-                  i % 2 === 0 ? "from-violet-500/30 to-purple-600/30" : "from-cyan-500/30 to-blue-600/30"
-                } rounded-xl`}
+                className={`w-full h-full bg-gradient-to-br particle-float ${
+                  i % 3 === 0 
+                    ? "from-blue-500/40 to-blue-600/40" 
+                    : i % 3 === 1
+                    ? "from-gray-400/40 to-gray-600/40"
+                    : "from-blue-300/40 to-gray-500/40"
+                } rounded-xl blur-sm`}
               />
             </motion.div>
           ))}
@@ -263,14 +277,16 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 className="group"
               >
-                <Card className="glass-card rounded-3xl overflow-hidden border-0 card-hover">
+                <Card3D className="glass-enhanced rounded-3xl overflow-hidden border-0 card-hover">
                   <div className="relative overflow-hidden">
-                    <Image
-                      src={artwork.image || "/placeholder.svg"}
+                    <ArtworkImage
+                      src={artwork.image}
                       alt={artwork.title}
+                      title={artwork.title}
+                      category={artwork.category}
                       width={400}
-                      height={400}
-                      className="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110"
+                      height={320}
+                      className="w-full h-80 transition-transform duration-700 group-hover:scale-110"
                     />
 
                     {/* Overlay */}
@@ -334,18 +350,18 @@ export default function HomePage() {
                       </Button>
                     </div>
                   </CardContent>
-                </Card>
+                </Card3D>
               </motion.div>
             ))}
           </div>
 
           <div className="text-center mt-16">
-            <Button asChild variant="outline" size="lg" className="glass text-lg px-8 py-4 bg-transparent">
+            <MagneticButton asChild variant="outline" size="lg" className="glass-enhanced text-lg px-8 py-4 bg-transparent">
               <Link href="/artworks">
                 View All Artworks
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
-            </Button>
+            </MagneticButton>
           </div>
         </div>
       </section>

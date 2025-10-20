@@ -35,10 +35,10 @@ export const sampleArtworks: Artwork[] = [
   },
   {
     id: "2",
-    title: "Golden Horizon",
+    title: "Midnight Horizon",
     artist: "Elena Vasquez",
     description:
-      "An abstract landscape that captures the magical moment when day meets night. Rich golden hues dance across the canvas, creating depth and movement that draws the viewer into a world of warmth and tranquility. The interplay of light and shadow creates an almost three-dimensional effect.",
+      "An abstract landscape that captures the magical moment when day meets night. Deep blue and purple hues dance across the canvas, creating depth and movement that draws the viewer into a world of mystery and tranquility. The interplay of light and shadow creates an almost three-dimensional effect.",
     price: 3200,
     category: "painting",
     images: ["/images/artwork-2.jpg", "/images/artwork-2-detail.jpg"],
