@@ -8,6 +8,24 @@ import { toast } from 'sonner'
 
 // Mock the Supabase client
 vi.mock('@/lib/supabase/client')
+
+// Helper function to create a mock Supabase client
+const createMockSupabaseClient = (mockAuth: any) => ({
+  auth: mockAuth,
+  supabaseUrl: 'https://test.supabase.co',
+  supabaseKey: 'test-key',
+  realtime: {} as any,
+  storage: {} as any,
+  from: vi.fn(),
+  rpc: vi.fn(),
+  schema: vi.fn(),
+  functions: {} as any,
+  channel: vi.fn(),
+  getChannels: vi.fn(),
+  removeChannel: vi.fn(),
+  removeAllChannels: vi.fn(),
+  rest: {} as any,
+} as any)
 vi.mock('sonner', () => ({
   toast: {
     error: vi.fn(),
@@ -70,9 +88,7 @@ describe('Authentication Property Tests', () => {
       signOut: vi.fn(),
     }
 
-    mockSupabaseClient = {
-      auth: mockAuth,
-    }
+    mockSupabaseClient = createMockSupabaseClient(mockAuth)
 
     mockCreateClient.mockReturnValue(mockSupabaseClient)
 
@@ -121,9 +137,7 @@ describe('Authentication Property Tests', () => {
             signOut: vi.fn(),
           }
 
-          const mockSupabaseClient = {
-            auth: mockAuth,
-          }
+          const mockSupabaseClient = createMockSupabaseClient(mockAuth)
 
           mockCreateClient.mockReturnValue(mockSupabaseClient)
 
@@ -234,9 +248,7 @@ describe('Authentication Property Tests', () => {
             signOut: vi.fn(),
           }
 
-          const mockSupabaseClient = {
-            auth: mockAuth,
-          }
+          const mockSupabaseClient = createMockSupabaseClient(mockAuth)
 
           mockCreateClient.mockReturnValue(mockSupabaseClient)
 
@@ -309,14 +321,13 @@ describe('Auth Context Unit Tests', () => {
       updateUser: vi.fn(),
     }
 
-    mockSupabaseClient = {
-      auth: mockAuth,
-      from: vi.fn(() => ({
-        upsert: vi.fn(() => ({
-          error: null,
-        })),
+    mockSupabaseClient = createMockSupabaseClient(mockAuth)
+    // Override the from method for this specific test
+    mockSupabaseClient.from = vi.fn(() => ({
+      upsert: vi.fn(() => ({
+        error: null,
       })),
-    }
+    }))
 
     mockCreateClient.mockReturnValue(mockSupabaseClient)
 
@@ -368,7 +379,7 @@ describe('Auth Context Unit Tests', () => {
 
       // Mock auth state change to simulate successful login
       let authStateCallback: any
-      mockAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockAuth.onAuthStateChange.mockImplementation((callback: any) => {
         authStateCallback = callback
         return { data: { subscription: { unsubscribe: vi.fn() } } }
       })
@@ -407,7 +418,13 @@ describe('Auth Context Unit Tests', () => {
     it('should handle failed login flow', async () => {
       const mockErrorResponse: AuthResponse = {
         data: { user: null, session: null },
-        error: { message: 'Invalid credentials', name: 'AuthError', status: 400 },
+        error: { 
+          message: 'Invalid credentials', 
+          name: 'AuthError', 
+          status: 400,
+          code: 'invalid_credentials',
+          __isAuthError: true
+        } as any,
       }
 
       mockAuth.signInWithPassword.mockResolvedValue(mockErrorResponse)
@@ -463,7 +480,7 @@ describe('Auth Context Unit Tests', () => {
       mockAuth.signOut.mockResolvedValue({ error: null })
 
       let authStateCallback: any
-      mockAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockAuth.onAuthStateChange.mockImplementation((callback: any) => {
         authStateCallback = callback
         return { data: { subscription: { unsubscribe: vi.fn() } } }
       })
@@ -622,7 +639,7 @@ describe('Auth Context Unit Tests', () => {
 
     it('should handle auth state changes from external sources', async () => {
       let authStateCallback: any
-      mockAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockAuth.onAuthStateChange.mockImplementation((callback: any) => {
         authStateCallback = callback
         return { data: { subscription: { unsubscribe: vi.fn() } } }
       })
@@ -840,7 +857,7 @@ describe('Auth Context Unit Tests', () => {
       })
 
       let authStateCallback: any
-      mockAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockAuth.onAuthStateChange.mockImplementation((callback: any) => {
         authStateCallback = callback
         return { data: { subscription: { unsubscribe: vi.fn() } } }
       })
@@ -926,7 +943,7 @@ describe('Auth Context Unit Tests', () => {
       })
 
       let authStateCallback: any
-      mockAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockAuth.onAuthStateChange.mockImplementation((callback: any) => {
         authStateCallback = callback
         return { data: { subscription: { unsubscribe: vi.fn() } } }
       })
@@ -1007,7 +1024,7 @@ describe('Auth Context Unit Tests', () => {
       })
 
       let authStateCallback: any
-      mockAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockAuth.onAuthStateChange.mockImplementation((callback: any) => {
         authStateCallback = callback
         return { data: { subscription: { unsubscribe: vi.fn() } } }
       })

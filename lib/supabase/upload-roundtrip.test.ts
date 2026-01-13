@@ -70,7 +70,7 @@ describe('Upload Storage Round-trip Property Tests', () => {
    */
   it('Property 2: Upload Storage Round-trip - valid uploads can be stored and retrieved', async () => {
     await fc.assert(
-      fc.property(
+      fc.asyncProperty(
         // Generate valid artwork data
         fc.record({
           title: fc.string({ minLength: 1, maxLength: 100 }).filter(s => s.trim().length > 0),
@@ -251,7 +251,7 @@ describe('Upload Storage Round-trip Property Tests', () => {
    */
   it('Property 2 (Extended): Upload Storage Round-trip handles edge cases correctly', async () => {
     await fc.assert(
-      fc.property(
+      fc.asyncProperty(
         fc.record({
           // Test edge case titles and descriptions
           title: fc.oneof(
