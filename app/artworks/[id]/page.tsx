@@ -11,9 +11,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { createClient } from "@/lib/supabase/client"
+import { useRealtimeArtworks } from "@/hooks/use-realtime-artworks"
 import { ArtworkRecord } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
+import { LiveViewCounter } from "@/components/ui/live-view-counter"
 import { ArrowLeft, Eye, Heart, Share2, Calendar, User, AlertCircle, RefreshCw } from "lucide-react"
 
 export default function ArtworkDetailPage() {
@@ -25,6 +27,21 @@ export default function ArtworkDetailPage() {
   const [viewCountUpdated, setViewCountUpdated] = useState(false)
 
   const supabase = createClient()
+
+  // Real-time updates for view count changes on this specific artwork
+  useRealtimeArtworks({
+    onViewCountUpdate: (artworkId, newViewCount) => {
+      if (artwork && artworkId === artwork.id) {
+        setArtwork(prev => prev ? { ...prev, view_count: newViewCount } : null)
+      }
+    },
+    onArtworkUpdate: (updatedArtwork) => {
+      if (artwork && updatedArtwork.id === artwork.id) {
+        setArtwork(updatedArtwork)
+      }
+    },
+    enabled: !!artwork // Only enable when we have an artwork loaded
+  })
 
   const fetchArtwork = async () => {
     try {
@@ -249,15 +266,9 @@ export default function ArtworkDetailPage() {
                     </div>
                   </div>
                   
-                  <div className="glass rounded-lg p-4">
-                    <div className="flex items-center gap-2 text-gray-400 mb-1">
-                      <Eye className="w-4 h-4" />
-                      <span>Views</span>
-                    </div>
-                    <div className="font-medium text-white">
-                      {artwork.view_count.toLocaleString()}
-                    </div>
-                  </div>
+                  <LiveViewCounter 
+                    viewCount={artwork.view_count}
+                  />
 
                   <div className="glass rounded-lg p-4">
                     <div className="flex items-center gap-2 text-gray-400 mb-1">

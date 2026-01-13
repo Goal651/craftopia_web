@@ -5,6 +5,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { CartProvider } from "@/contexts/cart-context"
 import { AuthProvider } from "@/contexts/auth-context"
+import { ImagePerformanceProvider } from "@/components/ui/image-performance-monitor"
 import { Navbar } from "@/components/layout/navbar"
 import { Toaster } from "@/components/ui/sonner"
 import { AppErrorBoundary } from "@/components/error-boundaries"
@@ -96,21 +97,23 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange={false}>
             <AuthProvider>
               <CartProvider>
-                <div className="relative min-h-screen">
-                  <Navbar />
-                  <main className="relative">{children}</main>
-                  <Toaster
-                    position="top-right"
-                    toastOptions={{
-                      style: {
-                        background: "rgba(255, 255, 255, 0.1)",
-                        backdropFilter: "blur(20px)",
-                        border: "1px solid rgba(255, 255, 255, 0.2)",
-                        color: "var(--foreground)",
-                      },
-                    }}
-                  />
-                </div>
+                <ImagePerformanceProvider>
+                  <div className="relative min-h-screen">
+                    <Navbar />
+                    <main className="relative">{children}</main>
+                    <Toaster
+                      position="top-right"
+                      toastOptions={{
+                        style: {
+                          background: "rgba(255, 255, 255, 0.1)",
+                          backdropFilter: "blur(20px)",
+                          border: "1px solid rgba(255, 255, 255, 0.2)",
+                          color: "var(--foreground)",
+                        },
+                      }}
+                    />
+                  </div>
+                </ImagePerformanceProvider>
               </CartProvider>
             </AuthProvider>
           </ThemeProvider>

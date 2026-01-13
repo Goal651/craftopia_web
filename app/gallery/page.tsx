@@ -15,11 +15,14 @@ import { SearchHighlight } from "@/components/ui/search-highlight"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { createClient } from "@/lib/supabase/client"
 import { useArtworkSearch } from "@/hooks/use-artwork-search"
+import { useRealtimeArtworks } from "@/hooks/use-realtime-artworks"
 import { ArtworkRecord, ArtworkCategory } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { GalleryErrorBoundary } from '@/components/error-boundaries'
-import { ArtworkImage } from '@/components/ui/image-fallback'
-import { Eye, Heart, ChevronLeft, ChevronRight, AlertCircle, Palette, RefreshCw, Search as SearchIcon, Filter } from "lucide-react"
+import { ArtworkImage } from '@/components/ui/artwork-image'
+import { ImagePerformanceMonitor } from '@/components/ui/image-performance-monitor'
+import { RealtimeNotification } from '@/components/ui/realtime-notification'
+import { Eye, Heart, ChevronLeft, ChevronRight, AlertCircle, Palette, RefreshCw, Search as SearchIcon, Filter, Wifi, WifiOff } from "lucide-react"
 
 const ITEMS_PER_PAGE = 12
 
@@ -60,6 +63,8 @@ export default function PublicGalleryPage() {
   const [retryCount, setRetryCount] = useState(0)
   const [isSearchMode, setIsSearchMode] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<ArtworkCategory | 'all'>('all')
+  const [realtimeEnabled, setRealtimeEnabled] = useState(true)
+  const [newArtworkNotification, setNewArtworkNotification] = useState<ArtworkRecord | null>(null)
 
   // Initialize from URL parameters
   useEffect(() => {
@@ -94,6 +99,61 @@ export default function PublicGalleryPage() {
   })
 
   const supabase = createClient()
+
+  // Real-time updates for new artworks and view count changes
+  const { isConnected: realtimeConnected, error: realtimeError, reconnect: reconnectRealtime } = useRealtimeArtworks({
+    onNewArtwork: (newArtwork) => {
+      // Show notification for new artwork
+      setNewArtworkNotification(newArtwork)
+      
+      // Only add to gallery if not in search mode and matches current category filter
+      if (!isSearchMode && (selectedCategory === 'all' || newArtwork.category === selectedCategory)) {
+        setArtworks(prev => {
+          // Check if artwork already exists to prevent duplicates
+          if (prev.some(artwork => artwork.id === newArtwork.id)) {
+            return prev
+          }
+          // Add new artwork to the beginning of the list
+          return [newArtwork, ...prev]
+        })
+        
+        // Update pagination info
+        setPagination(prev => ({
+          ...prev,
+          totalItems: prev.totalItems + 1,
+          totalPages: Math.ceil((prev.totalItems + 1) / ITEMS_PER_PAGE)
+        }))
+      }
+    },
+    onArtworkUpdate: (updatedArtwork) => {
+      // Update artwork in current list if it exists
+      setArtworks(prev => prev.map(artwork => 
+        artwork.id === updatedArtwork.id ? updatedArtwork : artwork
+      ))
+    },
+    onArtworkDelete: (artworkId) => {
+      // Remove artwork from current list
+      setArtworks(prev => {
+        const filtered = prev.filter(artwork => artwork.id !== artworkId)
+        // Update pagination if we removed an item
+        if (filtered.length !== prev.length) {
+          setPagination(prevPag => ({
+            ...prevPag,
+            totalItems: Math.max(0, prevPag.totalItems - 1),
+            totalPages: Math.ceil(Math.max(0, prevPag.totalItems - 1) / ITEMS_PER_PAGE)
+          }))
+        }
+        return filtered
+      })
+    },
+    onViewCountUpdate: (artworkId, newViewCount) => {
+      // Update view count for specific artwork
+      setArtworks(prev => prev.map(artwork => 
+        artwork.id === artworkId ? { ...artwork, view_count: newViewCount } : artwork
+      ))
+    },
+    enabled: realtimeEnabled && !isSearchMode // Only enable for gallery view, not search
+  })
 
   const fetchArtworks = async (page: number = 1, category: ArtworkCategory | 'all' = 'all') => {
     try {
@@ -520,6 +580,37 @@ export default function PublicGalleryPage() {
             />
           </div>
 
+          {/* Real-time Connection Status */}
+          {realtimeEnabled && !isSearchMode && (
+            <div className="flex justify-center">
+              <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs ${
+                realtimeConnected 
+                  ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                  : 'bg-red-500/20 text-red-400 border border-red-500/30'
+              }`}>
+                {realtimeConnected ? (
+                  <>
+                    <Wifi className="w-3 h-3" />
+                    <span>Live updates active</span>
+                  </>
+                ) : (
+                  <>
+                    <WifiOff className="w-3 h-3" />
+                    <span>Reconnecting...</span>
+                    {realtimeError && (
+                      <button
+                        onClick={reconnectRealtime}
+                        className="ml-2 underline hover:no-underline"
+                      >
+                        Retry
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Category Filter */}
           <div className="flex justify-center">
             <div className="glass-card rounded-2xl p-4">
@@ -694,6 +785,20 @@ export default function PublicGalleryPage() {
           )}
         </motion.div>
       </div>
+      
+      {/* Image Performance Monitor (development only) */}
+      <ImagePerformanceMonitor showDetails={true} />
+      
+      {/* Real-time New Artwork Notification */}
+      <RealtimeNotification
+        newArtwork={newArtworkNotification}
+        onDismiss={() => setNewArtworkNotification(null)}
+        onView={() => {
+          if (newArtworkNotification) {
+            router.push(`/gallery/${newArtworkNotification.id}`)
+          }
+        }}
+      />
     </div>
     </GalleryErrorBoundary>
   )

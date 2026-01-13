@@ -215,13 +215,13 @@ This implementation plan transforms the existing art gallery into a community-dr
     - _Requirements: 1.6, 3.5_
 
 - [ ] 11. Integration and performance optimization
-  - [-] 11.1 Optimize image loading and display
+  - [x] 11.1 Optimize image loading and display
     - Implement progressive image loading
     - Add image optimization and resizing
     - Create responsive image components
     - _Requirements: 2.2, 3.1_
 
-  - [ ] 11.2 Add real-time updates
+  - [x] 11.2 Add real-time updates
     - Implement Supabase real-time subscriptions
     - Update gallery when new artworks are uploaded
     - Add live view count updates
