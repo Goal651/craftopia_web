@@ -1,8 +1,10 @@
 "use client"
 
-import { useState } from "react"
-import Image from "next/image"
+import { useState, useCallback } from "react"
+import { OptimizedArtworkImage } from "./optimized-image"
+import { ResponsiveArtworkImage } from "./responsive-image"
 import { ArtworkGenerator } from "./artwork-generator"
+import { cn } from "@/lib/utils"
 
 interface ArtworkImageProps {
   src?: string
@@ -11,8 +13,17 @@ interface ArtworkImageProps {
   category?: string
   width?: number
   height?: number
+  fill?: boolean
   className?: string
   priority?: boolean
+  sizes?: string
+  aspectRatio?: string
+  variant?: 'galleryCard' | 'artworkDetail' | 'hero' | 'avatar'
+  enableOptimizations?: boolean
+  showLoadingTime?: boolean
+  maxRetries?: number
+  onLoad?: () => void
+  onError?: (error: string) => void
 }
 
 export function ArtworkImage({ 
@@ -22,13 +33,22 @@ export function ArtworkImage({
   category = "abstract",
   width = 400, 
   height = 400,
+  fill = false,
   className = "",
-  priority = false
+  priority = false,
+  sizes,
+  aspectRatio,
+  variant = 'galleryCard',
+  enableOptimizations = true,
+  showLoadingTime = false,
+  maxRetries = 2,
+  onLoad,
+  onError
 }: ArtworkImageProps) {
   const [imageError, setImageError] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState(false)
+  const [showFallback, setShowFallback] = useState(false)
 
-  // Convert category to artwork style
+  // Convert category to artwork style for fallback generator
   const getArtworkStyle = (cat: string): "abstract" | "digital" | "painting" | "sculpture" | "photography" | "mixed" => {
     const lowerCat = cat.toLowerCase()
     if (lowerCat.includes('digital')) return 'digital'
@@ -42,10 +62,22 @@ export function ArtworkImage({
   // Generate a seed from the title for consistent artwork generation
   const seed = title + category
 
-  // If no src provided or image failed to load, show generated artwork
-  if (!src || imageError) {
+  const handleImageError = useCallback((error: string) => {
+    setImageError(true)
+    setShowFallback(true)
+    onError?.(error)
+  }, [onError])
+
+  const handleImageLoad = useCallback(() => {
+    setImageError(false)
+    setShowFallback(false)
+    onLoad?.()
+  }, [onLoad])
+
+  // If no src provided or image failed to load after retries, show generated artwork
+  if (!src || showFallback) {
     return (
-      <div className={`relative overflow-hidden ${className}`}>
+      <div className={cn("relative overflow-hidden", className)}>
         <ArtworkGenerator
           seed={seed}
           width={width}
@@ -53,38 +85,53 @@ export function ArtworkImage({
           style={getArtworkStyle(category)}
           className="w-full h-full"
         />
+        {/* Overlay to indicate this is a fallback */}
+        <div className="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+          <div className="glass rounded px-2 py-1 text-xs text-white/80">
+            Generated Artwork
+          </div>
+        </div>
       </div>
     )
   }
 
-  return (
-    <div className={`relative overflow-hidden ${className}`}>
-      {/* Show generated artwork while loading */}
-      {!imageLoaded && (
-        <div className="absolute inset-0">
-          <ArtworkGenerator
-            seed={seed}
-            width={width}
-            height={height}
-            style={getArtworkStyle(category)}
-            className="w-full h-full"
-          />
-        </div>
-      )}
-      
-      {/* Actual image */}
-      <Image
+  // Use optimized responsive image if optimizations are enabled
+  if (enableOptimizations) {
+    return (
+      <ResponsiveArtworkImage
         src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        className={`w-full h-full object-cover transition-opacity duration-300 ${
-          imageLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
+        artworkTitle={title}
+        category={category}
+        variant={variant}
+        className={className}
         priority={priority}
-        onLoad={() => setImageLoaded(true)}
-        onError={() => setImageError(true)}
+        aspectRatio={aspectRatio}
+        onLoad={handleImageLoad}
+        onError={handleImageError}
+        showLoadingTime={showLoadingTime}
       />
-    </div>
+    )
+  }
+
+  // Fallback to optimized image without responsive features
+  return (
+    <OptimizedArtworkImage
+      src={src}
+      artworkTitle={title}
+      category={category}
+      width={width}
+      height={height}
+      fill={fill}
+      className={className}
+      sizes={sizes}
+      priority={priority}
+      aspectRatio={aspectRatio}
+      onLoad={handleImageLoad}
+      onError={handleImageError}
+      showLoadingTime={showLoadingTime}
+      maxRetries={maxRetries}
+      enableProgressiveLoading={true}
+      enableLazyLoading={!priority}
+    />
   )
 }

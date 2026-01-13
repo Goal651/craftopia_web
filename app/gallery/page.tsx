@@ -256,12 +256,16 @@ export default function PublicGalleryPage() {
             <ArtworkImage
               src={artwork.image_url}
               alt={artwork.title}
-              artworkTitle={artwork.title}
+              title={artwork.title}
+              category={artwork.category}
               fill
               className="object-cover transition-transform duration-700 group-hover:scale-110"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              variant="galleryCard"
+              enableOptimizations={true}
+              aspectRatio="3/4"
               maxRetries={2}
-              showRetryInfo={process.env.NODE_ENV === 'development'}
+              showLoadingTime={process.env.NODE_ENV === 'development'}
             />
 
             {/* Overlay */}

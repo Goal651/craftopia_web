@@ -14,6 +14,7 @@ import { getArtistStats, getArtistArtworks, generatePageNumbers } from "@/lib/su
 import { ArtworkRecord, UserProfile } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
+import { ArtworkImage } from "@/components/ui/artwork-image"
 import { 
   ArrowLeft, 
   Eye, 
@@ -246,12 +247,17 @@ export default function ArtistProfilePage() {
                 <div className="flex-shrink-0">
                   <div className="w-32 h-32 rounded-full overflow-hidden glass">
                     {artist.avatar_url ? (
-                      <Image
+                      <ArtworkImage
                         src={artist.avatar_url}
                         alt={artist.display_name}
+                        title={artist.display_name}
+                        category="avatar"
                         width={128}
                         height={128}
                         className="w-full h-full object-cover"
+                        variant="avatar"
+                        enableOptimizations={true}
+                        aspectRatio="1/1"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-500/20">
@@ -367,16 +373,17 @@ export default function ArtistProfilePage() {
                         <Card className="group cursor-pointer overflow-hidden border-0 glass-card card-hover">
                           <Link href={`/gallery/${artwork.id}`}>
                             <div className="relative aspect-[3/4] overflow-hidden">
-                              <Image
+                              <ArtworkImage
                                 src={artwork.image_url}
                                 alt={artwork.title}
+                                title={artwork.title}
+                                category={artwork.category}
                                 fill
                                 className="object-cover transition-transform duration-700 group-hover:scale-110"
                                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                                onError={(e) => {
-                                  const target = e.target as HTMLImageElement
-                                  target.src = "/placeholder.svg?height=400&width=300"
-                                }}
+                                variant="galleryCard"
+                                enableOptimizations={true}
+                                aspectRatio="3/4"
                               />
 
                               {/* Overlay */}

@@ -14,6 +14,7 @@ import { createClient } from "@/lib/supabase/client"
 import { ArtworkRecord } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
+import { ArtworkImage } from "@/components/ui/artwork-image"
 import { ArrowLeft, Eye, Heart, Share2, Calendar, User, AlertCircle, RefreshCw } from "lucide-react"
 
 export default function GalleryArtworkDetailPage() {
@@ -185,17 +186,19 @@ export default function GalleryArtworkDetailPage() {
             {/* Image */}
             <div className="space-y-4">
               <div className="aspect-square relative overflow-hidden rounded-lg glass">
-                <Image
+                <ArtworkImage
                   src={artwork.image_url}
                   alt={artwork.title}
+                  title={artwork.title}
+                  category={artwork.category}
                   fill
                   className="object-cover"
                   priority
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.src = "/placeholder.svg?height=600&width=600"
-                  }}
+                  variant="artworkDetail"
+                  enableOptimizations={true}
+                  aspectRatio="1/1"
+                  showLoadingTime={process.env.NODE_ENV === 'development'}
                 />
               </div>
             </div>
