@@ -14,11 +14,11 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRouteProps) {
-  const { user, isLoading, isAdmin } = useAuth()
+  const { user, loading, isAdmin } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!loading) {
       if (!user) {
         router.push("/login")
         return
@@ -29,9 +29,9 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
         return
       }
     }
-  }, [user, isLoading, requireAdmin, isAdmin, router])
+  }, [user, loading, requireAdmin, isAdmin, router])
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="w-96">

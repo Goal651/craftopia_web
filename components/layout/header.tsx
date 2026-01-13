@@ -40,7 +40,7 @@ export function Header() {
   const [mounted, setMounted] = useState(false)
   const { theme, setTheme } = useTheme()
   const { state } = useCart()
-  const { user, logout, isAdmin } = useAuth()
+  const { user, signOut, isAdmin } = useAuth()
   const pathname = usePathname()
 
   // Safe calculation of item count with fallback
@@ -175,10 +175,10 @@ export function Header() {
                         <User className="h-5 w-5 text-white" />
                       </div>
                       <div className="flex flex-col space-y-1 leading-none">
-                        <p className="font-semibold text-white">{user.name}</p>
+                        <p className="font-semibold text-white">{user.user_metadata?.display_name || user.email}</p>
                         <p className="text-xs text-gray-400">{user.email}</p>
                         <Badge variant="secondary" className="w-fit text-xs mt-1 bg-gray-700 text-gray-300">
-                          {user.role}
+                          User
                         </Badge>
                       </div>
                     </div>
@@ -200,7 +200,7 @@ export function Header() {
                         <DropdownMenuSeparator className="bg-gray-600" />
                       </>
                     )}
-                    <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-400 hover:text-red-300">
+                    <DropdownMenuItem onClick={signOut} className="cursor-pointer text-red-400 hover:text-red-300">
                       <LogOut className="mr-3 h-4 w-4" />
                       Sign Out
                     </DropdownMenuItem>
@@ -303,7 +303,7 @@ export function Header() {
                           <User className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                          <p className="font-semibold text-white">{user.name}</p>
+                          <p className="font-semibold text-white">{user.user_metadata?.display_name || user.email}</p>
                           <p className="text-xs text-gray-400">{user.email}</p>
                         </div>
                       </div>
@@ -330,7 +330,7 @@ export function Header() {
 
                       <button
                         onClick={() => {
-                          logout()
+                          signOut()
                           setIsMobileMenuOpen(false)
                         }}
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 transition-colors text-red-400 hover:text-red-300 w-full touch-target"

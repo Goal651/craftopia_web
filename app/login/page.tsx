@@ -21,7 +21,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const { login } = useAuth()
+  const { signIn } = useAuth()
   const router = useRouter()
 
   // Scroll to top when component mounts
@@ -35,11 +35,11 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const success = await login(email, password)
-      if (success) {
+      const response = await signIn(email, password)
+      if (!response.error && response.data.user) {
         router.push("/")
       } else {
-        setError("Invalid email or password. Please check your credentials and try again.")
+        setError(response.error?.message || "Invalid email or password. Please check your credentials and try again.")
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again later.")
@@ -59,7 +59,7 @@ export default function LoginPage() {
     },
     {
       type: "Customer Access",
-      email: "customer@example.com",
+      email: "user@example.com",
       password: "password123",
       description: "Browse collection, add to cart, and make purchases",
       icon: Users,

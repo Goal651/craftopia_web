@@ -1,5 +1,6 @@
 {
     "editor.codeLensFontFamily": "'MesloLGL Nerd Font Mono'",
     "editor.inlayHints.fontFamily": "'MesloLGL Nerd Font Mono'",
-    "terminal.integrated.fontFamily": "'MesloLGL Nerd Font Mono'"
+    "terminal.integrated.fontFamily": "'MesloLGL Nerd Font Mono'",
+    "kiroAgent.configureMCP": "Disabled"
 }

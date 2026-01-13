@@ -39,7 +39,8 @@ import {
 
 const navigation = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Gallery", href: "/artworks", icon: ImageIcon },
+  { name: "Curated Collection", href: "/artworks", icon: ImageIcon },
+  { name: "Community Gallery", href: "/gallery", icon: Palette },
   { name: "About", href: "/about", icon: Info },
   { name: "Contact", href: "/contact", icon: Mail },
 ]
@@ -48,9 +49,10 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
   const { theme, setTheme } = useTheme()
   const { state } = useCart()
-  const { user, logout, isAdmin } = useAuth()
+  const { user, signOut, isAdmin } = useAuth()
   const pathname = usePathname()
 
   const itemCount = state?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0
@@ -186,7 +188,7 @@ export function Navbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 glass-strong border-0">
                 <div className="px-2 py-1.5">
-                  <p className="text-sm font-medium text-white">{user.name}</p>
+                  <p className="text-sm font-medium text-white">{user.user_metadata?.display_name || user.email}</p>
                   <p className="text-xs text-gray-400">{user.email}</p>
                 </div>
                 <DropdownMenuSeparator className="bg-gray-600" />
@@ -205,7 +207,7 @@ export function Navbar() {
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator className="bg-gray-600" />
-                <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-400 hover:text-red-300">
+                <DropdownMenuItem onClick={signOut} className="cursor-pointer text-red-400 hover:text-red-300">
                   <LogOut className="w-4 h-4 mr-2" />
                   Logout
                 </DropdownMenuItem>
@@ -323,7 +325,7 @@ export function Navbar() {
                   {user ? (
                     <div className="space-y-2">
                       <div className="px-3 py-2">
-                        <p className="text-sm font-medium text-white">{user.name}</p>
+                        <p className="text-sm font-medium text-white">{user.user_metadata?.display_name || user.email}</p>
                         <p className="text-xs text-gray-400">{user.email}</p>
                       </div>
                       <Link
@@ -346,7 +348,7 @@ export function Navbar() {
                       )}
                       <button
                         onClick={() => {
-                          logout()
+                          signOut()
                           setIsOpen(false)
                         }}
                         className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-white/10 text-red-400 hover:text-red-300 w-full text-left"

@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ProductModal } from "@/components/product-modal"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { sampleArtworks } from "@/lib/data"
 import { Search, Grid, List, Heart, Eye, ShoppingCart, Star, Filter } from "lucide-react"
 
@@ -88,6 +89,13 @@ export default function ArtworksPage() {
     <div className="min-h-screen pt-20 bg-black">
       <div className="container mx-auto container-padding py-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+          {/* Breadcrumb Navigation */}
+          <BreadcrumbNav 
+            items={[
+              { label: "Curated Collection", current: true }
+            ]}
+          />
+
           {/* Header */}
           <div className="text-center space-y-4">
             <h1 className="text-4xl lg:text-5xl font-light text-white">

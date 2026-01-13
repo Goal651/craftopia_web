@@ -7,6 +7,7 @@ import { CartProvider } from "@/contexts/cart-context"
 import { AuthProvider } from "@/contexts/auth-context"
 import { Navbar } from "@/components/layout/navbar"
 import { Toaster } from "@/components/ui/sonner"
+import { AppErrorBoundary } from "@/components/error-boundaries"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -80,27 +81,40 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange={false}>
-          <AuthProvider>
-            <CartProvider>
-              <div className="relative min-h-screen">
-                <Navbar />
-                <main className="relative">{children}</main>
-                <Toaster
-                  position="top-right"
-                  toastOptions={{
-                    style: {
-                      background: "rgba(255, 255, 255, 0.1)",
-                      backdropFilter: "blur(20px)",
-                      border: "1px solid rgba(255, 255, 255, 0.2)",
-                      color: "var(--foreground)",
-                    },
-                  }}
-                />
-              </div>
-            </CartProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <AppErrorBoundary
+          onError={(error, errorInfo, errorId) => {
+            console.error('App-level error:', error, errorInfo, errorId)
+            // In production, send to error tracking service
+            // errorTrackingService.captureException(error, {
+            //   tags: { errorId, level: 'app' },
+            //   extra: errorInfo
+            // })
+          }}
+          resetOnPropsChange={true}
+          resetKeys={[]} // Add keys that should trigger reset when changed
+        >
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange={false}>
+            <AuthProvider>
+              <CartProvider>
+                <div className="relative min-h-screen">
+                  <Navbar />
+                  <main className="relative">{children}</main>
+                  <Toaster
+                    position="top-right"
+                    toastOptions={{
+                      style: {
+                        background: "rgba(255, 255, 255, 0.1)",
+                        backdropFilter: "blur(20px)",
+                        border: "1px solid rgba(255, 255, 255, 0.2)",
+                        color: "var(--foreground)",
+                      },
+                    }}
+                  />
+                </div>
+              </CartProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </AppErrorBoundary>
       </body>
     </html>
   )

@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { MagneticButton } from "@/components/ui/magnetic-button"
 import { Card3D } from "@/components/ui/card-3d"
 import { ArtworkImage } from "@/components/ui/artwork-image"
+import { GalleryNav } from "@/components/ui/gallery-nav"
 import { useCart } from "@/contexts/cart-context"
 import { getArtworkImage, categoryImages } from "@/lib/generate-images"
 import { ArrowRight, Star, ShoppingCart, Heart, Eye, Sparkles, TrendingUp, Users, Award } from "lucide-react"
@@ -245,6 +246,36 @@ export default function HomePage() {
               />
             </motion.div>
           ))}
+        </div>
+      </section>
+
+      {/* Gallery Navigation Section */}
+      <section className="py-16 lg:py-24">
+        <div className="container-padding">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <Badge className="mb-6 glass px-4 py-2">Explore Our Galleries</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Choose Your <span className="text-gradient-blue">Art Journey</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Discover curated masterpieces or explore community-driven creativity
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <GalleryNav />
+          </motion.div>
         </div>
       </section>
 
