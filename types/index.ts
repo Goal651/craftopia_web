@@ -29,6 +29,18 @@ export interface CartItem {
   quantity: number
 }
 
+// Alternative cart item for checkout
+export interface CheckoutCartItem {
+  id: string
+  artwork_id: string
+  quantity: number
+  artwork: {
+    id: string
+    title: string
+    price: number
+  }
+}
+
 export interface Order {
   id: string
   userId: string
@@ -56,6 +68,7 @@ export interface ArtworkRecord {
   artist_id: string
   artist_name: string
   created_at: string
+  updated_at: string
   view_count: number
 }
 
@@ -84,4 +97,7 @@ export interface UserProfile {
   bio?: string | null
   created_at: string
   updated_at: string
+  // Extended properties for artist stats
+  artwork_count?: number
+  total_views?: number
 }

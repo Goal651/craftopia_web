@@ -193,6 +193,7 @@ export async function POST(request: NextRequest) {
       artist_id: artwork.artist_id,
       artist_name: artwork.artist_name,
       created_at: artwork.created_at,
+      updated_at: artwork.updated_at,
       view_count: artwork.view_count
     }
 

@@ -11,7 +11,15 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { createClient } from "@/lib/supabase/client"
-import { ArtworkRecord } from "@/types/index"
+import { ArtworkRecord, ArtworkCategory } from "@/types/index"
+
+// Type assertion function to ensure category is valid
+function assertArtworkRecord(data: any): ArtworkRecord {
+  return {
+    ...data,
+    category: data.category as ArtworkCategory
+  }
+}
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
 import { ArtworkImage } from "@/components/ui/artwork-image"
@@ -32,10 +40,12 @@ export default function GalleryArtworkDetailPage() {
       setLoading(true)
       setError(null)
 
+      const artworkId = Array.isArray(params.id) ? params.id[0] : params.id
+
       const { data, error: fetchError } = await supabase
         .from('artworks')
         .select('*')
-        .eq('id', params.id)
+        .eq('id', artworkId)
         .single()
 
       if (fetchError) {
@@ -45,13 +55,13 @@ export default function GalleryArtworkDetailPage() {
         throw new Error(`Failed to fetch artwork: ${fetchError.message}`)
       }
 
-      setArtwork(data)
+      setArtwork(assertArtworkRecord(data))
 
       // Fetch related artworks (same category or same artist, excluding current artwork)
       const { data: related, error: relatedError } = await supabase
         .from('artworks')
         .select('*')
-        .neq('id', params.id)
+        .neq('id', artworkId)
         .or(`category.eq.${data.category},artist_id.eq.${data.artist_id}`)
         .order('created_at', { ascending: false })
         .limit(4)
@@ -59,7 +69,7 @@ export default function GalleryArtworkDetailPage() {
       if (relatedError) {
         console.warn('Failed to fetch related artworks:', relatedError.message)
       } else {
-        setRelatedArtworks(related || [])
+        setRelatedArtworks((related || []).map(assertArtworkRecord))
       }
 
     } catch (err) {

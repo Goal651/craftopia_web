@@ -73,6 +73,7 @@
     "@types/piexifjs": "^1.0.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/three": "^0.182.0",
     "@vitejs/plugin-react": "^5.1.2",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.56.0",

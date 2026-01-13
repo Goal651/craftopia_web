@@ -80,6 +80,7 @@ describe('useRealtimeArtworks', () => {
       artist_id: 'artist1',
       artist_name: 'Test Artist',
       created_at: '2024-01-01',
+      updated_at: '2024-01-01',
       view_count: 0
     }
     
@@ -110,6 +111,7 @@ describe('useRealtimeArtworks', () => {
       artist_id: 'artist1',
       artist_name: 'Test Artist',
       created_at: '2024-01-01',
+      updated_at: '2024-01-01',
       view_count: 5
     }
     
@@ -145,6 +147,7 @@ describe('useRealtimeArtworks', () => {
       artist_id: 'artist1',
       artist_name: 'Test Artist',
       created_at: '2024-01-01',
+      updated_at: '2024-01-01',
       view_count: 5
     }
     

@@ -17,6 +17,14 @@ import { createClient } from "@/lib/supabase/client"
 import { useArtworkSearch } from "@/hooks/use-artwork-search"
 import { useRealtimeArtworks } from "@/hooks/use-realtime-artworks"
 import { ArtworkRecord, ArtworkCategory } from "@/types/index"
+
+// Type assertion function to ensure category is valid
+function assertArtworkRecord(data: any): ArtworkRecord {
+  return {
+    ...data,
+    category: data.category as ArtworkCategory
+  }
+}
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { GalleryErrorBoundary } from '@/components/error-boundaries'
 import { ArtworkImage } from '@/components/ui/artwork-image'
@@ -200,7 +208,7 @@ export default function PublicGalleryPage() {
       const totalItems = count || 0
       const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE)
 
-      setArtworks(data || [])
+      setArtworks((data || []).map(assertArtworkRecord))
       setPagination({
         currentPage: page,
         totalPages,

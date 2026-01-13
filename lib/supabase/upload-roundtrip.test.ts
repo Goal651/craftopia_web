@@ -228,6 +228,7 @@ describe('Upload Storage Round-trip Property Tests', () => {
             artist_id: retrievedArtwork.artist_id,
             artist_name: retrievedArtwork.artist_name,
             created_at: retrievedArtwork.created_at,
+            updated_at: retrievedArtwork.updated_at,
             view_count: retrievedArtwork.view_count
           }
 

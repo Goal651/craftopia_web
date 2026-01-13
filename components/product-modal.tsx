@@ -18,7 +18,7 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
   const [quantity, setQuantity] = useState(1)
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [isZoomed, setIsZoomed] = useState(false)
-  const { dispatch } = useCart()
+  const { addItem } = useCart()
   const { toast } = useToast()
 
   // Lock body scroll when modal is open
@@ -30,19 +30,13 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
   }, [])
 
   const handleAddToCart = () => {
-    dispatch({
-      type: "ADD_ITEM",
-      payload: {
-        id: artwork.id,
-        title: artwork.title,
-        price: artwork.price,
-        image: artwork.images[0],
-        quantity,
-      },
-    })
-    toast({
-      title: "Added to Cart",
-      description: `${artwork.title} has been added to your cart.`,
+    addItem({
+      id: artwork.id,
+      title: artwork.title,
+      artist: artwork.artist,
+      price: artwork.price,
+      image: artwork.images[0],
+      stock: artwork.stockQuantity,
     })
     onClose()
   }

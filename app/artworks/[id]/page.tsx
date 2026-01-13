@@ -8,11 +8,19 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+
+// Type assertion function to ensure category is valid
+function assertArtworkRecord(data: any): ArtworkRecord {
+  return {
+    ...data,
+    category: data.category as ArtworkCategory
+  }
+}
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { createClient } from "@/lib/supabase/client"
 import { useRealtimeArtworks } from "@/hooks/use-realtime-artworks"
-import { ArtworkRecord } from "@/types/index"
+import { ArtworkRecord, ArtworkCategory } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
 import { LiveViewCounter } from "@/components/ui/live-view-counter"
@@ -48,10 +56,12 @@ export default function ArtworkDetailPage() {
       setLoading(true)
       setError(null)
 
+      const artworkId = Array.isArray(params.id) ? params.id[0] : params.id
+
       const { data, error: fetchError } = await supabase
         .from('artworks')
         .select('*')
-        .eq('id', params.id)
+        .eq('id', artworkId)
         .single()
 
       if (fetchError) {
@@ -61,13 +71,13 @@ export default function ArtworkDetailPage() {
         throw new Error(`Failed to fetch artwork: ${fetchError.message}`)
       }
 
-      setArtwork(data)
+      setArtwork(assertArtworkRecord(data))
 
       // Fetch related artworks (same category or same artist, excluding current artwork)
       const { data: related, error: relatedError } = await supabase
         .from('artworks')
         .select('*')
-        .neq('id', params.id)
+        .neq('id', artworkId)
         .or(`category.eq.${data.category},artist_id.eq.${data.artist_id}`)
         .order('created_at', { ascending: false })
         .limit(4)
@@ -75,7 +85,7 @@ export default function ArtworkDetailPage() {
       if (relatedError) {
         console.warn('Failed to fetch related artworks:', relatedError.message)
       } else {
-        setRelatedArtworks(related || [])
+        setRelatedArtworks((related || []).map(assertArtworkRecord))
       }
 
     } catch (err) {

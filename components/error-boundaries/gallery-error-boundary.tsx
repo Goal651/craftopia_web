@@ -1,7 +1,7 @@
 "use client"
 
 import React, { Component, ReactNode } from 'react'
-import { AlertTriangle, RefreshCw, Gallery, Home, Search } from 'lucide-react'
+import { AlertTriangle, RefreshCw, Image, Home, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -297,7 +297,7 @@ export class GalleryErrorBoundary extends Component<GalleryErrorBoundaryProps, G
                       variant="outline"
                       className="flex-1 glass border-0 bg-transparent text-white hover:bg-white/10"
                     >
-                      <Gallery className="w-4 h-4 mr-2" />
+                      <Image className="w-4 h-4 mr-2" />
                       Reload Gallery
                     </Button>
                     

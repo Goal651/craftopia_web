@@ -50,7 +50,7 @@ const artworkUploadSchema = z.object({
     'drawing',
     'other'
   ] as const, {
-    errorMap: () => ({ message: 'Please select a category' })
+    message: 'Please select a category'
   }),
   imageFile: z.instanceof(File, { message: 'Please select an image file' })
     .refine((file) => file.size <= 10 * 1024 * 1024, 'File size must be under 10MB')

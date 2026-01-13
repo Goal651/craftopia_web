@@ -262,12 +262,12 @@ export default function CheckoutPage() {
                   {/* Order Items */}
                   <div className="space-y-3 max-h-60 overflow-y-auto">
                     {state.items.map((item) => (
-                      <div key={item.artwork.id} className="flex justify-between items-center">
+                      <div key={item.id} className="flex justify-between items-center">
                         <div className="flex-1">
-                          <p className="font-medium text-sm">{item.artwork.title}</p>
+                          <p className="font-medium text-sm">{item.title}</p>
                           <p className="text-xs text-slate-500">Qty: {item.quantity}</p>
                         </div>
-                        <p className="font-semibold">${(item.artwork.price * item.quantity).toLocaleString()}</p>
+                        <p className="font-semibold">${(item.price * item.quantity).toLocaleString()}</p>
                       </div>
                     ))}
                   </div>

@@ -76,7 +76,7 @@ export async function paginateArtworks({
   const totalPages = Math.ceil(totalItems / limit)
 
   return {
-    data: data || [],
+    data: (data || []).map(item => ({ ...item, category: item.category as ArtworkCategory })),
     pagination: {
       currentPage: page,
       totalPages,
@@ -94,20 +94,38 @@ export async function paginateArtworks({
 export async function getArtistStats(artistId: string) {
   const supabase = createClient()
   
-  const { data, error } = await supabase
-    .from('artist_stats')
+  // Get user profile
+  const { data: profile, error: profileError } = await supabase
+    .from('user_profiles')
     .select('*')
     .eq('id', artistId)
     .single()
 
-  if (error) {
-    if (error.code === 'PGRST116') {
+  if (profileError) {
+    if (profileError.code === 'PGRST116') {
       throw new Error('Artist not found')
     }
-    throw new Error(`Failed to fetch artist stats: ${error.message}`)
+    throw new Error(`Failed to fetch artist profile: ${profileError.message}`)
   }
 
-  return data
+  // Get artwork count and total views
+  const { data: artworks, error: artworksError } = await supabase
+    .from('artworks')
+    .select('view_count')
+    .eq('artist_id', artistId)
+
+  if (artworksError) {
+    throw new Error(`Failed to fetch artist artworks: ${artworksError.message}`)
+  }
+
+  const artwork_count = artworks?.length || 0
+  const total_views = artworks?.reduce((sum, artwork) => sum + artwork.view_count, 0) || 0
+
+  return {
+    ...profile,
+    artwork_count,
+    total_views
+  }
 }
 
 /**
@@ -161,7 +179,7 @@ export async function searchArtworks({
   const totalPages = Math.ceil(totalItems / limit)
 
   return {
-    data: data || [],
+    data: (data || []).map(item => ({ ...item, category: item.category as ArtworkCategory })),
     pagination: {
       currentPage: page,
       totalPages,
