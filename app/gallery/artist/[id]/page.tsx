@@ -115,7 +115,9 @@ export default function ArtistProfilePage() {
         newSearchParams.delete('page')
       }
       
-      const newURL = `${window.location.pathname}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
+      const newURL = typeof window !== 'undefined' 
+        ? `${window.location.pathname}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}` 
+        : `?${newSearchParams.toString()}`
       router.replace(newURL, { scroll: false })
       
       // Fetch new page data

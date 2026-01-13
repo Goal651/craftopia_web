@@ -67,12 +67,7 @@ export default function UploadPage() {
   }
 
   return (
-    <UploadErrorBoundary
-      onError={(error, errorInfo) => {
-        console.error('Upload page error:', error, errorInfo)
-        // Could send to error tracking service here
-      }}
-    >
+    <UploadErrorBoundary>
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
         <div className="container mx-auto max-w-2xl pt-8">
           {/* Header */}

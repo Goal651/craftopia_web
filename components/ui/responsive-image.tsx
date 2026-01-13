@@ -290,7 +290,7 @@ export function generateOptimizedImageUrl(
   quality: number = 75,
   format?: 'webp' | 'jpeg' | 'png'
 ): string {
-  const url = new URL(baseUrl, window.location.origin)
+  const url = new URL(baseUrl, typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000')
   
   url.searchParams.set('w', width.toString())
   url.searchParams.set('q', quality.toString())

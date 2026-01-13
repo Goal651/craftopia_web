@@ -36,28 +36,15 @@ CREATE POLICY "Authenticated users can insert artworks" ON public.artworks
 
 -- Allow users to update their own artworks
 CREATE POLICY "Users can update own artworks" ON public.artworks
-  FOR UPDATE USING (auth.uid() = artist_id);
+  FOR UPDATE USING (auth.uid() = artist_id)
+  WITH CHECK (auth.uid() = artist_id);
+
+-- Allow anyone to update view counts (for public viewing analytics)
+-- This policy allows updating view_count for any artwork
+CREATE POLICY "Allow view count updates" ON public.artworks
+  FOR UPDATE USING (true)
+  WITH CHECK (true);
 
 -- Allow users to delete their own artworks
 CREATE POLICY "Users can delete own artworks" ON public.artworks
   FOR DELETE USING (auth.uid() = artist_id);
-
--- Special policy for view count updates (can be updated by anyone viewing)
--- This allows the system to increment view counts without authentication
-CREATE POLICY "Anyone can increment view count" ON public.artworks
-  FOR UPDATE USING (true)
-  WITH CHECK (
-    -- Only allow updating the view_count column
-    -- All other columns must remain unchanged
-    OLD.id = NEW.id
-    AND OLD.title = NEW.title
-    AND OLD.description = NEW.description
-    AND OLD.category = NEW.category
-    AND OLD.image_url = NEW.image_url
-    AND OLD.image_path = NEW.image_path
-    AND OLD.artist_id = NEW.artist_id
-    AND OLD.artist_name = NEW.artist_name
-    AND OLD.created_at = NEW.created_at
-    -- Only view_count and updated_at can change
-    AND NEW.view_count >= OLD.view_count
-  );

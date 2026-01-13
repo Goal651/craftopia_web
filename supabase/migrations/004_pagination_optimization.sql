@@ -18,10 +18,9 @@ WHERE category IS NOT NULL;
 -- This improves performance when sorting by view_count
 CREATE INDEX IF NOT EXISTS idx_artworks_view_count_created_at ON public.artworks(view_count DESC, created_at DESC);
 
--- Partial index for recent artworks (last 30 days)
--- This can speed up queries for recent content
-CREATE INDEX IF NOT EXISTS idx_artworks_recent ON public.artworks(created_at DESC) 
-WHERE created_at >= NOW() - INTERVAL '30 days';
+-- Regular index for recent artworks queries (without time-based predicate)
+-- This will help with queries that filter by creation date
+CREATE INDEX IF NOT EXISTS idx_artworks_recent ON public.artworks(created_at DESC);
 
 -- Index for user profiles display name (for artist search)
 CREATE INDEX IF NOT EXISTS idx_user_profiles_display_name ON public.user_profiles(display_name);

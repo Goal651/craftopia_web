@@ -83,14 +83,6 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} antialiased`}>
         <AppErrorBoundary
-          onError={(error, errorInfo, errorId) => {
-            console.error('App-level error:', error, errorInfo, errorId)
-            // In production, send to error tracking service
-            // errorTrackingService.captureException(error, {
-            //   tags: { errorId, level: 'app' },
-            //   extra: errorInfo
-            // })
-          }}
           resetOnPropsChange={true}
           resetKeys={[]} // Add keys that should trigger reset when changed
         >

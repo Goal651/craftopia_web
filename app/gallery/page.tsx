@@ -1,5 +1,6 @@
 "use client"
 
+import { Suspense } from "react"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -54,7 +55,7 @@ interface PaginationInfo {
   hasPrevPage: boolean
 }
 
-export default function PublicGalleryPage() {
+function PublicGalleryPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   
@@ -242,7 +243,9 @@ export default function PublicGalleryPage() {
       }
     })
 
-    const newURL = `${window.location.pathname}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
+    const newURL = typeof window !== 'undefined' 
+      ? `${window.location.pathname}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}` 
+      : `?${newSearchParams.toString()}`
     router.replace(newURL, { scroll: false })
   }
 
@@ -551,12 +554,7 @@ export default function PublicGalleryPage() {
   }
 
   return (
-    <GalleryErrorBoundary
-      onError={(error, errorInfo) => {
-        console.error('Gallery page error:', error, errorInfo)
-        // Could send to error tracking service here
-      }}
-    >
+    <GalleryErrorBoundary>
       <div className="min-h-screen pt-20 bg-black">
         <div className="container mx-auto container-padding py-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
@@ -809,5 +807,33 @@ export default function PublicGalleryPage() {
       />
     </div>
     </GalleryErrorBoundary>
+  )
+}
+
+export default function PublicGalleryPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen pt-20 bg-black">
+        <div className="container mx-auto container-padding py-8">
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <Skeleton className="h-8 w-48" />
+              <Skeleton className="h-12 w-full" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div key={i} className="space-y-3">
+                  <Skeleton className="h-64 w-full rounded-lg" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <PublicGalleryPageContent />
+    </Suspense>
   )
 }

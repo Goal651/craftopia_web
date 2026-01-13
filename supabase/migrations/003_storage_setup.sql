@@ -13,35 +13,25 @@ VALUES (
 )
 ON CONFLICT (id) DO NOTHING;
 
--- Storage policies for the artworks bucket
--- These policies control who can upload, view, and manage files
+-- Note: Storage policies need to be created through the Supabase Dashboard
+-- Go to Storage > Policies in your Supabase dashboard and create these policies:
 
--- Policy 1: Anyone can view artwork images (public access)
-CREATE POLICY "Anyone can view artwork images" ON storage.objects
-  FOR SELECT USING (bucket_id = 'artworks');
+-- Policy 1: "Anyone can view artwork images"
+-- Operation: SELECT
+-- Target roles: public
+-- USING expression: bucket_id = 'artworks'
 
--- Policy 2: Authenticated users can upload artwork images to their own folder
--- Files must be stored in a folder named with the user's UUID
-CREATE POLICY "Authenticated users can upload artwork images" ON storage.objects
-  FOR INSERT WITH CHECK (
-    bucket_id = 'artworks' 
-    AND auth.role() = 'authenticated'
-    AND (storage.foldername(name))[1] = auth.uid()::text
-  );
+-- Policy 2: "Authenticated users can upload artwork images"  
+-- Operation: INSERT
+-- Target roles: authenticated
+-- WITH CHECK expression: bucket_id = 'artworks' AND (storage.foldername(name))[1] = auth.uid()::text
 
--- Policy 3: Users can update their own artwork images
-CREATE POLICY "Users can update own artwork images" ON storage.objects
-  FOR UPDATE USING (
-    bucket_id = 'artworks' 
-    AND auth.uid()::text = (storage.foldername(name))[1]
-  );
+-- Policy 3: "Users can update own artwork images"
+-- Operation: UPDATE  
+-- Target roles: authenticated
+-- USING expression: bucket_id = 'artworks' AND auth.uid()::text = (storage.foldername(name))[1]
 
--- Policy 4: Users can delete their own artwork images
-CREATE POLICY "Users can delete own artwork images" ON storage.objects
-  FOR DELETE USING (
-    bucket_id = 'artworks' 
-    AND auth.uid()::text = (storage.foldername(name))[1]
-  );
-
--- Enable RLS on storage.objects if not already enabled
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+-- Policy 4: "Users can delete own artwork images"
+-- Operation: DELETE
+-- Target roles: authenticated  
+-- USING expression: bucket_id = 'artworks' AND auth.uid()::text = (storage.foldername(name))[1]
