@@ -23,20 +23,20 @@ export default function UploadPage() {
 
   if (uploadedArtwork) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
+      <div className="min-h-screen bg-black p-4">
         <div className="container mx-auto max-w-2xl pt-8">
-          <Card className="glass border-0 bg-white/5 backdrop-blur-xl">
+          <Card className="glass border-0 bg-white/5 backdrop-blur-xl border border-gray-800">
             <CardContent className="p-8 text-center">
-              <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500" />
-              <h1 className="text-2xl font-bold mb-4">Upload Successful!</h1>
-              <p className="text-muted-foreground mb-6">
+              <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-400" />
+              <h1 className="text-2xl font-bold mb-4 text-white">Upload Successful!</h1>
+              <p className="text-gray-400 mb-6">
                 Your artwork "{uploadedArtwork.title}" has been uploaded to the public gallery.
               </p>
               
               <div className="space-y-4">
                 <Button
                   onClick={() => router.push(`/artworks/${uploadedArtwork.id}`)}
-                  className="w-full glass border-0 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                  className="w-full glass border-0 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
                 >
                   View Your Artwork
                 </Button>
@@ -68,7 +68,7 @@ export default function UploadPage() {
 
   return (
     <UploadErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
+      <div className="min-h-screen bg-black p-4">
         <div className="container mx-auto max-w-2xl pt-8">
           {/* Header */}
           <div className="mb-8">

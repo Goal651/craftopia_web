@@ -228,8 +228,8 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
                       <span className="text-sm text-gray-300">Professional Packaging & Shipping</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-purple-500/20 rounded-full flex items-center justify-center">
-                        <RotateCcw className="w-4 h-4 text-purple-400" />
+                      <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
+                        <RotateCcw className="w-4 h-4 text-green-400" />
                       </div>
                       <span className="text-sm text-gray-300">30-Day Return Guarantee</span>
                     </div>
@@ -286,7 +286,7 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
 
                 {/* Stock Status */}
                 {artwork.stockQuantity <= 5 && artwork.inStock && (
-                  <p className="text-sm text-orange-400 text-center">Only {artwork.stockQuantity} left in stock!</p>
+                  <p className="text-sm text-blue-400 text-center">Only {artwork.stockQuantity} left in stock!</p>
                 )}
               </div>
             </div>

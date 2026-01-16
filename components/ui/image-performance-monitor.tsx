@@ -223,7 +223,7 @@ export function ImagePerformanceMonitor({
                   {parseFloat(successRate) >= 95 ? (
                     <CheckCircle className="w-4 h-4 ml-1 text-green-400" />
                   ) : parseFloat(successRate) < 80 ? (
-                    <AlertTriangle className="w-4 h-4 ml-1 text-yellow-400" />
+                    <AlertTriangle className="w-4 h-4 ml-1 text-blue-400" />
                   ) : null}
                 </div>
               </div>

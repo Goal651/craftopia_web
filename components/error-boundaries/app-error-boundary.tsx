@@ -210,9 +210,9 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
       const showDetails = this.props.showErrorDetails ?? (process.env.NODE_ENV === 'development')
 
       return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-black flex items-center justify-center p-4">
           <div className="max-w-2xl w-full">
-            <Card className="glass border-0 bg-white/5 backdrop-blur-xl">
+            <Card className="glass border-0 bg-white/5 backdrop-blur-xl border border-gray-800">
               <CardHeader className="text-center">
                 <div className="w-16 h-16 mx-auto mb-4 glass rounded-full flex items-center justify-center">
                   <AlertTriangle className="w-8 h-8 text-red-400" />
@@ -292,7 +292,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
                   {category === 'chunk' ? (
                     <Button
                       onClick={this.handleReload}
-                      className="flex-1 glass border-0 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                      className="flex-1 glass border-0 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
                     >
                       <RefreshCw className="w-4 h-4 mr-2" />
                       Refresh Page
@@ -300,7 +300,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
                   ) : (
                     <Button
                       onClick={this.handleRetry}
-                      className="flex-1 glass border-0 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                      className="flex-1 glass border-0 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
                     >
                       <RefreshCw className="w-4 h-4 mr-2" />
                       Try Again

@@ -76,7 +76,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-        <meta name="theme-color" content="#8b5cf6" />
+        <meta name="theme-color" content="#3b82f6" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
@@ -86,21 +86,25 @@ export default function RootLayout({
           resetOnPropsChange={true}
           resetKeys={[]} // Add keys that should trigger reset when changed
         >
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange={false}>
+          <ThemeProvider 
+            attribute="class" 
+            defaultTheme="system" 
+            enableSystem 
+            disableTransitionOnChange={false}
+          >
             <AuthProvider>
               <CartProvider>
                 <ImagePerformanceProvider>
-                  <div className="relative min-h-screen">
+                  <div className="relative min-h-screen bg-background text-foreground">
                     <Navbar />
                     <main className="relative">{children}</main>
                     <Toaster
                       position="top-right"
                       toastOptions={{
                         style: {
-                          background: "rgba(255, 255, 255, 0.1)",
-                          backdropFilter: "blur(20px)",
-                          border: "1px solid rgba(255, 255, 255, 0.2)",
-                          color: "var(--foreground)",
+                          background: "hsl(var(--card))",
+                          border: "1px solid hsl(var(--border))",
+                          color: "hsl(var(--foreground))",
                         },
                       }}
                     />

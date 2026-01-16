@@ -76,13 +76,13 @@ export default function CheckoutPage() {
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
             <Link
               href="/cart"
-              className="inline-flex items-center text-amber-600 dark:text-amber-400 hover:underline mb-4"
+              className="inline-flex items-center text-blue-400 hover:text-blue-300 hover:underline mb-4"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Cart
             </Link>
-            <h1 className="text-3xl lg:text-4xl font-light text-slate-900 dark:text-white">
-              Secure <span className="text-amber-600 dark:text-amber-400 font-medium">Checkout</span>
+            <h1 className="text-3xl lg:text-4xl font-light text-white">
+              Secure <span className="text-blue-400 font-medium">Checkout</span>
             </h1>
           </motion.div>
 
@@ -94,7 +94,7 @@ export default function CheckoutPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-amber-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                      <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
                         1
                       </div>
                       Contact Information
@@ -120,7 +120,7 @@ export default function CheckoutPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-amber-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                      <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
                         2
                       </div>
                       Shipping Address
@@ -194,7 +194,7 @@ export default function CheckoutPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-amber-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                      <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
                         3
                       </div>
                       Payment Information
@@ -291,14 +291,14 @@ export default function CheckoutPage() {
                     <Separator />
                     <div className="flex justify-between text-lg font-semibold">
                       <span>Total</span>
-                      <span className="text-amber-600 dark:text-amber-400">${total.toLocaleString()}</span>
+                      <span className="text-blue-400">${total.toLocaleString()}</span>
                     </div>
                   </div>
 
                   <Button
                     type="submit"
                     size="lg"
-                    className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                    className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
                     disabled={isProcessing}
                     onClick={handleSubmit}
                   >

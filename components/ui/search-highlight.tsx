@@ -13,7 +13,7 @@ export function SearchHighlight({
   text,
   searchTerm,
   className = "",
-  highlightClassName = "bg-yellow-400/30 text-yellow-200 px-1 rounded"
+  highlightClassName = "bg-blue-400/30 text-blue-200 px-1 rounded"
 }: SearchHighlightProps) {
   const highlightedText = useMemo(() => {
     if (!searchTerm || !text) {

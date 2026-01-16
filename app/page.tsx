@@ -11,9 +11,8 @@ import { MagneticButton } from "@/components/ui/magnetic-button"
 import { Card3D } from "@/components/ui/card-3d"
 import { ArtworkImage } from "@/components/ui/artwork-image"
 import { GalleryNav } from "@/components/ui/gallery-nav"
-import { useCart } from "@/contexts/cart-context"
 import { getArtworkImage, categoryImages } from "@/lib/generate-images"
-import { ArrowRight, Star, ShoppingCart, Heart, Eye, Sparkles, TrendingUp, Users, Award } from "lucide-react"
+import { ArrowRight, Star, Heart, Eye, Sparkles, TrendingUp, Users, Award, Mail } from "lucide-react"
 
 const featuredArtworks = [
   {
@@ -96,28 +95,28 @@ const categories = [
     count: 24,
     image: categoryImages["Abstract Art"],
     href: "/artworks?category=abstract",
-    color: "from-violet-500 to-purple-600",
+    color: "from-blue-500 to-blue-600",
   },
   {
     name: "Digital Art",
     count: 18,
     image: categoryImages["Digital Art"],
     href: "/artworks?category=digital",
-    color: "from-cyan-500 to-blue-600",
+    color: "from-green-500 to-green-600",
   },
   {
     name: "Sculptures",
     count: 12,
     image: categoryImages["Sculptures"],
     href: "/artworks?category=sculptures",
-    color: "from-emerald-500 to-teal-600",
+    color: "from-blue-400 to-green-500",
   },
   {
     name: "Photography",
     count: 15,
     image: categoryImages["Photography"],
     href: "/artworks?category=photography",
-    color: "from-orange-500 to-red-600",
+    color: "from-green-400 to-blue-500",
   },
 ]
 
@@ -130,11 +129,15 @@ const stats = [
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
-  const { addItem, isInCart } = useCart()
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const handleContactOwner = (artworkTitle: string, artist: string) => {
+    // Navigate to contact page with artwork details
+    window.location.href = `/contact?artwork=${encodeURIComponent(artworkTitle)}&artist=${encodeURIComponent(artist)}`
+  }
 
   if (!mounted) {
     return null
@@ -146,9 +149,9 @@ export default function HomePage() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-violet-500/20 rounded-full blur-3xl float" />
-          <div className="absolute top-40 right-20 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl float-delayed" />
-          <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl float" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl float" />
+          <div className="absolute top-40 right-20 w-96 h-96 bg-green-500/20 rounded-full blur-3xl float-delayed" />
+          <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl float" />
         </div>
 
         <div className="container-padding relative z-10">
@@ -165,11 +168,11 @@ export default function HomePage() {
 
               <h1 className="text-5xl md:text-7xl lg:text-9xl text-hero mb-8">
                 <span className="block">Discover</span>
-                <span className="block text-gradient-blue relative">
+                <span className="block bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent relative">
                   Extraordinary
                   <div className="absolute -top-4 -right-4 w-8 h-8 bg-blue-500/20 rounded-full blur-xl animate-pulse" />
                 </span>
-                <span className="block text-gradient-grey">Art</span>
+                <span className="block text-white">Art</span>
               </h1>
 
               <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
@@ -199,10 +202,10 @@ export default function HomePage() {
               className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20"
             >
               {stats.map((stat, index) => (
-                <div key={stat.label} className="glass-card rounded-2xl p-6 text-center">
-                  <stat.icon className="w-8 h-8 mx-auto mb-3 text-violet-500" />
-                  <div className="text-2xl md:text-3xl font-bold text-gradient-violet mb-1">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div key={stat.label} className="glass-card rounded-2xl p-6 text-center border border-gray-800">
+                  <stat.icon className="w-8 h-8 mx-auto mb-3 text-blue-400" />
+                  <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent mb-1">{stat.value}</div>
+                  <div className="text-sm text-gray-400">{stat.label}</div>
                 </div>
               ))}
             </motion.div>
@@ -291,7 +294,7 @@ export default function HomePage() {
           >
             <Badge className="mb-6 glass px-4 py-2">Featured Collection</Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Curated <span className="text-gradient-violet">Masterpieces</span>
+              Curated <span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">Masterpieces</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Handpicked artworks that showcase exceptional creativity and artistic vision
@@ -334,13 +337,13 @@ export default function HomePage() {
                     </div>
 
                     {/* Category Badge */}
-                    <Badge className="absolute top-4 left-4 gradient-violet text-white border-0">
+                    <Badge className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-green-500 text-white border-0">
                       {artwork.category}
                     </Badge>
 
                     {/* Rating */}
                     <div className="absolute bottom-4 left-4 flex items-center gap-1 glass px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <Star className="w-4 h-4 fill-green-400 text-green-400" />
                       <span className="text-sm font-medium text-white">{artwork.rating}</span>
                     </div>
                   </div>
@@ -348,7 +351,7 @@ export default function HomePage() {
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h3 className="text-xl font-bold mb-1 group-hover:text-violet-600 transition-colors">
+                        <h3 className="text-xl font-bold mb-1 group-hover:text-blue-400 transition-colors">
                           {artwork.title}
                         </h3>
                         <p className="text-muted-foreground">by {artwork.artist}</p>
@@ -360,24 +363,14 @@ export default function HomePage() {
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-gradient-violet">${artwork.price.toLocaleString()}</span>
+                      <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">${artwork.price.toLocaleString()}</span>
 
                       <Button
-                        onClick={() =>
-                          addItem({
-                            id: artwork.id,
-                            title: artwork.title,
-                            artist: artwork.artist,
-                            price: artwork.price,
-                            image: artwork.image,
-                            stock: artwork.stock,
-                          })
-                        }
-                        disabled={isInCart(artwork.id)}
-                        className={isInCart(artwork.id) ? "btn-secondary" : "btn-primary"}
+                        onClick={() => handleContactOwner(artwork.title, artwork.artist)}
+                        className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
                       >
-                        <ShoppingCart className="w-4 h-4 mr-2" />
-                        {isInCart(artwork.id) ? "In Cart" : "Add to Cart"}
+                        <Mail className="w-4 h-4 mr-2" />
+                        Contact Owner
                       </Button>
                     </div>
                   </CardContent>
@@ -398,7 +391,7 @@ export default function HomePage() {
       </section>
 
       {/* Categories */}
-      <section className="py-20 lg:py-32 bg-gradient-to-b from-transparent to-violet-500/5">
+      <section className="py-20 lg:py-32 bg-black">
         <div className="container-padding">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -409,7 +402,7 @@ export default function HomePage() {
           >
             <Badge className="mb-6 glass px-4 py-2">Explore Categories</Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Art <span className="text-gradient-aqua">Categories</span>
+              Art <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">Categories</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Discover artworks across different mediums and styles
@@ -461,7 +454,7 @@ export default function HomePage() {
             className="text-center glass-strong rounded-3xl p-12 lg:p-20"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Ready to Start Your <span className="text-gradient-violet">Art Journey</span>?
+              Ready to Start Your <span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">Art Journey</span>?
             </h2>
             <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
               Join thousands of art enthusiasts who have discovered their perfect pieces through our gallery

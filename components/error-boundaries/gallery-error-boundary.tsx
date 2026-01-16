@@ -285,7 +285,7 @@ export class GalleryErrorBoundary extends Component<GalleryErrorBoundaryProps, G
                     {canRetry && (
                       <Button
                         onClick={this.handleRetry}
-                        className="flex-1 glass border-0 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                        className="flex-1 glass border-0 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
                       >
                         <RefreshCw className="w-4 h-4 mr-2" />
                         Retry

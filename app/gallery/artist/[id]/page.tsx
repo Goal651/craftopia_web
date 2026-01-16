@@ -262,7 +262,7 @@ export default function ArtistProfilePage() {
                         aspectRatio="1/1"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-500/20">
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-green-500/20">
                         <User className="w-12 h-12 text-gray-400" />
                       </div>
                     )}

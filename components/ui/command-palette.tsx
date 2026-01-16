@@ -110,7 +110,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const getTypeColor = (type: string) => {
     switch (type) {
       case "artwork": return "bg-blue-500/20 text-blue-400"
-      case "artist": return "bg-purple-500/20 text-purple-400"
+      case "artist": return "bg-green-500/20 text-green-400"
       case "category": return "bg-green-500/20 text-green-400"
       case "page": return "bg-gray-500/20 text-gray-400"
       default: return "bg-gray-500/20 text-gray-400"

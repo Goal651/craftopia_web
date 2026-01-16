@@ -130,7 +130,7 @@ export default function CartPage() {
 
                                 <span className="w-12 text-center font-medium">
                                   {isLoading === item.id ? (
-                                    <div className="w-4 h-4 border-2 border-violet-500 border-t-transparent rounded-full animate-spin mx-auto" />
+                                    <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
                                   ) : (
                                     item.quantity
                                   )}

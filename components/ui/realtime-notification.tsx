@@ -62,7 +62,7 @@ export function RealtimeNotification({
           <Card className="glass-strong border border-blue-500/30 shadow-2xl overflow-hidden">
             <div className="relative">
               {/* Animated background gradient */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-green-500/10 to-blue-500/10 animate-pulse" />
               
               <div className="relative p-4">
                 <div className="flex items-start gap-3">

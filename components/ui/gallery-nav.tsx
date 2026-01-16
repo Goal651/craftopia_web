@@ -45,7 +45,7 @@ export function GalleryNav({ className }: GalleryNavProps) {
           <div className={cn(
             "glass-card rounded-lg p-4 transition-all duration-300 hover:scale-105 border-0",
             item.active && "ring-2 ring-blue-500/50 bg-blue-500/10",
-            item.highlight && "bg-gradient-to-r from-blue-500/20 to-purple-500/20"
+            item.highlight && "bg-gradient-to-r from-blue-500/20 to-green-500/20"
           )}>
             <div className="flex items-center gap-3 mb-2">
               <div className={cn(

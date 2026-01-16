@@ -276,7 +276,7 @@ export default function AdminPanel() {
                     <p className="text-2xl font-bold text-gradient-violet">${stats.totalRevenue.toLocaleString()}</p>
                     <p className="text-xs text-green-600 mt-1">+12.5% from last month</p>
                   </div>
-                  <DollarSign className="w-8 h-8 text-violet-500" />
+                  <DollarSign className="w-8 h-8 text-blue-400" />
                 </div>
               </CardContent>
             </Card>
@@ -302,7 +302,7 @@ export default function AdminPanel() {
                     <p className="text-2xl font-bold text-gradient-violet">{stats.totalCustomers}</p>
                     <p className="text-xs text-green-600 mt-1">+8 this month</p>
                   </div>
-                  <Users className="w-8 h-8 text-violet-500" />
+                  <Users className="w-8 h-8 text-green-400" />
                 </div>
               </CardContent>
             </Card>
@@ -363,7 +363,7 @@ export default function AdminPanel() {
                       <span className="text-xs text-muted-foreground ml-auto">4h ago</span>
                     </div>
                     <div className="flex items-center gap-3 p-3 glass rounded-xl">
-                      <div className="w-2 h-2 bg-purple-500 rounded-full" />
+                      <div className="w-2 h-2 bg-green-500 rounded-full" />
                       <span className="text-sm">New customer registration</span>
                       <span className="text-xs text-muted-foreground ml-auto">6h ago</span>
                     </div>
@@ -486,7 +486,7 @@ export default function AdminPanel() {
                             <TableCell>
                               <div className="flex items-center gap-4 text-sm">
                                 <div className="flex items-center gap-1">
-                                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                                  <Star className="w-4 h-4 fill-green-400 text-green-400" />
                                   <span>{artwork.rating}</span>
                                 </div>
                                 <div className="flex items-center gap-1">
@@ -606,8 +606,8 @@ export default function AdminPanel() {
                                     : order.status === "shipped"
                                       ? "bg-blue-500"
                                       : order.status === "processing"
-                                        ? "bg-yellow-500"
-                                        : "bg-orange-500"
+                                        ? "bg-green-500"
+                                        : "bg-blue-400"
                                 } text-white border-0`}
                               >
                                 {order.status}

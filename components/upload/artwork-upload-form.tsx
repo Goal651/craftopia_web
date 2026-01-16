@@ -209,9 +209,9 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
 
   if (!user) {
     return (
-      <Card className="glass border-0 bg-white/5 backdrop-blur-xl">
+      <Card className="glass border-0 bg-white/5 backdrop-blur-xl border border-gray-800">
         <CardContent className="p-8 text-center">
-          <AlertCircle className="w-12 h-12 mx-auto mb-4 text-yellow-500" />
+          <AlertCircle className="w-12 h-12 mx-auto mb-4 text-blue-400" />
           <h3 className="text-xl font-semibold mb-2">Authentication Required</h3>
           <p className="text-muted-foreground">
             Please log in to upload your artwork to the public gallery.
@@ -395,7 +395,7 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
             <Button
               type="submit"
               disabled={isUploading}
-              className="w-full glass border-0 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+              className="w-full glass border-0 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
             >
               {isUploading ? (
                 <>
