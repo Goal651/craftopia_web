@@ -10,10 +10,11 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ProductModal } from "@/components/product-modal"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
-import { sampleArtworks } from "@/lib/data"
-import { Search, Grid, List, Heart, Eye, ShoppingCart, Star, Filter } from "lucide-react"
+import { useArt } from "@/contexts/ArtContext"
+import { Search, Grid, List, Heart, Eye, ShoppingCart, Star, Filter, RefreshCw, Loader2 } from "lucide-react"
 
 export default function ArtworksPage() {
+  const { artworks, loading } = useArt()
   const [selectedArtwork, setSelectedArtwork] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("all")
@@ -28,11 +29,11 @@ export default function ArtworksPage() {
   }, [])
 
   const filteredAndSortedArtworks = useMemo(() => {
-    const filtered = sampleArtworks.filter((artwork) => {
+    const filtered = artworks.filter((artwork) => {
       const matchesSearch =
         artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        artwork.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        artwork.description.toLowerCase().includes(searchTerm.toLowerCase())
+        artwork.artist_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (artwork.description || "").toLowerCase().includes(searchTerm.toLowerCase())
 
       const matchesCategory = categoryFilter === "all" || artwork.category === categoryFilter
 
@@ -199,7 +200,7 @@ export default function ArtworksPage() {
 
               {/* Results Count */}
               <div className="mt-4 text-center text-muted-foreground">
-                Showing {filteredAndSortedArtworks.length} of {sampleArtworks.length} artworks
+                Showing {filteredAndSortedArtworks.length} of {artworks.length} artworks
               </div>
             </div>
           </div>
@@ -207,7 +208,14 @@ export default function ArtworksPage() {
           {/* Artworks Grid */}
           <motion.div layout className={viewMode === "grid" ? "gallery-grid" : "space-y-6"}>
             <AnimatePresence>
-              {filteredAndSortedArtworks.map((artwork, index) => (
+              {loading ? (
+                <div className="col-span-full py-20 flex justify-center items-center">
+                  <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="w-10 h-10 animate-spin text-primary" />
+                    <p className="text-muted-foreground animate-pulse">Loading collection...</p>
+                  </div>
+                </div>
+              ) : filteredAndSortedArtworks.map((artwork, index) => (
                 <motion.div
                   key={artwork.id}
                   layout
@@ -221,7 +229,7 @@ export default function ArtworksPage() {
                     <Card className="group cursor-pointer overflow-hidden border-0 glass-card card-hover">
                       <div className="relative aspect-[3/4] overflow-hidden">
                         <Image
-                          src={artwork.images[0] || "/placeholder.svg?height=400&width=300"}
+                          src={artwork.image_url || "/placeholder.svg?height=400&width=300"}
                           alt={artwork.title}
                           fill
                           className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -284,8 +292,8 @@ export default function ArtworksPage() {
                           </h3>
                           <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">{artwork.description}</p>
                           <div className="flex items-center justify-between pt-2">
-                            <span className="text-xs text-muted-foreground font-light">{artwork.medium}</span>
-                            <span className="text-xs font-medium text-muted-foreground">{artwork.year}</span>
+                            <span className="text-xs text-muted-foreground font-light">{artwork.medium || "Mixed Media"}</span>
+                            <span className="text-xs font-medium text-muted-foreground">{artwork.year || "2024"}</span>
                           </div>
                           <Button size="sm" className="w-full btn-primary" onClick={() => setSelectedArtwork(artwork)}>
                             <ShoppingCart className="w-3 h-3 mr-2" />
@@ -299,7 +307,7 @@ export default function ArtworksPage() {
                       <div className="flex flex-col md:flex-row">
                         <div className="relative w-full md:w-64 aspect-[4/3] md:aspect-square overflow-hidden">
                           <Image
-                            src={artwork.images[0] || "/placeholder.svg?height=256&width=256"}
+                            src={artwork.image_url || "/placeholder.svg?height=256&width=256"}
                             alt={artwork.title}
                             fill
                             className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -330,7 +338,7 @@ export default function ArtworksPage() {
                                 <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
                                   {artwork.title}
                                 </h3>
-                                <p className="text-muted-foreground">by {artwork.artist}</p>
+                                <p className="text-muted-foreground">by {artwork.artist_name}</p>
                               </div>
                               <Button
                                 variant="ghost"
@@ -356,7 +364,7 @@ export default function ArtworksPage() {
                               </div>
                               <div>
                                 <span className="text-gray-500">Year:</span>
-                                <span className="ml-2 font-medium text-gray-300">{artwork.year}</span>
+                                <span className="ml-2 font-medium text-gray-300">{artwork.year || "2024"}</span>
                               </div>
                               <div>
                                 <span className="text-muted-foreground">Dimensions:</span>
@@ -364,8 +372,8 @@ export default function ArtworksPage() {
                               </div>
                               <div>
                                 <span className="text-gray-500">Stock:</span>
-                                <Badge variant={artwork.inStock ? "default" : "destructive"} className="ml-2 text-xs">
-                                  {artwork.inStock ? `${artwork.stockQuantity} available` : "Out of stock"}
+                                <Badge variant={artwork.inStock !== false ? "default" : "destructive"} className="ml-2 text-xs">
+                                  {artwork.inStock !== false ? `${artwork.stock_quantity || 1} available` : "Out of stock"}
                                 </Badge>
                               </div>
                             </div>

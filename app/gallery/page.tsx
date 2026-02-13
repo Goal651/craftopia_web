@@ -389,8 +389,8 @@ function PublicGalleryPageContent() {
                 page === currentPagination.currentPage
                   ? "btn-primary min-w-[40px]"
                   : typeof page === 'number'
-                    ? "glass border-0 bg-transparent text-gray-300 hover:text-white hover:bg-white/10 min-w-[40px]"
-                    : "glass border-0 bg-transparent text-gray-500 cursor-default min-w-[40px]"
+                    ? "glass border-border/50 bg-background/50 text-muted-foreground hover:text-foreground hover:bg-muted min-w-[40px]"
+                    : "glass border-0 bg-transparent text-muted-foreground/30 cursor-default min-w-[40px]"
               }
             >
               {page}
@@ -508,7 +508,7 @@ function PublicGalleryPageContent() {
             )}
 
             {!loading && !error && !isSearchMode && (
-              <div className="flex items-center justify-center gap-8 text-sm text-gray-400">
+              <div className="flex items-center justify-center gap-8 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Palette className="w-4 h-4" />
                   <span>{pagination.totalItems} artworks</span>
@@ -524,15 +524,16 @@ function PublicGalleryPageContent() {
             {(loading || searchLoading) && <LoadingSkeleton />}
 
             {error && !loading && !isSearchMode && <ErrorDisplay />}
+
             {searchError && isSearchMode && (
               <div className="text-center py-16">
                 <div className="space-y-6">
                   <div className="w-24 h-24 mx-auto glass rounded-full flex items-center justify-center">
-                    <AlertCircle className="w-8 h-8 text-red-400" />
+                    <AlertCircle className="w-8 h-8 text-destructive" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-xl font-semibold text-white">Search Failed</h3>
-                    <p className="text-gray-400 max-w-md mx-auto">{searchError}</p>
+                    <h3 className="text-xl font-semibold text-foreground">Search Failed</h3>
+                    <p className="text-muted-foreground max-w-md mx-auto">{searchError}</p>
                   </div>
                   <Button
                     onClick={() => search(currentQuery)}
@@ -547,15 +548,16 @@ function PublicGalleryPageContent() {
             )}
 
             {!loading && !error && artworks.length === 0 && !isSearchMode && <EmptyState />}
+
             {isSearchMode && searchIsEmpty && !searchLoading && !searchError && (
               <div className="text-center py-16">
                 <div className="space-y-6">
                   <div className="w-24 h-24 mx-auto glass rounded-full flex items-center justify-center">
-                    <SearchIcon className="w-8 h-8 text-gray-400" />
+                    <SearchIcon className="w-8 h-8 text-muted-foreground" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-xl font-semibold text-white">No Results Found</h3>
-                    <p className="text-gray-400 max-w-md mx-auto">
+                    <h3 className="text-xl font-semibold text-foreground">No Results Found</h3>
+                    <p className="text-muted-foreground max-w-md mx-auto">
                       No artworks match your search for "{currentQuery}". Try different keywords or browse all artworks.
                     </p>
                   </div>
@@ -614,7 +616,7 @@ function PublicGalleryPageContent() {
 
 export default function GalleryPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-black" />}>
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <PublicGalleryPageContent />
     </Suspense>
   )

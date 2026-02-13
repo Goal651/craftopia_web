@@ -11,9 +11,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
-import { useAuth } from "@/contexts/auth-context"
-import { Eye, EyeOff, Mail, Lock, ArrowLeft, Palette, Shield, Users } from "lucide-react"
+import { useAuth } from "@/contexts/AuthContext"
+import { Eye, EyeOff, Mail, Lock, ArrowLeft, Palette } from "lucide-react"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -39,7 +38,7 @@ export default function LoginPage() {
       if (!response.error && response.data.user) {
         router.push("/")
       } else {
-        setError(response.error?.message || "Invalid email or password. Please check your credentials and try again.")
+        setError(response.error || "Invalid email or password. Please check your credentials and try again.")
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again later.")
@@ -48,37 +47,18 @@ export default function LoginPage() {
     }
   }
 
-  const demoCredentials = [
-    {
-      type: "Admin Access",
-      email: "admin@artgallery.com",
-      password: "password123",
-      description: "Full access to admin dashboard and gallery management",
-      icon: Shield,
-      gradient: "gradient-blue",
-    },
-    {
-      type: "Customer Access",
-      email: "user@example.com",
-      password: "password123",
-      description: "Browse collection, add to cart, and make purchases",
-      icon: Users,
-      gradient: "gradient-grey",
-    },
-  ]
-
   return (
-    <div className="min-h-screen flex items-center justify-center container-padding bg-black">
+    <div className="min-h-screen flex items-center justify-center container-padding ">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-md space-y-8"
+        className="w-full max-w-md space-y-8 bg-card text-card-foreground"
       >
         {/* Back to home */}
         <Link
           href="/"
-          className="inline-flex items-center text-sm text-gray-400 hover:text-blue-400 transition-colors group"
+          className="inline-flex items-center text-sm text-gray-400 hover:text-blue-400 transition-colors group "
         >
           <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
           Back to Gallery
@@ -174,58 +154,13 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            <div className="space-y-4">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-gray-600" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="glass px-2 text-gray-400">Demo Credentials</span>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                {demoCredentials.map((cred, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                    className="glass-card p-4 rounded-xl cursor-pointer hover:shadow-md transition-all"
-                    onClick={() => {
-                      setEmail(cred.email)
-                      setPassword(cred.password)
-                    }}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div
-                        className={`w-8 h-8 ${cred.gradient} rounded-lg flex items-center justify-center flex-shrink-0`}
-                      >
-                        <cred.icon className="w-4 h-4 text-white" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <div className="text-sm font-medium text-white">{cred.type}</div>
-                          <Badge variant="outline" className="text-xs border-blue-500/30 text-blue-400">
-                            Demo
-                          </Badge>
-                        </div>
-                        <div className="text-xs text-gray-400 mb-2">{cred.description}</div>
-                        <div className="text-xs font-mono glass rounded px-2 py-1 text-gray-300">{cred.email}</div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="text-center">
-                <p className="text-sm text-gray-400">
-                  Don't have an account?{" "}
-                  <Link href="/register" className="text-blue-400 hover:underline font-medium">
-                    Create one here
-                  </Link>
-                </p>
-              </div>
+            <div className="text-center">
+              <p className="text-sm text-gray-400">
+                Don't have an account?{" "}
+                <Link href="/register" className="text-blue-400 hover:underline font-medium">
+                  Create one here
+                </Link>
+              </p>
             </div>
           </CardContent>
         </Card>

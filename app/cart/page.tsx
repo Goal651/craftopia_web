@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { useCart } from "@/contexts/cart-context"
+import { useCart } from "@/contexts/CartContext"
 import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, CreditCard, Shield, Truck } from "lucide-react"
 
 export default function CartPage() {

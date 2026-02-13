@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { CommandPalette } from "@/components/ui/command-palette"
-import { useAuth } from "@/contexts/auth-context"
+import { useAuth } from "@/contexts/AuthContext"
 import {
   User,
   Menu,

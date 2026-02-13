@@ -24,7 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { useAuth } from "@/contexts/auth-context"
+import { useAuth } from "@/contexts/AuthContext"
 import {
   Plus,
   Edit,
@@ -601,12 +601,12 @@ export default function AdminPanel() {
                             <TableCell>
                               <Badge
                                 className={`${order.status === "delivered"
-                                    ? "bg-green-500"
-                                    : order.status === "shipped"
-                                      ? "bg-blue-500"
-                                      : order.status === "processing"
-                                        ? "bg-green-500"
-                                        : "bg-blue-400"
+                                  ? "bg-green-500"
+                                  : order.status === "shipped"
+                                    ? "bg-blue-500"
+                                    : order.status === "processing"
+                                      ? "bg-green-500"
+                                      : "bg-blue-400"
                                   } text-white border-0`}
                               >
                                 {order.status}

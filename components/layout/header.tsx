@@ -7,8 +7,8 @@ import { useTheme } from "next-themes"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { useCart } from "@/contexts/cart-context"
-import { useAuth } from "@/contexts/auth-context"
+import { useCart } from "@/contexts/CartContext"
+import { useAuth } from "@/contexts/AuthContext"
 import {
   ShoppingCart,
   User,
@@ -44,7 +44,7 @@ export function Header() {
   const pathname = usePathname()
 
   // Safe calculation of item count with fallback
-  const itemCount = state?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0
+  const itemCount = state?.items?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0
 
   useEffect(() => {
     setMounted(true)

@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { useAuth } from '@/contexts/auth-context'
+import { useAuth } from '@/contexts/AuthContext'
 import type { ArtworkCategory, ArtworkRecord } from '@/types'
 import { useUploadThing } from "@/lib/uploadthing";
 

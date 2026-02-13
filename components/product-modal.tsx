@@ -5,7 +5,7 @@ import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { useCart } from "@/contexts/cart-context"
+import { useCart } from "@/contexts/CartContext"
 import { X, Plus, Minus, Heart, Share2, ZoomIn, Star, Truck, Shield, RotateCcw } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
@@ -33,17 +33,18 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
     addItem({
       id: artwork.id,
       title: artwork.title,
-      artist: artwork.artist,
-      price: artwork.price,
-      image: artwork.images[0],
-      stock: artwork.stockQuantity,
+      artist: artwork.artist_name,
+      price: artwork.price || 0,
+      image: artwork.image_url || artwork.images?.[0] || "",
+      stock: artwork.stock_quantity || 1,
     })
     onClose()
   }
 
   const handleQuantityChange = (change: number) => {
     const newQuantity = quantity + change
-    if (newQuantity >= 1 && newQuantity <= artwork.stockQuantity) {
+    const maxStock = artwork.stock_quantity || 1
+    if (newQuantity >= 1 && newQuantity <= maxStock) {
       setQuantity(newQuantity)
     }
   }
@@ -89,7 +90,7 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
                   transition={{ duration: 0.3 }}
                 >
                   <Image
-                    src={artwork.images[selectedImageIndex] || "/placeholder.svg"}
+                    src={(artwork.images && artwork.images[selectedImageIndex]) || artwork.image_url || "/placeholder.svg"}
                     alt={artwork.title}
                     fill
                     className="object-cover cursor-zoom-in"
@@ -115,14 +116,13 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
                 </motion.div>
 
                 {/* Image Thumbnails */}
-                {artwork.images.length > 1 && (
+                {artwork.images && artwork.images.length > 1 && (
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
                     {artwork.images.map((image: string, index: number) => (
                       <motion.button
                         key={index}
-                        className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${
-                          selectedImageIndex === index ? "border-blue-500" : "border-transparent"
-                        }`}
+                        className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${selectedImageIndex === index ? "border-blue-500" : "border-transparent"
+                          }`}
                         onClick={() => setSelectedImageIndex(index)}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
@@ -150,7 +150,7 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
                     <div className="space-y-2">
                       <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">{artwork.category}</Badge>
                       <h1 className="text-2xl lg:text-3xl font-bold text-white">{artwork.title}</h1>
-                      <p className="text-lg text-gray-400">by {artwork.artist}</p>
+                      <p className="text-lg text-gray-400">by {artwork.artist_name}</p>
                     </div>
                     <div className="flex gap-2">
                       <Button variant="ghost" size="icon" className="hover:bg-white/10 text-gray-400 hover:text-white">
@@ -177,7 +177,7 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
 
                   {/* Price */}
                   <div className="space-y-2">
-                    <div className="text-3xl font-bold text-gradient-blue">${artwork.price.toLocaleString()}</div>
+                    <div className="text-3xl font-bold text-gradient-blue">${(artwork.price || 0).toLocaleString()}</div>
                     <p className="text-sm text-gray-400">Free shipping worldwide • 30-day return policy</p>
                   </div>
                 </div>
@@ -206,7 +206,7 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
                     </div>
                     <div>
                       <span className="text-gray-500">Stock:</span>
-                      <span className="ml-2 font-medium text-gray-300">{artwork.stockQuantity} available</span>
+                      <span className="ml-2 font-medium text-gray-300">{artwork.stock_quantity || 1} available</span>
                     </div>
                   </div>
                 </div>
@@ -258,7 +258,7 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
                       size="icon"
                       className="h-8 w-8 glass border-0 bg-transparent text-gray-300 hover:text-white hover:bg-white/10"
                       onClick={() => handleQuantityChange(1)}
-                      disabled={quantity >= artwork.stockQuantity}
+                      disabled={quantity >= (artwork.stock_quantity || 1)}
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -268,13 +268,13 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
                 {/* Total Price */}
                 <div className="flex items-center justify-between text-lg font-semibold">
                   <span className="text-white">Total:</span>
-                  <span className="text-gradient-blue">${(artwork.price * quantity).toLocaleString()}</span>
+                  <span className="text-gradient-blue">${((artwork.price || 0) * quantity).toLocaleString()}</span>
                 </div>
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Button onClick={handleAddToCart} className="flex-1 btn-primary" disabled={!artwork.inStock}>
-                    {artwork.inStock ? "Add to Cart" : "Out of Stock"}
+                  <Button onClick={handleAddToCart} className="flex-1 btn-primary" disabled={artwork.inStock === false}>
+                    {artwork.inStock !== false ? "Add to Cart" : "Out of Stock"}
                   </Button>
                   <Button
                     variant="outline"
@@ -285,8 +285,8 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
                 </div>
 
                 {/* Stock Status */}
-                {artwork.stockQuantity <= 5 && artwork.inStock && (
-                  <p className="text-sm text-blue-400 text-center">Only {artwork.stockQuantity} left in stock!</p>
+                {(artwork.stock_quantity || 1) <= 5 && artwork.inStock !== false && (
+                  <p className="text-sm text-blue-400 text-center">Only {artwork.stock_quantity || 1} left in stock!</p>
                 )}
               </div>
             </div>

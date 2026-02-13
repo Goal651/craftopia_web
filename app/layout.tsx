@@ -3,8 +3,9 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { CartProvider } from "@/contexts/cart-context"
-import { AuthProvider } from "@/contexts/auth-context"
+import { CartProvider } from "@/contexts/CartContext"
+import { AuthProvider } from "@/contexts/AuthContext"
+import { ArtProvider } from "@/contexts/ArtContext"
 import { ImagePerformanceProvider } from "@/components/ui/image-performance-monitor"
 import { Navbar } from "@/components/layout/navbar"
 import { Toaster } from "@/components/ui/sonner"
@@ -62,7 +63,7 @@ export const metadata: Metadata = {
   verification: {
     google: "your-google-verification-code",
   },
-    generator: 'v0.dev'
+  generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -86,31 +87,33 @@ export default function RootLayout({
           resetOnPropsChange={true}
           resetKeys={[]} // Add keys that should trigger reset when changed
         >
-          <ThemeProvider 
-            attribute="class" 
-            defaultTheme="system" 
-            enableSystem 
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
             disableTransitionOnChange={false}
           >
             <AuthProvider>
-              <CartProvider>
-                <ImagePerformanceProvider>
-                  <div className="relative min-h-screen bg-background text-foreground">
-                    <Navbar />
-                    <main className="relative">{children}</main>
-                    <Toaster
-                      position="top-right"
-                      toastOptions={{
-                        style: {
-                          background: "hsl(var(--card))",
-                          border: "1px solid hsl(var(--border))",
-                          color: "hsl(var(--foreground))",
-                        },
-                      }}
-                    />
-                  </div>
-                </ImagePerformanceProvider>
-              </CartProvider>
+              <ArtProvider>
+                <CartProvider>
+                  <ImagePerformanceProvider>
+                    <div className="relative min-h-screen bg-background text-foreground">
+                      <Navbar />
+                      <main className="relative">{children}</main>
+                      <Toaster
+                        position="top-right"
+                        toastOptions={{
+                          style: {
+                            background: "hsl(var(--card))",
+                            border: "1px solid hsl(var(--border))",
+                            color: "hsl(var(--foreground))",
+                          },
+                        }}
+                      />
+                    </div>
+                  </ImagePerformanceProvider>
+                </CartProvider>
+              </ArtProvider>
             </AuthProvider>
           </ThemeProvider>
         </AppErrorBoundary>

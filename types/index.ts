@@ -70,15 +70,23 @@ export interface ArtworkRecord {
   created_at: string
   updated_at: string
   view_count: number
+  price: number
+  stock_quantity: number
+  year?: number
+  featured?: boolean
+  images?: string[]
+  medium?: string
+  dimensions?: string
+  inStock?: boolean
 }
 
-export type ArtworkCategory = 
-  | 'painting' 
-  | 'digital-art' 
-  | 'photography' 
-  | 'sculpture' 
-  | 'mixed-media' 
-  | 'drawing' 
+export type ArtworkCategory =
+  | 'painting'
+  | 'digital-art'
+  | 'photography'
+  | 'sculpture'
+  | 'mixed-media'
+  | 'drawing'
   | 'other'
 
 export interface AuthUser {

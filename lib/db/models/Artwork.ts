@@ -35,6 +35,14 @@ const ArtworkSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    price: {
+        type: Number,
+        default: 0,
+    },
+    stock_quantity: {
+        type: Number,
+        default: 0,
+    },
 }, {
     timestamps: true,
 })

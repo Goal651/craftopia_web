@@ -12,82 +12,8 @@ import { Card3D } from "@/components/ui/card-3d"
 import { ArtworkImage } from "@/components/ui/artwork-image"
 import { GalleryNav } from "@/components/ui/gallery-nav"
 import { getArtworkImage, categoryImages } from "@/lib/generate-images"
-import { ArrowRight, Star, Heart, Eye, Sparkles, TrendingUp, Users, Award, Mail } from "lucide-react"
-
-const featuredArtworks = [
-  {
-    id: "1",
-    title: "Ethereal Dreams",
-    artist: "Elena Vasquez",
-    price: 2500,
-    image: getArtworkImage("1", "Abstract"),
-    category: "Abstract",
-    stock: 1,
-    featured: true,
-    rating: 4.9,
-    likes: 234,
-  },
-  {
-    id: "2",
-    title: "Digital Harmony",
-    artist: "Elena Vasquez",
-    price: 1800,
-    image: getArtworkImage("2", "Digital Art"),
-    category: "Digital Art",
-    stock: 3,
-    featured: true,
-    rating: 4.8,
-    likes: 189,
-  },
-  {
-    id: "3",
-    title: "Sculptural Form",
-    artist: "Elena Vasquez",
-    price: 3200,
-    image: getArtworkImage("3", "Sculpture"),
-    category: "Sculpture",
-    stock: 1,
-    featured: true,
-    rating: 5.0,
-    likes: 312,
-  },
-  {
-    id: "4",
-    title: "Ocean Depths",
-    artist: "Elena Vasquez",
-    price: 2200,
-    image: getArtworkImage("4", "Painting"),
-    category: "Painting",
-    stock: 2,
-    featured: true,
-    rating: 4.7,
-    likes: 156,
-  },
-  {
-    id: "5",
-    title: "Urban Reflections",
-    artist: "Elena Vasquez",
-    price: 1950,
-    image: getArtworkImage("5", "Photography"),
-    category: "Photography",
-    stock: 5,
-    featured: true,
-    rating: 4.6,
-    likes: 98,
-  },
-  {
-    id: "6",
-    title: "Cosmic Journey",
-    artist: "Elena Vasquez",
-    price: 2800,
-    image: getArtworkImage("6", "Mixed Media"),
-    category: "Mixed Media",
-    stock: 1,
-    featured: true,
-    rating: 4.9,
-    likes: 267,
-  },
-]
+import { ArrowRight, Star, Heart, Eye, Sparkles, TrendingUp, Users, Award, Mail, Loader2, RefreshCw } from "lucide-react"
+import { useArt } from "@/contexts/ArtContext"
 
 const categories = [
   {
@@ -129,6 +55,7 @@ const stats = [
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
+  const { featuredArtworks, loading } = useArt()
 
   useEffect(() => {
     setMounted(true)
@@ -296,81 +223,97 @@ export default function HomePage() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredArtworks.map((artwork, index) => (
-              <motion.div
-                key={artwork.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="group"
-              >
-                <Card3D className="glass-enhanced rounded-3xl overflow-hidden border-0 card-hover">
-                  <div className="relative overflow-hidden">
-                    <ArtworkImage
-                      src={artwork.image}
-                      alt={artwork.title}
-                      title={artwork.title}
-                      category={artwork.category}
-                      width={400}
-                      height={320}
-                      className="w-full h-80 transition-transform duration-700 group-hover:scale-110"
-                    />
+            {loading ? (
+              [...Array(6)].map((_, i) => (
+                <div key={i} className="h-96 glass rounded-3xl animate-pulse" />
+              ))
+            ) : featuredArtworks.length > 0 ? (
+              featuredArtworks.map((artwork, index) => (
+                <motion.div
+                  key={artwork.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="group"
+                >
+                  <Card3D className="glass-enhanced rounded-3xl overflow-hidden border-0 card-hover">
+                    <div className="relative overflow-hidden">
+                      <ArtworkImage
+                        src={artwork.image_url}
+                        alt={artwork.title}
+                        title={artwork.title}
+                        category={artwork.category}
+                        width={400}
+                        height={320}
+                        className="w-full h-80 transition-transform duration-700 group-hover:scale-110"
+                      />
 
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      {/* Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                    {/* Action Buttons */}
-                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Button size="icon" className="glass w-10 h-10 hover:bg-white/20" aria-label="Add to wishlist">
-                        <Heart className="w-4 h-4" />
-                      </Button>
-                      <Button size="icon" className="glass w-10 h-10 hover:bg-white/20" aria-label="Quick view">
-                        <Eye className="w-4 h-4" />
-                      </Button>
-                    </div>
-
-                    {/* Category Badge */}
-                    <Badge className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-green-500 text-white border-0">
-                      {artwork.category}
-                    </Badge>
-
-                    {/* Rating */}
-                    <div className="absolute bottom-4 left-4 flex items-center gap-1 glass px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Star className="w-4 h-4 fill-green-400 text-green-400" />
-                      <span className="text-sm font-medium text-white">{artwork.rating}</span>
-                    </div>
-                  </div>
-
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="text-xl font-bold mb-1 group-hover:text-blue-400 transition-colors">
-                          {artwork.title}
-                        </h3>
-                        <p className="text-muted-foreground">by {artwork.artist}</p>
+                      {/* Action Buttons */}
+                      <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <Button size="icon" className="glass w-10 h-10 hover:bg-white/20" aria-label="Add to wishlist">
+                          <Heart className="w-4 h-4" />
+                        </Button>
+                        <Button size="icon" className="glass w-10 h-10 hover:bg-white/20" aria-label="Quick view">
+                          <Eye className="w-4 h-4" />
+                        </Button>
                       </div>
-                      <div className="flex items-center gap-1 text-muted-foreground">
-                        <Heart className="w-4 h-4" />
-                        <span className="text-sm">{artwork.likes}</span>
+
+                      {/* Category Badge */}
+                      <Badge className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-green-500 text-white border-0">
+                        {artwork.category}
+                      </Badge>
+
+                      {/* Rating (Simulated if missing) */}
+                      <div className="absolute bottom-4 left-4 flex items-center gap-1 glass px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <Star className="w-4 h-4 fill-green-400 text-green-400" />
+                        <span className="text-sm font-medium text-white">{(4.5 + (artwork.view_count % 5) / 10).toFixed(1)}</span>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-gradient-primary">${artwork.price.toLocaleString()}</span>
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="text-xl font-bold mb-1 group-hover:text-blue-400 transition-colors">
+                            {artwork.title}
+                          </h3>
+                          <p className="text-muted-foreground">by {artwork.artist_name}</p>
+                        </div>
+                        <div className="flex items-center gap-1 text-muted-foreground">
+                          <Eye className="w-4 h-4" />
+                          <span className="text-sm">{artwork.view_count}</span>
+                        </div>
+                      </div>
 
-                      <Button
-                        onClick={() => handleContactOwner(artwork.title, artwork.artist)}
-                        className="btn-primary"
-                      >
-                        <Mail className="w-4 h-4 mr-2" />
-                        Contact Owner
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card3D>
-              </motion.div>
-            ))}
+                      <div className="flex items-center justify-between">
+                        <span className="text-2xl font-bold text-gradient-primary">
+                          Gallery Piece
+                        </span>
+
+                        <Button
+                          onClick={() => handleContactOwner(artwork.title, artwork.artist_name)}
+                          className="btn-primary"
+                        >
+                          <Mail className="w-4 h-4 mr-2" />
+                          Contact Artist
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card3D>
+                </motion.div>
+              ))
+            ) : (
+              <div className="col-span-full py-20 text-center glass rounded-3xl">
+                <p className="text-xl text-muted-foreground">No featured artworks found.</p>
+                <Button variant="outline" className="mt-6" onClick={() => window.location.reload()}>
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Reload Collection
+                </Button>
+              </div>
+            )}
           </div>
 
           <div className="text-center mt-16">
@@ -385,7 +328,7 @@ export default function HomePage() {
       </section>
 
       {/* Categories */}
-      <section className="py-20 lg:py-32 bg-black">
+      <section className="py-20 lg:py-32 ">
         <div className="container-padding">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -445,7 +388,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center glass-strong rounded-3xl p-12 lg:p-20"
+            className="text-center rounded-3xl p-12 lg:p-20"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Ready to Start Your <span className="text-gradient-primary">Art Journey</span>?
