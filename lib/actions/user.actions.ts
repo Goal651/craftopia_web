@@ -32,8 +32,9 @@ export async function signInAction(email: string, password: string) {
             display_name: user.display_name,
             avatar_url: user.avatar_url,
         }
+        const cookies_data = await cookies()
 
-        cookies().set("session", JSON.stringify(sessionUser), {
+        cookies_data.set("session", JSON.stringify(sessionUser), {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             maxAge: 60 * 60 * 24 * 7, // 1 week
@@ -70,7 +71,9 @@ export async function signUpAction(email: string, password: string, displayName:
             avatar_url: user.avatar_url,
         }
 
-        cookies().set("session", JSON.stringify(sessionUser), {
+        const cookies_data = await cookies()
+
+        cookies_data.set("session", JSON.stringify(sessionUser), {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             maxAge: 60 * 60 * 24 * 7, // 1 week
@@ -85,12 +88,14 @@ export async function signUpAction(email: string, password: string, displayName:
 }
 
 export async function signOutAction() {
-    cookies().delete("session")
+    const cookies_data = await cookies()
+    cookies_data.delete("session")
     return { success: true }
 }
 
 export async function getSessionAction() {
-    const session = cookies().get("session")
+    const cookies_data = await cookies()
+    const session = cookies_data.get("session")
     if (!session) return null
     try {
         return JSON.parse(session.value)
@@ -120,7 +125,8 @@ export async function updateProfileAction(displayName: string, bio?: string) {
             avatar_url: updatedUser.avatar_url,
         }
 
-        cookies().set("session", JSON.stringify(newSessionUser), {
+        const cookies_data = await cookies()
+        cookies_data.set("session", JSON.stringify(newSessionUser), {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             maxAge: 60 * 60 * 24 * 7,
