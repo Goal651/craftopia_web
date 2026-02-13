@@ -72,9 +72,8 @@ export function Header() {
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full ${
-          isScrolled ? "glass-effect shadow-lg" : "bg-black/50"
-        } hidden md:block`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full ${isScrolled ? "glass-effect shadow-lg" : "bg-black/50"
+          } hidden md:block`}
       >
         <div className="w-full px-6">
           <div className="flex items-center justify-between h-20">
@@ -100,9 +99,8 @@ export function Header() {
               {navItems.map((item) => (
                 <Link key={item.href} href={item.href} className="relative group">
                   <span
-                    className={`text-sm font-medium transition-colors ${
-                      pathname === item.href ? "text-blue-400" : "text-white hover:text-blue-400"
-                    }`}
+                    className={`text-sm font-medium transition-colors ${pathname === item.href ? "text-blue-400" : "text-white hover:text-blue-400"
+                      }`}
                   >
                     {item.label}
                   </span>
@@ -175,7 +173,7 @@ export function Header() {
                         <User className="h-5 w-5 text-white" />
                       </div>
                       <div className="flex flex-col space-y-1 leading-none">
-                        <p className="font-semibold text-white">{user.user_metadata?.display_name || user.email}</p>
+                        <p className="font-semibold text-white">{user.display_name || user.email}</p>
                         <p className="text-xs text-gray-400">{user.email}</p>
                         <Badge variant="secondary" className="w-fit text-xs mt-1 bg-gray-700 text-gray-300">
                           User
@@ -220,9 +218,8 @@ export function Header() {
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full ${
-          isScrolled ? "glass-effect shadow-lg" : "bg-black/50"
-        } md:hidden`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full ${isScrolled ? "glass-effect shadow-lg" : "bg-black/50"
+          } md:hidden`}
       >
         <div className="px-4 w-full">
           <div className="flex items-center justify-between h-16">
@@ -282,9 +279,8 @@ export function Header() {
                     >
                       <Link
                         href={item.href}
-                        className={`flex items-center gap-3 p-3 rounded-lg transition-colors touch-target ${
-                          pathname === item.href ? "bg-blue-500/20 text-blue-400" : "text-white hover:bg-white/10"
-                        }`}
+                        className={`flex items-center gap-3 p-3 rounded-lg transition-colors touch-target ${pathname === item.href ? "bg-blue-500/20 text-blue-400" : "text-white hover:bg-white/10"
+                          }`}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <item.icon className="w-5 h-5" />
@@ -303,7 +299,7 @@ export function Header() {
                           <User className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                          <p className="font-semibold text-white">{user.user_metadata?.display_name || user.email}</p>
+                          <p className="font-semibold text-white">{user.display_name || user.email}</p>
                           <p className="text-xs text-gray-400">{user.email}</p>
                         </div>
                       </div>

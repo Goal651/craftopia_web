@@ -29,10 +29,10 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { useAuth } from '@/contexts/auth-context'
-import { useUploadErrorHandler } from '@/components/error-boundaries'
 import type { ArtworkCategory, ArtworkRecord } from '@/types'
+import { useUploadThing } from "@/lib/uploadthing";
 
-// Validation schema based on requirements
+// Validation schema
 const artworkUploadSchema = z.object({
   title: z.string()
     .min(1, 'Title is required')
@@ -43,7 +43,7 @@ const artworkUploadSchema = z.object({
     .optional(),
   category: z.enum([
     'painting',
-    'digital-art', 
+    'digital-art',
     'photography',
     'sculpture',
     'mixed-media',
@@ -53,14 +53,14 @@ const artworkUploadSchema = z.object({
     message: 'Please select a category'
   }),
   imageFile: z.instanceof(File, { message: 'Please select an image file' })
-    .refine((file) => file.size <= 10 * 1024 * 1024, 'File size must be under 10MB')
+    .refine((file) => file.size <= 8 * 1024 * 1024, 'File size must be under 8MB')
     .refine(
       (file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type),
       'File must be JPG, PNG, or WebP format'
     )
 })
 
-type ArtworkUploadForm = z.infer<typeof artworkUploadSchema>
+type ArtworkUploadFormValues = z.infer<typeof artworkUploadSchema>
 
 interface ArtworkUploadFormProps {
   onSuccess?: (artwork: ArtworkRecord) => void
@@ -70,7 +70,7 @@ interface ArtworkUploadFormProps {
 const categoryLabels: Record<ArtworkCategory, string> = {
   'painting': 'Painting',
   'digital-art': 'Digital Art',
-  'photography': 'Photography', 
+  'photography': 'Photography',
   'sculpture': 'Sculpture',
   'mixed-media': 'Mixed Media',
   'drawing': 'Drawing',
@@ -79,14 +79,25 @@ const categoryLabels: Record<ArtworkCategory, string> = {
 
 export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps) {
   const { user } = useAuth()
-  const { handleError: handleUploadError, retry, reset, hasError } = useUploadErrorHandler()
   const [isUploading, setIsUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [dragActive, setDragActive] = useState(false)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [retryCount, setRetryCount] = useState(0)
 
-  const form = useForm<ArtworkUploadForm>({
+  const { startUpload } = useUploadThing("imageUploader", {
+    onClientUploadComplete: () => {
+      // Handled in onSubmit
+    },
+    onUploadError: (e: Error) => {
+      toast.error(`Error uploading: ${e.message}`);
+      setIsUploading(false);
+    },
+    onUploadProgress: (p: number) => {
+      setUploadProgress(p);
+    },
+  });
+
+  const form = useForm<ArtworkUploadFormValues>({
     resolver: zodResolver(artworkUploadSchema),
     defaultValues: {
       title: '',
@@ -96,39 +107,30 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
     }
   })
 
-  // Handle file selection
   const handleFileSelect = (file: File) => {
     form.setValue('imageFile', file)
     form.clearErrors('imageFile')
-    
-    // Create preview URL
     const url = URL.createObjectURL(file)
     setPreviewUrl(url)
   }
 
-  // Handle drag and drop
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (e.type === 'dragenter' || e.type === 'dragover') {
-      setDragActive(true)
-    } else if (e.type === 'dragleave') {
-      setDragActive(false)
-    }
+    if (e.type === 'dragenter' || e.type === 'dragover') setDragActive(true)
+    else if (e.type === 'dragleave') setDragActive(false)
   }
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     setDragActive(false)
-
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFileSelect(e.dataTransfer.files[0])
     }
   }
 
-  // Handle form submission
-  const onSubmit = async (data: ArtworkUploadForm) => {
+  const onSubmit = async (data: ArtworkUploadFormValues) => {
     if (!user) {
       toast.error('You must be logged in to upload artwork')
       return
@@ -138,84 +140,63 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
     setUploadProgress(0)
 
     try {
-      // Simulate progress updates
-      const progressInterval = setInterval(() => {
-        setUploadProgress(prev => Math.min(prev + 10, 90))
-      }, 200)
+      // 1. Upload to Uploadthing
+      const uploadRes = await startUpload([data.imageFile]);
 
-      const formData = new FormData()
-      formData.append('title', data.title)
-      formData.append('description', data.description || '')
-      formData.append('category', data.category)
-      formData.append('imageFile', data.imageFile)
+      if (!uploadRes || uploadRes.length === 0) {
+        throw new Error("Failed to upload image");
+      }
 
-      const response = await fetch('/api/artworks/upload', {
+      const imageUrl = uploadRes[0].url;
+
+      // 2. Save metadata to MongoDB
+      const response = await fetch('/api/artworks', {
         method: 'POST',
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: data.title,
+          description: data.description,
+          category: data.category,
+          image_url: imageUrl,
+          artist_id: user.id,
+          artist_name: user.display_name || user.email
+        })
       })
-
-      clearInterval(progressInterval)
-      setUploadProgress(100)
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Upload failed')
+        throw new Error(errorData.error || 'Failed to save artwork details')
       }
 
       const result = await response.json()
-      
-      // Show warnings if any
-      if (result.warnings && result.warnings.length > 0) {
-        result.warnings.forEach((warning: string) => {
-          toast.warning(warning)
-        })
-      }
-      
       toast.success('Artwork uploaded successfully!')
-      
-      // Reset form
       form.reset()
       setPreviewUrl(null)
-      
       onSuccess?.(result.artwork)
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Upload failed'
-      
-      // Handle different types of errors
-      if (error instanceof Error) {
-        handleUploadError(error)
-      }
-      
       toast.error(errorMessage)
       onError?.(errorMessage)
-      
-      // Increment retry count for internal tracking
-      setRetryCount(prev => prev + 1)
     } finally {
       setIsUploading(false)
       setUploadProgress(0)
     }
   }
 
-  // Clean up preview URL on unmount
   React.useEffect(() => {
     return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl)
-      }
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
     }
   }, [previewUrl])
 
   if (!user) {
     return (
-      <Card className="glass border-0 bg-white/5 backdrop-blur-xl border border-gray-800">
+      <Card className="glass border-0 bg-white/5 backdrop-blur-xl">
         <CardContent className="p-8 text-center">
           <AlertCircle className="w-12 h-12 mx-auto mb-4 text-blue-400" />
           <h3 className="text-xl font-semibold mb-2">Authentication Required</h3>
-          <p className="text-muted-foreground">
-            Please log in to upload your artwork to the public gallery.
-          </p>
+          <p className="text-muted-foreground">Please log in to upload your artwork.</p>
         </CardContent>
       </Card>
     )
@@ -232,7 +213,6 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* File Upload Area */}
             <FormField
               control={form.control}
               name="imageFile"
@@ -241,11 +221,8 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
                   <FormLabel>Artwork Image</FormLabel>
                   <FormControl>
                     <div
-                      className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
-                        dragActive 
-                          ? 'border-primary bg-primary/5' 
-                          : 'border-white/20 hover:border-white/40'
-                      }`}
+                      className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${dragActive ? 'border-primary bg-primary/5' : 'border-white/20 hover:border-white/40'
+                        }`}
                       onDragEnter={handleDrag}
                       onDragLeave={handleDrag}
                       onDragOver={handleDrag}
@@ -254,11 +231,7 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
                       {previewUrl ? (
                         <div className="space-y-4">
                           <div className="relative inline-block">
-                            <img
-                              src={previewUrl}
-                              alt="Preview"
-                              className="max-w-full max-h-48 rounded-lg object-cover"
-                            />
+                            <img src={previewUrl} alt="Preview" className="max-w-full max-h-48 rounded-lg object-cover" />
                             <Button
                               type="button"
                               variant="destructive"
@@ -272,16 +245,12 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
                               <X className="w-3 h-3" />
                             </Button>
                           </div>
-                          <p className="text-sm text-muted-foreground">
-                            {form.getValues('imageFile')?.name}
-                          </p>
+                          <p className="text-sm text-muted-foreground">{form.getValues('imageFile')?.name}</p>
                         </div>
                       ) : (
                         <>
                           <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                          <p className="text-muted-foreground mb-2">
-                            Drag and drop your image here, or click to browse
-                          </p>
+                          <p className="text-muted-foreground mb-2">Drag and drop your image here, or click to browse</p>
                           <input
                             type="file"
                             accept="image/jpeg,image/png,image/webp"
@@ -305,15 +274,12 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
                       )}
                     </div>
                   </FormControl>
-                  <FormDescription>
-                    Upload JPG, PNG, or WebP files up to 10MB
-                  </FormDescription>
+                  <FormDescription>Upload JPG, PNG, or WebP files up to 8MB</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* Title Field */}
             <FormField
               control={form.control}
               name="title"
@@ -321,18 +287,13 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter artwork title"
-                      className="glass border-0 bg-white/5"
-                      {...field}
-                    />
+                    <Input placeholder="Enter artwork title" className="glass border-0 bg-white/5" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* Category Field */}
             <FormField
               control={form.control}
               name="category"
@@ -347,9 +308,7 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
                     </FormControl>
                     <SelectContent>
                       {Object.entries(categoryLabels).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
+                        <SelectItem key={value} value={value}>{label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -358,7 +317,6 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
               )}
             />
 
-            {/* Description Field */}
             <FormField
               control={form.control}
               name="description"
@@ -366,21 +324,13 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
                 <FormItem>
                   <FormLabel>Description (Optional)</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Tell us about your artwork..."
-                      className="glass border-0 bg-white/5 min-h-[100px]"
-                      {...field}
-                    />
+                    <Textarea placeholder="Tell us about your artwork..." className="glass border-0 bg-white/5 min-h-[100px]" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Share the story behind your artwork (optional)
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* Upload Progress */}
             {isUploading && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
@@ -391,23 +341,12 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
               </div>
             )}
 
-            {/* Submit Button */}
             <Button
               type="submit"
               disabled={isUploading}
               className="w-full glass border-0 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
             >
-              {isUploading ? (
-                <>
-                  <div className="w-4 h-4 mr-2 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Uploading...
-                </>
-              ) : (
-                <>
-                  <Upload className="w-4 h-4 mr-2" />
-                  Upload Artwork
-                </>
-              )}
+              {isUploading ? "Uploading..." : "Upload Artwork"}
             </Button>
           </form>
         </Form>

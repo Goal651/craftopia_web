@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
-import type { ArtworkRecord } from '@/types'
+import dbConnect from '@/lib/db/mongodb'
+import Artwork from '@/lib/db/models/Artwork'
 
 export async function GET(request: NextRequest) {
   try {
+    await dbConnect()
+
     const { searchParams } = new URL(request.url)
     const query = searchParams.get('q')
     const page = parseInt(searchParams.get('page') || '1')
@@ -17,47 +19,36 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const supabase = await createClient()
-    
-    // Calculate offset for pagination
-    const offset = (page - 1) * limit
+    const skip = (page - 1) * limit
 
-    // Build the base query
-    let queryBuilder = supabase
-      .from('artworks')
-      .select('*', { count: 'exact' })
+    // Build filter object
+    const filter: any = {
+      $text: { $search: query }
+    }
 
-    // Add full-text search using PostgreSQL's to_tsvector
-    // Search in title, artist_name, and description fields
-    const searchTerm = query.trim().replace(/[^\w\s]/g, '').split(/\s+/).join(' | ')
-    
-    queryBuilder = queryBuilder.or(`title.ilike.%${query}%,artist_name.ilike.%${query}%,description.ilike.%${query}%`)
-
-    // Add category filter if provided
     if (category && category !== 'all') {
-      queryBuilder = queryBuilder.eq('category', category)
+      filter.category = category
     }
 
-    // Add ordering and pagination
-    queryBuilder = queryBuilder
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1)
+    // Execute query with count
+    const [artworks, totalItems] = await Promise.all([
+      Artwork.find(filter)
+        .sort({ score: { $meta: "textScore" }, createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Artwork.countDocuments(filter)
+    ])
 
-    const { data: artworks, error, count } = await queryBuilder
-
-    if (error) {
-      console.error('Search error:', error)
-      return NextResponse.json(
-        { error: 'Failed to search artworks' },
-        { status: 500 }
-      )
-    }
-
-    const totalItems = count || 0
     const totalPages = Math.ceil(totalItems / limit)
 
     return NextResponse.json({
-      artworks: artworks || [],
+      artworks: artworks.map((art: any) => ({
+        ...art,
+        id: art._id.toString(),
+        _id: undefined,
+        __v: undefined
+      })),
       pagination: {
         currentPage: page,
         totalPages,
@@ -76,26 +67,4 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     )
   }
-}
-
-// Handle unsupported methods
-export async function POST() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  )
-}
-
-export async function PUT() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  )
-}
-
-export async function DELETE() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  )
 }

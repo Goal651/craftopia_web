@@ -26,7 +26,7 @@ export default function ProfilePage() {
       setDisplayName(profile.display_name)
       setBio(profile.bio || "")
     } else if (user) {
-      setDisplayName(user.user_metadata?.display_name || user.email.split('@')[0])
+      setDisplayName(user.display_name || user.email.split('@')[0])
       setBio("")
     }
   }, [profile, user])
@@ -38,9 +38,9 @@ export default function ProfilePage() {
     }
 
     setIsSaving(true)
-    
+
     const result = await updateProfile(displayName.trim(), bio.trim() || undefined)
-    
+
     if (result.success) {
       setIsEditing(false)
       // Refresh profile data to get updated timestamps
@@ -48,7 +48,7 @@ export default function ProfilePage() {
     } else {
       toast.error(result.error || "Failed to update profile")
     }
-    
+
     setIsSaving(false)
   }
 
@@ -59,7 +59,7 @@ export default function ProfilePage() {
       setDisplayName(profile.display_name)
       setBio(profile.bio || "")
     } else if (user) {
-      setDisplayName(user.user_metadata?.display_name || user.email.split('@')[0])
+      setDisplayName(user.display_name || user.email.split('@')[0])
       setBio("")
     }
   }
@@ -178,9 +178,8 @@ export default function ProfilePage() {
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     disabled={!isEditing || isSaving}
-                    className={`pl-10 glass border-0 text-white ${
-                      !isEditing ? "cursor-not-allowed text-gray-400" : "focus:ring-2 focus:ring-blue-500/50"
-                    }`}
+                    className={`pl-10 glass border-0 text-white ${!isEditing ? "cursor-not-allowed text-gray-400" : "focus:ring-2 focus:ring-blue-500/50"
+                      }`}
                     placeholder="Enter your display name"
                     required
                   />
@@ -196,9 +195,8 @@ export default function ProfilePage() {
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   disabled={!isEditing || isSaving}
-                  className={`glass border-0 text-white min-h-[100px] ${
-                    !isEditing ? "cursor-not-allowed text-gray-400" : "focus:ring-2 focus:ring-blue-500/50"
-                  }`}
+                  className={`glass border-0 text-white min-h-[100px] ${!isEditing ? "cursor-not-allowed text-gray-400" : "focus:ring-2 focus:ring-blue-500/50"
+                    }`}
                   placeholder="Tell us about yourself..."
                   maxLength={500}
                 />
@@ -254,7 +252,7 @@ export default function ProfilePage() {
                 <div>
                   <h3 className="font-medium text-white">Member Since</h3>
                   <p className="text-sm text-gray-400">
-                    {profile?.created_at 
+                    {profile?.created_at
                       ? new Date(profile.created_at).toLocaleDateString()
                       : new Date().toLocaleDateString()
                     }

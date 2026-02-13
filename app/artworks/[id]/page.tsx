@@ -8,18 +8,8 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-
-// Type assertion function to ensure category is valid
-function assertArtworkRecord(data: any): ArtworkRecord {
-  return {
-    ...data,
-    category: data.category as ArtworkCategory
-  }
-}
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { createClient } from "@/lib/supabase/client"
-import { useRealtimeArtworks } from "@/hooks/use-realtime-artworks"
 import { ArtworkRecord, ArtworkCategory } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
@@ -34,58 +24,27 @@ export default function ArtworkDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [viewCountUpdated, setViewCountUpdated] = useState(false)
 
-  const supabase = createClient()
-
-  // Real-time updates for view count changes on this specific artwork
-  useRealtimeArtworks({
-    onViewCountUpdate: (artworkId, newViewCount) => {
-      if (artwork && artworkId === artwork.id) {
-        setArtwork(prev => prev ? { ...prev, view_count: newViewCount } : null)
-      }
-    },
-    onArtworkUpdate: (updatedArtwork) => {
-      if (artwork && updatedArtwork.id === artwork.id) {
-        setArtwork(updatedArtwork)
-      }
-    },
-    enabled: !!artwork // Only enable when we have an artwork loaded
-  })
+  const artworkId = Array.isArray(params.id) ? params.id[0] : params.id
 
   const fetchArtwork = async () => {
     try {
       setLoading(true)
       setError(null)
 
-      const artworkId = Array.isArray(params.id) ? params.id[0] : params.id
-
-      const { data, error: fetchError } = await supabase
-        .from('artworks')
-        .select('*')
-        .eq('id', artworkId)
-        .single()
-
-      if (fetchError) {
-        if (fetchError.code === 'PGRST116') {
-          throw new Error('Artwork not found')
-        }
-        throw new Error(`Failed to fetch artwork: ${fetchError.message}`)
+      const response = await fetch(`/api/artworks/${artworkId}`)
+      if (!response.ok) {
+        if (response.status === 404) throw new Error('Artwork not found')
+        throw new Error('Failed to fetch artwork')
       }
 
-      setArtwork(assertArtworkRecord(data))
+      const data = await response.json()
+      setArtwork(data)
 
-      // Fetch related artworks (same category or same artist, excluding current artwork)
-      const { data: related, error: relatedError } = await supabase
-        .from('artworks')
-        .select('*')
-        .neq('id', artworkId)
-        .or(`category.eq.${data.category},artist_id.eq.${data.artist_id}`)
-        .order('created_at', { ascending: false })
-        .limit(4)
-
-      if (relatedError) {
-        console.warn('Failed to fetch related artworks:', relatedError.message)
-      } else {
-        setRelatedArtworks((related || []).map(assertArtworkRecord))
+      // Fetch related artworks
+      const relatedRes = await fetch(`/api/artworks?category=${data.category}&limit=5`)
+      if (relatedRes.ok) {
+        const relatedData = await relatedRes.json()
+        setRelatedArtworks(relatedData.artworks.filter((a: ArtworkRecord) => a.id !== artworkId).slice(0, 4))
       }
 
     } catch (err) {
@@ -100,13 +59,12 @@ export default function ArtworkDetailPage() {
     if (!artwork || viewCountUpdated) return
 
     try {
-      const { error } = await supabase
-        .from('artworks')
-        .update({ view_count: artwork.view_count + 1 })
-        .eq('id', artwork.id)
-
-      if (!error) {
-        setArtwork(prev => prev ? { ...prev, view_count: prev.view_count + 1 } : null)
+      const response = await fetch(`/api/artworks/${artworkId}/views`, {
+        method: 'POST'
+      })
+      if (response.ok) {
+        const data = await response.json()
+        setArtwork(prev => prev ? { ...prev, view_count: data.view_count } : null)
         setViewCountUpdated(true)
       }
     } catch (err) {
@@ -115,14 +73,13 @@ export default function ArtworkDetailPage() {
   }
 
   useEffect(() => {
-    if (params.id) {
+    if (artworkId) {
       fetchArtwork()
     }
-  }, [params.id])
+  }, [artworkId])
 
   useEffect(() => {
     if (artwork && !viewCountUpdated) {
-      // Increment view count after a short delay to ensure the user is actually viewing
       const timer = setTimeout(incrementViewCount, 2000)
       return () => clearTimeout(timer)
     }
@@ -133,16 +90,11 @@ export default function ArtworkDetailPage() {
       <div className="min-h-screen pt-20 bg-black">
         <div className="container mx-auto container-padding py-8">
           <div className="space-y-8">
-            {/* Breadcrumb skeleton */}
             <Skeleton className="h-4 w-32 bg-gray-700/50" />
-            
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Image skeleton */}
               <div className="space-y-4">
                 <Skeleton className="aspect-square w-full bg-gray-700/50 rounded-lg" />
               </div>
-              
-              {/* Details skeleton */}
               <div className="space-y-6">
                 <div className="space-y-4">
                   <Skeleton className="h-6 w-24 bg-gray-700/50" />
@@ -171,7 +123,7 @@ export default function ArtworkDetailPage() {
                 {error === 'Artwork not found' ? 'Artwork Not Found' : 'Failed to Load Artwork'}
               </h1>
               <p className="text-gray-400 max-w-md mx-auto">
-                {error === 'Artwork not found' 
+                {error === 'Artwork not found'
                   ? "The artwork you're looking for doesn't exist or may have been removed."
                   : error
                 }
@@ -196,9 +148,8 @@ export default function ArtworkDetailPage() {
     <div className="min-h-screen pt-20 bg-black">
       <div className="container mx-auto container-padding py-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-          {/* Navigation */}
           <div className="flex items-center justify-between">
-            <BreadcrumbNav 
+            <BreadcrumbNav
               items={[
                 { label: "Community Gallery", href: "/gallery" },
                 { label: artwork.title, current: true }
@@ -207,9 +158,7 @@ export default function ArtworkDetailPage() {
             <BackButton href="/gallery" label="Back to Gallery" />
           </div>
 
-          {/* Main Content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Image */}
             <div className="space-y-4">
               <div className="aspect-square relative overflow-hidden rounded-lg glass">
                 <Image
@@ -219,15 +168,10 @@ export default function ArtworkDetailPage() {
                   className="object-cover"
                   priority
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.src = "/placeholder.svg?height=600&width=600"
-                  }}
                 />
               </div>
             </div>
 
-            {/* Details */}
             <div className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-start justify-between">
@@ -236,7 +180,7 @@ export default function ArtworkDetailPage() {
                       {artwork.category.replace('-', ' ')}
                     </Badge>
                     <h1 className="text-3xl lg:text-4xl font-light text-white">{artwork.title}</h1>
-                    <Link 
+                    <Link
                       href={`/gallery/artist/${artwork.artist_id}`}
                       className="text-xl text-blue-400 hover:text-blue-300 transition-colors"
                     >
@@ -258,7 +202,6 @@ export default function ArtworkDetailPage() {
                 )}
               </div>
 
-              {/* Artwork Metadata */}
               <div className="space-y-4">
                 <h3 className="font-semibold text-white text-lg">Artwork Details</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
@@ -275,8 +218,8 @@ export default function ArtworkDetailPage() {
                       })}
                     </div>
                   </div>
-                  
-                  <LiveViewCounter 
+
+                  <LiveViewCounter
                     viewCount={artwork.view_count}
                   />
 
@@ -285,7 +228,7 @@ export default function ArtworkDetailPage() {
                       <User className="w-4 h-4" />
                       <span>Artist</span>
                     </div>
-                    <Link 
+                    <Link
                       href={`/gallery/artist/${artwork.artist_id}`}
                       className="font-medium text-blue-400 hover:text-blue-300 transition-colors"
                     >
@@ -305,7 +248,6 @@ export default function ArtworkDetailPage() {
                 </div>
               </div>
 
-              {/* Actions */}
               <div className="space-y-4">
                 <Button asChild size="lg" className="w-full btn-primary">
                   <Link href={`/gallery/artist/${artwork.artist_id}`}>
@@ -314,7 +256,6 @@ export default function ArtworkDetailPage() {
                 </Button>
               </div>
 
-              {/* Share URL */}
               <Card className="glass border-0">
                 <CardContent className="p-4">
                   <div className="space-y-2 text-sm">
@@ -344,7 +285,6 @@ export default function ArtworkDetailPage() {
             </div>
           </div>
 
-          {/* Related Artworks */}
           {relatedArtworks.length > 0 && (
             <div className="space-y-6">
               <h2 className="text-2xl lg:text-3xl font-light text-white">Related Artworks</h2>
@@ -359,16 +299,8 @@ export default function ArtworkDetailPage() {
                           fill
                           className="object-cover transition-transform duration-700 group-hover:scale-110"
                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement
-                            target.src = "/placeholder.svg?height=400&width=300"
-                          }}
                         />
-                        
-                        {/* Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        
-                        {/* View Count */}
                         {relatedArtwork.view_count > 0 && (
                           <div className="absolute top-3 right-3 glass rounded-full px-2 py-1">
                             <div className="flex items-center gap-1 text-xs text-white">
@@ -378,7 +310,7 @@ export default function ArtworkDetailPage() {
                           </div>
                         )}
                       </div>
-                      
+
                       <CardContent className="p-4">
                         <div className="space-y-2">
                           <Badge variant="secondary" className="bg-gray-700/50 text-gray-300 text-xs">

@@ -1,100 +1,49 @@
-import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { useAuth } from '@/contexts/auth-context'
+"use client"
 
-interface UserProfile {
-  id: string
-  display_name: string
-  avatar_url: string | null
-  bio: string | null
-  created_at: string
-  updated_at: string
-}
+import { useState, useEffect, useCallback } from "react"
+import { useAuth } from "@/contexts/auth-context"
+import { toast } from "sonner"
 
 export function useUserProfile() {
-  const { user } = useAuth()
-  const [profile, setProfile] = useState<UserProfile | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const supabase = createClient()
+    const { user } = useAuth()
+    const [profile, setProfile] = useState<any>(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (!user) {
-      setProfile(null)
-      setLoading(false)
-      return
-    }
-
-    const fetchProfile = async () => {
-      try {
-        setLoading(true)
-        setError(null)
-
-        const { data, error: fetchError } = await supabase
-          .from('user_profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single()
-
-        if (fetchError) {
-          // If profile doesn't exist, create a default one
-          if (fetchError.code === 'PGRST116') {
-            const { data: newProfile, error: insertError } = await supabase
-              .from('user_profiles')
-              .insert({
-                id: user.id,
-                display_name: user.user_metadata?.display_name || user.email.split('@')[0],
-                bio: null
-              })
-              .select()
-              .single()
-
-            if (insertError) {
-              setError(insertError.message)
-            } else {
-              setProfile(newProfile)
-            }
-          } else {
-            setError(fetchError.message)
-          }
-        } else {
-          setProfile(data)
+    const fetchProfile = useCallback(async () => {
+        if (!user) {
+            setLoading(false)
+            return
         }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch profile')
-      } finally {
-        setLoading(false)
-      }
+
+        try {
+            setLoading(true)
+            const response = await fetch(`/api/users/profile?userId=${user.id}`)
+            if (!response.ok) {
+                throw new Error("Failed to fetch profile")
+            }
+            const data = await response.json()
+            setProfile(data)
+        } catch (err) {
+            console.error("Error fetching profile:", err)
+            setError(err instanceof Error ? err.message : "Failed to load profile")
+        } finally {
+            setLoading(false)
+        }
+    }, [user])
+
+    useEffect(() => {
+        fetchProfile()
+    }, [fetchProfile])
+
+    const refreshProfile = async () => {
+        await fetchProfile()
     }
 
-    fetchProfile()
-  }, [user, supabase])
-
-  const refreshProfile = async () => {
-    if (!user) return
-
-    try {
-      const { data, error: fetchError } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single()
-
-      if (fetchError) {
-        setError(fetchError.message)
-      } else {
-        setProfile(data)
-        setError(null)
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to refresh profile')
+    return {
+        profile,
+        loading,
+        error,
+        refreshProfile
     }
-  }
-
-  return {
-    profile,
-    loading,
-    error,
-    refreshProfile
-  }
 }

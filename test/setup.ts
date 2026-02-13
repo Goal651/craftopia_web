@@ -2,8 +2,9 @@ import '@testing-library/jest-dom'
 import { vi } from 'vitest'
 
 // Mock environment variables for testing
-process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test-project.supabase.co'
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key'
+process.env.MONGODB_URI = 'mongodb://localhost:27017/test'
+process.env.UPLOADTHING_SECRET = 'sk_test_123'
+process.env.UPLOADTHING_APP_ID = 'test-app-id'
 
 // Setup jest compatibility with proper types
 global.jest = {

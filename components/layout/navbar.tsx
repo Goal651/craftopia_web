@@ -98,11 +98,10 @@ export function Navbar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    pathname === item.href
-                      ? "bg-blue-500/10 text-blue-400"
-                      : "text-gray-400 hover:text-white hover:bg-gray-800/50"
-                  }`}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${pathname === item.href
+                    ? "bg-blue-500/10 text-blue-400"
+                    : "text-gray-400 hover:text-white hover:bg-gray-800/50"
+                    }`}
                 >
                   {item.name}
                 </Link>
@@ -137,9 +136,9 @@ export function Navbar() {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       className="text-gray-400 hover:text-white hover:bg-gray-800/50"
                       aria-label="User menu"
                     >
@@ -150,7 +149,7 @@ export function Navbar() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-gray-900 border-gray-800">
                     <div className="px-2 py-1.5">
-                      <p className="text-sm font-medium text-white">{user.user_metadata?.display_name || user.email}</p>
+                      <p className="text-sm font-medium text-white">{user.display_name || user.email}</p>
                       <p className="text-xs text-gray-400">{user.email}</p>
                     </div>
                     <DropdownMenuSeparator className="bg-gray-800" />
@@ -169,8 +168,8 @@ export function Navbar() {
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuSeparator className="bg-gray-800" />
-                    <DropdownMenuItem 
-                      onClick={signOut} 
+                    <DropdownMenuItem
+                      onClick={signOut}
                       className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-gray-800"
                     >
                       <LogOut className="w-4 h-4 mr-2" />
@@ -179,8 +178,8 @@ export function Navbar() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button 
-                  asChild 
+                <Button
+                  asChild
                   className="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
                 >
                   <Link href="/login">Sign In</Link>
@@ -202,7 +201,7 @@ export function Navbar() {
                   </Link>
                 </Button>
               )}
-              
+
               <Button
                 variant="ghost"
                 size="icon"
@@ -249,11 +248,10 @@ export function Navbar() {
                     <Link
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-                        pathname === item.href
-                          ? "bg-blue-500/10 text-blue-400"
-                          : "text-gray-400 hover:text-white hover:bg-gray-800/50"
-                      }`}
+                      className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${pathname === item.href
+                        ? "bg-blue-500/10 text-blue-400"
+                        : "text-gray-400 hover:text-white hover:bg-gray-800/50"
+                        }`}
                     >
                       <item.icon className="w-4 h-4" />
                       <span className="font-medium">{item.name}</span>
@@ -266,7 +264,7 @@ export function Navbar() {
                   {user ? (
                     <div className="space-y-2">
                       <div className="px-3 py-2">
-                        <p className="text-sm font-medium text-white">{user.user_metadata?.display_name || user.email}</p>
+                        <p className="text-sm font-medium text-white">{user.display_name || user.email}</p>
                         <p className="text-xs text-gray-400">{user.email}</p>
                       </div>
                       <Link
@@ -300,9 +298,9 @@ export function Navbar() {
                     </div>
                   ) : (
                     <div className="px-3 py-2">
-                      <Button 
-                        asChild 
-                        className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white" 
+                      <Button
+                        asChild
+                        className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
                         onClick={() => setIsOpen(false)}
                       >
                         <Link href="/login">Sign In</Link>
@@ -320,9 +318,9 @@ export function Navbar() {
       <div className="h-16" />
 
       {/* Command Palette */}
-      <CommandPalette 
-        isOpen={commandPaletteOpen} 
-        onClose={() => setCommandPaletteOpen(false)} 
+      <CommandPalette
+        isOpen={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
       />
     </>
   )

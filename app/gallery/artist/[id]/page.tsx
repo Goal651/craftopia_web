@@ -9,19 +9,17 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
-import { createClient } from "@/lib/supabase/client"
-import { getArtistStats, getArtistArtworks, generatePageNumbers } from "@/lib/supabase/pagination"
 import { ArtworkRecord, UserProfile } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
 import { ArtworkImage } from "@/components/ui/artwork-image"
-import { 
-  ArrowLeft, 
-  Eye, 
-  Calendar, 
-  User, 
+import {
+  ArrowLeft,
+  Eye,
+  Calendar,
+  User,
   Palette,
-  AlertCircle, 
+  AlertCircle,
   RefreshCw,
   Mail,
   ChevronLeft,
@@ -38,11 +36,16 @@ interface PaginationInfo {
   hasPrevPage: boolean
 }
 
+interface ArtistStats extends UserProfile {
+  artwork_count: number
+  total_views: number
+}
+
 export default function ArtistProfilePage() {
   const params = useParams()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [artist, setArtist] = useState<UserProfile | null>(null)
+  const [artist, setArtist] = useState<ArtistStats | null>(null)
   const [artworks, setArtworks] = useState<ArtworkRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [artworksLoading, setArtworksLoading] = useState(false)
@@ -55,16 +58,18 @@ export default function ArtistProfilePage() {
     hasPrevPage: false
   })
 
-  const supabase = createClient()
   const artistId = params.id as string
-
-  // Get current page from URL parameters
-  const currentPage = parseInt(searchParams.get('page') || '1')
+  const currentPageFromUrl = parseInt(searchParams.get('page') || '1')
 
   const fetchArtistProfile = async () => {
     try {
-      const artistStats = await getArtistStats(artistId)
-      setArtist(artistStats)
+      const response = await fetch(`/api/artists/${artistId}`)
+      if (!response.ok) {
+        if (response.status === 404) throw new Error('Artist not found')
+        throw new Error('Failed to fetch artist profile')
+      }
+      const data = await response.json()
+      setArtist(data)
     } catch (err) {
       console.error('Error fetching artist profile:', err)
       setError(err instanceof Error ? err.message : 'Failed to load artist profile')
@@ -74,14 +79,16 @@ export default function ArtistProfilePage() {
   const fetchArtworks = async (page: number = 1) => {
     try {
       setArtworksLoading(true)
-      
-      const result = await getArtistArtworks(artistId, {
-        page,
-        limit: ITEMS_PER_PAGE,
-        sortBy: 'newest'
+      const params = new URLSearchParams({
+        artistId: artistId,
+        page: page.toString(),
+        limit: ITEMS_PER_PAGE.toString()
       })
+      const response = await fetch(`/api/artworks?${params}`)
+      if (!response.ok) throw new Error('Failed to fetch artworks')
 
-      setArtworks(result.data)
+      const result = await response.json()
+      setArtworks(result.artworks)
       setPagination(result.pagination)
     } catch (err) {
       console.error('Error fetching artworks:', err)
@@ -95,11 +102,12 @@ export default function ArtistProfilePage() {
     try {
       setLoading(true)
       setError(null)
-
-      await fetchArtistProfile()
-      await fetchArtworks(currentPage)
+      await Promise.all([
+        fetchArtistProfile(),
+        fetchArtworks(currentPageFromUrl)
+      ])
     } catch (err) {
-      // Error handling is done in individual functions
+      // Errors handled in individual functions
     } finally {
       setLoading(false)
     }
@@ -107,23 +115,18 @@ export default function ArtistProfilePage() {
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= pagination.totalPages && !artworksLoading) {
-      // Update URL with new page parameter
       const newSearchParams = new URLSearchParams(searchParams.toString())
       if (newPage > 1) {
         newSearchParams.set('page', newPage.toString())
       } else {
         newSearchParams.delete('page')
       }
-      
-      const newURL = typeof window !== 'undefined' 
-        ? `${window.location.pathname}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}` 
-        : `?${newSearchParams.toString()}`
+
+      const newURL = `${window.location.pathname}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
       router.replace(newURL, { scroll: false })
-      
-      // Fetch new page data
+
       fetchArtworks(newPage)
-      
-      // Scroll to artworks section
+
       const artworksSection = document.getElementById('artworks-section')
       if (artworksSection) {
         artworksSection.scrollIntoView({ behavior: 'smooth' })
@@ -137,23 +140,30 @@ export default function ArtistProfilePage() {
     }
   }, [artistId])
 
-  // Handle page changes from URL
   useEffect(() => {
-    if (artist && currentPage !== pagination.currentPage) {
-      fetchArtworks(currentPage)
+    if (artist && currentPageFromUrl !== pagination.currentPage) {
+      fetchArtworks(currentPageFromUrl)
     }
-  }, [currentPage, artist])
+  }, [currentPageFromUrl, artist])
 
-  // Loading skeleton
+  const generatePageNumbers = (current: number, total: number) => {
+    const pages = []
+    pages.push(1)
+    if (current > 3) pages.push('...')
+    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+      if (!pages.includes(i)) pages.push(i)
+    }
+    if (current < total - 2) pages.push('...')
+    if (total > 1 && !pages.includes(total)) pages.push(total)
+    return pages
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen pt-20 bg-black">
         <div className="container mx-auto container-padding py-8">
           <div className="space-y-8">
-            {/* Back button skeleton */}
             <Skeleton className="h-10 w-32 bg-gray-700/50" />
-            
-            {/* Profile header skeleton */}
             <Card className="border-0 glass-card">
               <CardContent className="p-8">
                 <div className="flex flex-col md:flex-row gap-6">
@@ -166,8 +176,6 @@ export default function ArtistProfilePage() {
                 </div>
               </CardContent>
             </Card>
-            
-            {/* Artworks grid skeleton */}
             <div className="gallery-grid">
               {Array.from({ length: 6 }).map((_, index) => (
                 <Card key={index} className="overflow-hidden border-0 glass-card">
@@ -186,7 +194,6 @@ export default function ArtistProfilePage() {
     )
   }
 
-  // Error state
   if (error) {
     return (
       <div className="min-h-screen pt-20 bg-black">
@@ -197,15 +204,12 @@ export default function ArtistProfilePage() {
                 <AlertCircle className="w-8 h-8 text-red-400" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-xl font-semibold text-white">Artist Not Found</h3>
+                <h3 className="text-xl font-semibold text-white">Error</h3>
                 <p className="text-gray-400 max-w-md mx-auto">{error}</p>
               </div>
               <div className="flex gap-4 justify-center">
                 <BackButton label="Go Back" />
-                <Button
-                  onClick={fetchArtistData}
-                  className="btn-primary"
-                >
+                <Button onClick={fetchArtistData} className="btn-primary">
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Try Again
                 </Button>
@@ -217,42 +221,33 @@ export default function ArtistProfilePage() {
     )
   }
 
-  if (!artist) {
-    return null
-  }
+  if (!artist) return null
 
   return (
     <div className="min-h-screen pt-20 bg-black">
       <div className="container mx-auto container-padding py-8">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          className="space-y-8"
-        >
-          {/* Navigation */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
           <div className="flex items-center justify-between">
-            <BreadcrumbNav 
+            <BreadcrumbNav
               items={[
                 { label: "Community Gallery", href: "/gallery" },
                 { label: "Artists", href: "/gallery" },
-                { label: artist.display_name, current: true }
+                { label: artist.display_name || "Profile", current: true }
               ]}
             />
             <BackButton href="/gallery" label="Back to Gallery" />
           </div>
 
-          {/* Artist Profile Header */}
           <Card className="border-0 glass-card">
             <CardContent className="p-8">
               <div className="flex flex-col md:flex-row gap-6">
-                {/* Avatar */}
                 <div className="flex-shrink-0">
                   <div className="w-32 h-32 rounded-full overflow-hidden glass">
                     {artist.avatar_url ? (
                       <ArtworkImage
                         src={artist.avatar_url}
-                        alt={artist.display_name}
-                        title={artist.display_name}
+                        alt={artist.display_name || "Avatar"}
+                        title={artist.display_name || "Avatar"}
                         category="avatar"
                         width={128}
                         height={128}
@@ -269,7 +264,6 @@ export default function ArtistProfilePage() {
                   </div>
                 </div>
 
-                {/* Artist Info */}
                 <div className="flex-1 space-y-4">
                   <div>
                     <h1 className="text-3xl lg:text-4xl font-light text-white mb-2">
@@ -282,38 +276,25 @@ export default function ArtistProfilePage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        <span>
-                          Joined {new Date(artist.created_at).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long'
-                          })}
-                        </span>
+                        <span>Joined {new Date(artist.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Bio */}
                   {artist.bio && (
                     <div>
                       <h3 className="text-lg font-semibold text-white mb-2">About</h3>
-                      <p className="text-gray-300 leading-relaxed">
-                        {artist.bio}
-                      </p>
+                      <p className="text-gray-300 leading-relaxed">{artist.bio}</p>
                     </div>
                   )}
 
-                  {/* Stats */}
                   <div className="flex gap-6">
                     <div>
-                      <p className="text-2xl font-bold text-white">
-                        {artist.total_views?.toLocaleString() || '0'}
-                      </p>
+                      <p className="text-2xl font-bold text-white">{artist.total_views?.toLocaleString() || '0'}</p>
                       <p className="text-sm text-gray-400">Total Views</p>
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-white">
-                        {artist.artwork_count || 0}
-                      </p>
+                      <p className="text-2xl font-bold text-white">{artist.artwork_count || 0}</p>
                       <p className="text-sm text-gray-400">Artworks</p>
                     </div>
                   </div>
@@ -322,30 +303,16 @@ export default function ArtistProfilePage() {
             </CardContent>
           </Card>
 
-          {/* Artworks Section */}
           <div id="artworks-section" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-light text-white">
                 Artworks by <span className="text-gradient-blue">{artist.display_name}</span>
               </h2>
-              {pagination.totalItems > 0 && (
-                <div className="flex items-center gap-4 text-gray-400">
-                  <p>
-                    {pagination.totalItems} artwork{pagination.totalItems !== 1 ? 's' : ''}
-                  </p>
-                  {pagination.totalPages > 1 && (
-                    <p className="text-sm">
-                      Page {pagination.currentPage} of {pagination.totalPages}
-                    </p>
-                  )}
-                </div>
-              )}
             </div>
 
-            {/* Loading state for artworks */}
             {artworksLoading && (
               <div className="gallery-grid">
-                {Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
+                {Array.from({ length: 6 }).map((_, index) => (
                   <Card key={index} className="overflow-hidden border-0 glass-card">
                     <Skeleton className="aspect-[3/4] w-full bg-gray-700/50" />
                     <CardContent className="p-4 space-y-3">
@@ -358,7 +325,6 @@ export default function ArtistProfilePage() {
               </div>
             )}
 
-            {/* Artworks Grid */}
             {!artworksLoading && artworks.length > 0 ? (
               <>
                 <motion.div layout className="gallery-grid">
@@ -387,19 +353,13 @@ export default function ArtistProfilePage() {
                                 enableOptimizations={true}
                                 aspectRatio="3/4"
                               />
-
-                              {/* Overlay */}
                               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                              {/* Action Buttons */}
                               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 <Button size="sm" className="btn-primary shadow-lg">
                                   <Eye className="w-4 h-4 mr-1" />
                                   <span className="hidden sm:inline">View</span>
                                 </Button>
                               </div>
-
-                              {/* View Count */}
                               {artwork.view_count > 0 && (
                                 <div className="absolute top-3 right-3 glass rounded-full px-2 py-1">
                                   <div className="flex items-center gap-1 text-xs text-white">
@@ -409,7 +369,6 @@ export default function ArtistProfilePage() {
                                 </div>
                               )}
                             </div>
-
                             <CardContent className="p-4">
                               <div className="space-y-3">
                                 <Badge variant="secondary" className="bg-gray-700/50 text-gray-300 text-xs">
@@ -422,9 +381,7 @@ export default function ArtistProfilePage() {
                                   {artwork.description || 'No description provided'}
                                 </p>
                                 <div className="flex items-center justify-between pt-2">
-                                  <span className="text-xs text-gray-500">
-                                    {new Date(artwork.created_at).toLocaleDateString()}
-                                  </span>
+                                  <span className="text-xs text-gray-500">{new Date(artwork.created_at).toLocaleDateString()}</span>
                                   <div className="flex items-center gap-1 text-xs text-gray-400">
                                     <Eye className="w-3 h-3" />
                                     <span>{artwork.view_count}</span>
@@ -439,7 +396,6 @@ export default function ArtistProfilePage() {
                   </AnimatePresence>
                 </motion.div>
 
-                {/* Pagination Controls */}
                 {pagination.totalPages > 1 && (
                   <div className="flex items-center justify-center space-x-2 mt-12">
                     <Button
@@ -452,7 +408,6 @@ export default function ArtistProfilePage() {
                       <ChevronLeft className="w-4 h-4 mr-1" />
                       Previous
                     </Button>
-
                     <div className="flex items-center space-x-1">
                       {generatePageNumbers(pagination.currentPage, pagination.totalPages).map((page, index) => (
                         <Button
@@ -461,19 +416,12 @@ export default function ArtistProfilePage() {
                           size="sm"
                           onClick={() => typeof page === 'number' ? handlePageChange(page) : undefined}
                           disabled={typeof page !== 'number' || artworksLoading}
-                          className={
-                            page === pagination.currentPage
-                              ? "btn-primary min-w-[40px]"
-                              : typeof page === 'number'
-                              ? "glass border-0 bg-transparent text-gray-300 hover:text-white hover:bg-white/10 min-w-[40px]"
-                              : "glass border-0 bg-transparent text-gray-500 cursor-default min-w-[40px]"
-                          }
+                          className={page === pagination.currentPage ? "btn-primary min-w-[40px]" : "glass border-0 bg-transparent text-gray-300 hover:text-white hover:bg-white/10 min-w-[40px]"}
                         >
                           {page}
                         </Button>
                       ))}
                     </div>
-
                     <Button
                       variant="outline"
                       size="sm"
@@ -488,7 +436,6 @@ export default function ArtistProfilePage() {
                 )}
               </>
             ) : !artworksLoading && artworks.length === 0 ? (
-              // Empty state for no artworks
               <div className="text-center py-16">
                 <div className="space-y-6">
                   <div className="w-24 h-24 mx-auto glass rounded-full flex items-center justify-center">
@@ -496,14 +443,10 @@ export default function ArtistProfilePage() {
                   </div>
                   <div className="space-y-2">
                     <h3 className="text-xl font-semibold text-white">No Artworks Yet</h3>
-                    <p className="text-gray-400 max-w-md mx-auto">
-                      {artist.display_name} hasn't uploaded any artworks to the gallery yet.
-                    </p>
+                    <p className="text-gray-400 max-w-md mx-auto">{artist.display_name} hasn't uploaded any artworks yet.</p>
                   </div>
                   <Button asChild variant="outline" className="glass border-0 bg-transparent text-gray-300 hover:text-white hover:bg-white/10">
-                    <Link href="/gallery">
-                      Browse Other Artists
-                    </Link>
+                    <Link href="/gallery">Browse Other Artists</Link>
                   </Button>
                 </div>
               </div>
