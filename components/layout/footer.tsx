@@ -50,7 +50,7 @@ export function Footer() {
           >
             <div className="space-y-2">
               <h3 className="text-2xl lg:text-3xl font-light text-foreground">
-                Stay Connected with <span className="text-gold font-medium">Elena's Art</span>
+                Stay Connected with <span className="text-gradient-primary">CRAFTOPIA</span>
               </h3>
               <p className="text-muted-foreground">
                 Get exclusive access to new artworks, behind-the-scenes content, and special exhibitions.
@@ -58,7 +58,7 @@ export function Footer() {
             </div>
             <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <Input type="email" placeholder="Enter your email" className="flex-1" />
-              <Button className="gradient-gold text-white hover:opacity-90 transition-opacity">
+              <Button className="btn-primary glow-primary">
                 <Send className="w-4 h-4 mr-2" />
                 Subscribe
               </Button>
@@ -78,15 +78,15 @@ export function Footer() {
                 <motion.div
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
-                  className="w-10 h-10 gradient-gold rounded-full flex items-center justify-center"
+                  className="w-10 h-10 gradient-blue-green rounded-xl flex items-center justify-center shadow-lg shadow-primary/20"
                 >
                   <Palette className="w-5 h-5 text-white" />
                 </motion.div>
                 <div>
-                  <h3 className="text-xl font-semibold text-foreground group-hover:text-gold transition-colors">
-                    Artisan Gallery
+                  <h3 className="text-xl font-bold tracking-tight text-gradient-primary">
+                    CRAFTOPIA
                   </h3>
-                  <p className="text-sm text-muted-foreground">Elena Vasquez Collection</p>
+                  <p className="text-sm text-muted-foreground">Digital Art & Collectibles</p>
                 </div>
               </Link>
 
@@ -98,16 +98,16 @@ export function Footer() {
               {/* Contact Info */}
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-sm">
-                  <Mail className="w-4 h-4 text-gold" />
-                  <span className="text-muted-foreground">elena@artisangallery.com</span>
+                  <Mail className="w-4 h-4 text-primary" />
+                  <span className="text-muted-foreground">hello@craftopia.com</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                  <Phone className="w-4 h-4 text-gold" />
-                  <span className="text-muted-foreground">+1 (555) 987-6543</span>
+                  <Phone className="w-4 h-4 text-primary" />
+                  <span className="text-muted-foreground">+1 (555) 000-1234</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                  <MapPin className="w-4 h-4 text-gold" />
-                  <span className="text-muted-foreground">Barcelona, Spain</span>
+                  <MapPin className="w-4 h-4 text-primary" />
+                  <span className="text-muted-foreground">San Francisco, CA</span>
                 </div>
               </div>
 
@@ -133,7 +133,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-muted-foreground hover:text-gold transition-colors text-sm group flex items-center"
+                      className="text-muted-foreground hover:text-primary transition-colors text-sm group flex items-center"
                     >
                       {link.label}
                       <ArrowRight className="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
@@ -151,7 +151,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-muted-foreground hover:text-gold transition-colors text-sm group flex items-center"
+                      className="text-muted-foreground hover:text-primary transition-colors text-sm group flex items-center"
                     >
                       {link.label}
                       <ArrowRight className="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
@@ -169,7 +169,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-muted-foreground hover:text-gold transition-colors text-sm group flex items-center"
+                      className="text-muted-foreground hover:text-primary transition-colors text-sm group flex items-center"
                     >
                       {link.label}
                       <ArrowRight className="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
@@ -191,7 +191,7 @@ export function Footer() {
               <div className="flex items-center gap-4">
                 {footerLinks.legal.map((link, index) => (
                   <span key={link.href} className="flex items-center gap-4">
-                    <Link href={link.href} className="hover:text-gold transition-colors">
+                    <Link href={link.href} className="hover:text-primary transition-colors">
                       {link.label}
                     </Link>
                     {index < footerLinks.legal.length - 1 && <span className="text-muted-foreground/50">•</span>}

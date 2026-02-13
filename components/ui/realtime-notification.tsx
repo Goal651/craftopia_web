@@ -26,7 +26,7 @@ export function RealtimeNotification({
   useEffect(() => {
     if (newArtwork) {
       setIsVisible(true)
-      
+
       // Auto-hide after delay
       const timer = setTimeout(() => {
         setIsVisible(false)
@@ -59,35 +59,35 @@ export function RealtimeNotification({
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           className="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 max-w-sm w-full mx-4"
         >
-          <Card className="glass-strong border border-blue-500/30 shadow-2xl overflow-hidden">
+          <Card className="glass-strong border border-primary/30 shadow-2xl overflow-hidden">
             <div className="relative">
               {/* Animated background gradient */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-green-500/10 to-blue-500/10 animate-pulse" />
-              
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 animate-pulse" />
+
               <div className="relative p-4">
                 <div className="flex items-start gap-3">
                   {/* Icon */}
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-blue-400" />
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-primary" />
                   </div>
-                  
+
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <h4 className="text-sm font-semibold text-white">New Artwork!</h4>
-                      <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 text-xs">
+                      <h4 className="text-sm font-semibold text-foreground">New Artwork!</h4>
+                      <Badge variant="secondary" className="bg-primary/20 text-primary text-xs">
                         {newArtwork.category.replace('-', ' ')}
                       </Badge>
                     </div>
-                    
-                    <p className="text-sm text-gray-300 line-clamp-1 mb-1">
+
+                    <p className="text-sm text-foreground line-clamp-1 mb-1">
                       <span className="font-medium">{newArtwork.title}</span>
                     </p>
-                    
-                    <p className="text-xs text-gray-400">
+
+                    <p className="text-xs text-muted-foreground">
                       by {newArtwork.artist_name}
                     </p>
-                    
+
                     {/* Actions */}
                     <div className="flex items-center gap-2 mt-3">
                       <Button
@@ -102,19 +102,19 @@ export function RealtimeNotification({
                         size="sm"
                         variant="ghost"
                         onClick={handleDismiss}
-                        className="text-gray-400 hover:text-white hover:bg-white/10 text-xs h-7 px-2"
+                        className="text-muted-foreground hover:text-foreground hover:bg-muted text-xs h-7 px-2"
                       >
                         Dismiss
                       </Button>
                     </div>
                   </div>
-                  
+
                   {/* Close button */}
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={handleDismiss}
-                    className="flex-shrink-0 w-6 h-6 p-0 text-gray-400 hover:text-white hover:bg-white/10"
+                    className="flex-shrink-0 w-6 h-6 p-0 text-muted-foreground hover:text-foreground hover:bg-muted"
                   >
                     <X className="w-3 h-3" />
                   </Button>

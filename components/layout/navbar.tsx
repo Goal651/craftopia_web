@@ -22,7 +22,10 @@ import {
   Info,
   Mail,
   Upload,
+  Sun,
+  Moon,
 } from "lucide-react"
+import { useTheme } from "next-themes"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,6 +48,7 @@ export function Navbar() {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const { user, signOut, isAdmin } = useAuth()
+  const { theme, setTheme } = useTheme()
   const pathname = usePathname()
 
   useEffect(() => {
@@ -67,10 +71,6 @@ export function Navbar() {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [])
 
-  if (!mounted) {
-    return null
-  }
-
   return (
     <>
       {/* Desktop Navbar */}
@@ -78,17 +78,17 @@ export function Navbar() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-gray-800"
+        className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2 group">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <Palette className="w-4 h-4 text-white" />
+              <div className="w-9 h-9 gradient-blue-green rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-primary/20">
+                <Palette className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-lg bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
-                ArtGallery
+              <span className="font-bold text-xl tracking-tight text-gradient-primary">
+                CRAFTOPIA
               </span>
             </Link>
 
@@ -99,8 +99,8 @@ export function Navbar() {
                   key={item.name}
                   href={item.href}
                   className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${pathname === item.href
-                    ? "bg-blue-500/10 text-blue-400"
-                    : "text-gray-400 hover:text-white hover:bg-gray-800/50"
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
                     }`}
                 >
                   {item.name}
@@ -113,8 +113,18 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="text-muted-foreground hover:text-foreground hover:bg-muted"
+                aria-label="Toggle theme"
+              >
+                {mounted && (theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />)}
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setCommandPaletteOpen(true)}
-                className="text-gray-400 hover:text-white hover:bg-gray-800/50"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted"
                 aria-label="Search"
               >
                 <Search className="w-4 h-4" />
@@ -125,7 +135,7 @@ export function Navbar() {
                   variant="ghost"
                   size="icon"
                   asChild
-                  className="text-gray-400 hover:text-white hover:bg-gray-800/50"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted"
                 >
                   <Link href="/upload" aria-label="Upload Artwork">
                     <Upload className="w-4 h-4" />
@@ -139,15 +149,15 @@ export function Navbar() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-gray-400 hover:text-white hover:bg-gray-800/50"
+                      className="text-muted-foreground hover:text-foreground hover:bg-muted"
                       aria-label="User menu"
                     >
-                      <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center">
-                        <User className="w-3 h-3 text-white" />
+                      <div className="w-8 h-8 gradient-blue-green rounded-full flex items-center justify-center border border-white/20 shadow-sm">
+                        <User className="w-4 h-4 text-white" />
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 bg-gray-900 border-gray-800">
+                  <DropdownMenuContent align="end" className="w-56 glass-strong border-border">
                     <div className="px-2 py-1.5">
                       <p className="text-sm font-medium text-white">{user.display_name || user.email}</p>
                       <p className="text-xs text-gray-400">{user.email}</p>
@@ -180,7 +190,8 @@ export function Navbar() {
               ) : (
                 <Button
                   asChild
-                  className="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
+                  variant="vibrant"
+                  size="sm"
                 >
                   <Link href="/login">Sign In</Link>
                 </Button>
@@ -205,6 +216,16 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="text-gray-400 hover:text-white"
+                aria-label="Toggle theme"
+              >
+                {mounted && (theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />)}
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setIsOpen(!isOpen)}
                 className="text-gray-400 hover:text-white"
                 aria-label="Toggle menu"
@@ -223,7 +244,7 @@ export function Navbar() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
-              className="lg:hidden border-t border-gray-800 bg-black/95 backdrop-blur-xl"
+              className="lg:hidden border-t border-border bg-background/95 backdrop-blur-xl"
             >
               <div className="px-4 py-4 space-y-2">
                 {/* Mobile Search */}
@@ -232,7 +253,7 @@ export function Navbar() {
                     placeholder="Search artworks..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="bg-gray-900 border-gray-800 text-white placeholder:text-gray-500 pl-10"
+                    className="bg-muted border-border pl-10"
                   />
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                 </div>
@@ -249,8 +270,8 @@ export function Navbar() {
                       href={item.href}
                       onClick={() => setIsOpen(false)}
                       className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${pathname === item.href
-                        ? "bg-blue-500/10 text-blue-400"
-                        : "text-gray-400 hover:text-white hover:bg-gray-800/50"
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
                         }`}
                     >
                       <item.icon className="w-4 h-4" />
@@ -260,17 +281,17 @@ export function Navbar() {
                 ))}
 
                 {/* Mobile User Section */}
-                <div className="pt-4 border-t border-gray-800">
+                <div className="pt-4 border-t border-border">
                   {user ? (
                     <div className="space-y-2">
                       <div className="px-3 py-2">
-                        <p className="text-sm font-medium text-white">{user.display_name || user.email}</p>
-                        <p className="text-xs text-gray-400">{user.email}</p>
+                        <p className="text-sm font-medium text-foreground">{user.display_name || user.email}</p>
+                        <p className="text-xs text-muted-foreground">{user.email}</p>
                       </div>
                       <Link
                         href="/profile"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50"
+                        className="flex items-center space-x-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
                       >
                         <User className="w-4 h-4" />
                         <span>Profile</span>
@@ -279,7 +300,7 @@ export function Navbar() {
                         <Link
                           href="/admin"
                           onClick={() => setIsOpen(false)}
-                          className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50"
+                          className="flex items-center space-x-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
                         >
                           <Settings className="w-4 h-4" />
                           <span>Admin Panel</span>
@@ -290,7 +311,7 @@ export function Navbar() {
                           signOut()
                           setIsOpen(false)
                         }}
-                        className="flex items-center space-x-3 px-3 py-2 rounded-lg text-red-400 hover:text-red-300 hover:bg-gray-800/50 w-full text-left"
+                        className="flex items-center space-x-3 px-3 py-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-500/10 w-full text-left"
                       >
                         <LogOut className="w-4 h-4" />
                         <span>Logout</span>
@@ -300,7 +321,9 @@ export function Navbar() {
                     <div className="px-3 py-2">
                       <Button
                         asChild
-                        className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
+                        variant="vibrant"
+                        size="sm"
+                        className="w-full"
                         onClick={() => setIsOpen(false)}
                       >
                         <Link href="/login">Sign In</Link>

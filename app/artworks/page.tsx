@@ -86,11 +86,11 @@ export default function ArtworksPage() {
   ]
 
   return (
-    <div className="min-h-screen pt-20 bg-black">
+    <div className="min-h-screen pt-20 bg-background text-foreground">
       <div className="container mx-auto container-padding py-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
           {/* Breadcrumb Navigation */}
-          <BreadcrumbNav 
+          <BreadcrumbNav
             items={[
               { label: "Curated Collection", current: true }
             ]}
@@ -98,10 +98,10 @@ export default function ArtworksPage() {
 
           {/* Header */}
           <div className="text-center space-y-4">
-            <h1 className="text-4xl lg:text-5xl font-light text-white">
-              Art <span className="text-gradient-blue font-medium">Collection</span>
+            <h1 className="text-4xl lg:text-5xl font-light text-foreground">
+              Art <span className="text-gradient-primary font-medium">Collection</span>
             </h1>
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Discover extraordinary contemporary artworks. Each piece tells a unique story through color, form, and
               emotion.
             </p>
@@ -111,12 +111,12 @@ export default function ArtworksPage() {
           <div className="space-y-6">
             {/* Search Bar */}
             <div className="relative max-w-2xl mx-auto">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 placeholder="Search artworks, artists, or descriptions..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 h-12 glass border-0 text-lg focus:ring-2 focus:ring-blue-500/50 text-white placeholder:text-gray-400"
+                className="pl-12 h-12 glass border-0 text-lg focus:ring-2 focus:ring-primary/50 text-foreground placeholder:text-muted-foreground"
               />
             </div>
 
@@ -125,17 +125,17 @@ export default function ArtworksPage() {
               <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
                 <div className="flex flex-wrap gap-4 items-center">
                   <div className="flex items-center gap-2">
-                    <Filter className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm font-medium text-gray-300">Filters:</span>
+                    <Filter className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm font-medium text-muted-foreground">Filters:</span>
                   </div>
 
                   <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger className="w-40 glass border-0 text-white">
+                    <SelectTrigger className="w-40 glass border-0 text-foreground">
                       <SelectValue placeholder="Category" />
                     </SelectTrigger>
                     <SelectContent className="glass-strong border-0">
                       {categories.map((category) => (
-                        <SelectItem key={category} value={category} className="text-white hover:bg-white/10">
+                        <SelectItem key={category} value={category} className="text-foreground hover:bg-muted">
                           {category === "all" ? "All Categories" : category.charAt(0).toUpperCase() + category.slice(1)}
                         </SelectItem>
                       ))}
@@ -143,12 +143,12 @@ export default function ArtworksPage() {
                   </Select>
 
                   <Select value={priceFilter} onValueChange={setPriceFilter}>
-                    <SelectTrigger className="w-40 glass border-0 text-white">
+                    <SelectTrigger className="w-40 glass border-0 text-foreground">
                       <SelectValue placeholder="Price Range" />
                     </SelectTrigger>
                     <SelectContent className="glass-strong border-0">
                       {priceRanges.map((range) => (
-                        <SelectItem key={range.value} value={range.value} className="text-white hover:bg-white/10">
+                        <SelectItem key={range.value} value={range.value} className="text-foreground hover:bg-muted">
                           {range.label}
                         </SelectItem>
                       ))}
@@ -156,12 +156,12 @@ export default function ArtworksPage() {
                   </Select>
 
                   <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="w-40 glass border-0 text-white">
+                    <SelectTrigger className="w-40 glass border-0 text-foreground">
                       <SelectValue placeholder="Sort By" />
                     </SelectTrigger>
                     <SelectContent className="glass-strong border-0">
                       {sortOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value} className="text-white hover:bg-white/10">
+                        <SelectItem key={option.value} value={option.value} className="text-foreground hover:bg-muted">
                           {option.label}
                         </SelectItem>
                       ))}
@@ -177,7 +177,7 @@ export default function ArtworksPage() {
                     className={
                       viewMode === "grid"
                         ? "btn-primary"
-                        : "glass border-0 text-gray-300 hover:text-white hover:bg-white/10"
+                        : "glass border-0 text-muted-foreground hover:text-foreground hover:bg-white/10"
                     }
                   >
                     <Grid className="h-4 w-4" />
@@ -189,7 +189,7 @@ export default function ArtworksPage() {
                     className={
                       viewMode === "list"
                         ? "btn-primary"
-                        : "glass border-0 text-gray-300 hover:text-white hover:bg-white/10"
+                        : "glass border-0 text-muted-foreground hover:text-foreground hover:bg-white/10"
                     }
                   >
                     <List className="h-4 w-4" />
@@ -198,7 +198,7 @@ export default function ArtworksPage() {
               </div>
 
               {/* Results Count */}
-              <div className="mt-4 text-center text-gray-400">
+              <div className="mt-4 text-center text-muted-foreground">
                 Showing {filteredAndSortedArtworks.length} of {sampleArtworks.length} artworks
               </div>
             </div>
@@ -245,7 +245,7 @@ export default function ArtworksPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="glass border-0 hover:bg-white/20 bg-transparent text-white"
+                              className="glass border-border/50 hover:bg-muted bg-background/50 text-foreground"
                               onClick={(e) => {
                                 e.stopPropagation()
                                 toggleWishlist(artwork.id)
@@ -259,14 +259,14 @@ export default function ArtworksPage() {
                         </div>
 
                         {/* Price Badge */}
-                        <div className="absolute top-3 right-3 glass rounded-full px-3 py-1">
-                          <span className="text-sm font-semibold text-white">${artwork.price.toLocaleString()}</span>
+                        <div className="absolute top-3 right-3 glass rounded-full px-3 py-1 border-border/50">
+                          <span className="text-sm font-semibold text-foreground">${artwork.price.toLocaleString()}</span>
                         </div>
 
                         {/* Featured Badge */}
                         {artwork.featured && (
                           <div className="absolute top-3 left-3">
-                            <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">
+                            <Badge className="bg-primary/20 text-primary border-primary/30">
                               <Star className="w-3 h-3 mr-1 fill-current" />
                               Featured
                             </Badge>
@@ -276,16 +276,16 @@ export default function ArtworksPage() {
 
                       <CardContent className="p-4">
                         <div className="space-y-3">
-                          <Badge variant="secondary" className="bg-gray-700/50 text-gray-300 text-xs">
+                          <Badge variant="secondary" className="bg-muted text-muted-foreground text-xs">
                             {artwork.category}
                           </Badge>
-                          <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors line-clamp-1">
+                          <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                             {artwork.title}
                           </h3>
-                          <p className="text-gray-400 text-sm leading-relaxed line-clamp-2">{artwork.description}</p>
+                          <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">{artwork.description}</p>
                           <div className="flex items-center justify-between pt-2">
-                            <span className="text-xs text-gray-500">{artwork.medium}</span>
-                            <span className="text-xs font-medium text-gray-400">{artwork.year}</span>
+                            <span className="text-xs text-muted-foreground font-light">{artwork.medium}</span>
+                            <span className="text-xs font-medium text-muted-foreground">{artwork.year}</span>
                           </div>
                           <Button size="sm" className="w-full btn-primary" onClick={() => setSelectedArtwork(artwork)}>
                             <ShoppingCart className="w-3 h-3 mr-2" />
@@ -317,25 +317,25 @@ export default function ArtworksPage() {
                             <div className="flex items-start justify-between">
                               <div className="space-y-2">
                                 <div className="flex items-center gap-2">
-                                  <Badge variant="secondary" className="bg-gray-700/50 text-gray-300 text-xs">
+                                  <Badge variant="secondary" className="bg-muted text-muted-foreground text-xs">
                                     {artwork.category}
                                   </Badge>
                                   {artwork.featured && (
-                                    <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs">
+                                    <Badge className="bg-primary/20 text-primary border-primary/30 text-xs">
                                       <Star className="w-3 h-3 mr-1 fill-current" />
                                       Featured
                                     </Badge>
                                   )}
                                 </div>
-                                <h3 className="text-xl font-semibold text-white group-hover:text-blue-400 transition-colors">
+                                <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
                                   {artwork.title}
                                 </h3>
-                                <p className="text-gray-400">by {artwork.artist}</p>
+                                <p className="text-muted-foreground">by {artwork.artist}</p>
                               </div>
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="text-gray-400 hover:text-white hover:bg-white/10"
+                                className="text-muted-foreground hover:text-foreground hover:bg-white/10"
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   toggleWishlist(artwork.id)
@@ -347,7 +347,7 @@ export default function ArtworksPage() {
                               </Button>
                             </div>
 
-                            <p className="text-gray-400 leading-relaxed line-clamp-3">{artwork.description}</p>
+                            <p className="text-muted-foreground leading-relaxed line-clamp-3">{artwork.description}</p>
 
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               <div>
@@ -359,8 +359,8 @@ export default function ArtworksPage() {
                                 <span className="ml-2 font-medium text-gray-300">{artwork.year}</span>
                               </div>
                               <div>
-                                <span className="text-gray-500">Dimensions:</span>
-                                <span className="ml-2 font-medium text-gray-300">{artwork.dimensions}</span>
+                                <span className="text-muted-foreground">Dimensions:</span>
+                                <span className="ml-2 font-medium text-foreground">{artwork.dimensions}</span>
                               </div>
                               <div>
                                 <span className="text-gray-500">Stock:</span>
@@ -377,7 +377,7 @@ export default function ArtworksPage() {
                               </Button>
                               <Button
                                 variant="outline"
-                                className="glass border-0 hover:bg-blue-500/10 bg-transparent text-gray-300 hover:text-white"
+                                className="glass border-0 hover:bg-primary/10 bg-transparent text-muted-foreground hover:text-foreground"
                                 onClick={() => setSelectedArtwork(artwork)}
                               >
                                 <ShoppingCart className="w-4 h-4 mr-2" />

@@ -192,10 +192,10 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
 
   if (!user) {
     return (
-      <Card className="glass border-0 bg-white/5 backdrop-blur-xl">
+      <Card className="glass border-border/50 bg-card/50 backdrop-blur-xl">
         <CardContent className="p-8 text-center">
-          <AlertCircle className="w-12 h-12 mx-auto mb-4 text-blue-400" />
-          <h3 className="text-xl font-semibold mb-2">Authentication Required</h3>
+          <AlertCircle className="w-12 h-12 mx-auto mb-4 text-primary" />
+          <h3 className="text-xl font-semibold mb-2 text-foreground">Authentication Required</h3>
           <p className="text-muted-foreground">Please log in to upload your artwork.</p>
         </CardContent>
       </Card>
@@ -203,9 +203,9 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
   }
 
   return (
-    <Card className="glass border-0 bg-white/5 backdrop-blur-xl">
+    <Card className="glass border-border/50 bg-card/50 backdrop-blur-xl">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-foreground">
           <Upload className="w-5 h-5" />
           Upload Your Artwork
         </CardTitle>
@@ -221,7 +221,7 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
                   <FormLabel>Artwork Image</FormLabel>
                   <FormControl>
                     <div
-                      className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${dragActive ? 'border-primary bg-primary/5' : 'border-white/20 hover:border-white/40'
+                      className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${dragActive ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'
                         }`}
                       onDragEnter={handleDrag}
                       onDragLeave={handleDrag}
@@ -287,7 +287,7 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter artwork title" className="glass border-0 bg-white/5" {...field} />
+                    <Input placeholder="Enter artwork title" className="glass border-border/50 bg-background/50" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -302,7 +302,7 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
                   <FormLabel>Category</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="glass border-0 bg-white/5">
+                      <SelectTrigger className="glass border-border/50 bg-background/50">
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
                     </FormControl>
@@ -324,7 +324,7 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
                 <FormItem>
                   <FormLabel>Description (Optional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Tell us about your artwork..." className="glass border-0 bg-white/5 min-h-[100px]" {...field} />
+                    <Textarea placeholder="Tell us about your artwork..." className="glass border-border/50 bg-background/50 min-h-[100px]" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -344,7 +344,7 @@ export function ArtworkUploadForm({ onSuccess, onError }: ArtworkUploadFormProps
             <Button
               type="submit"
               disabled={isUploading}
-              className="w-full glass border-0 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
+              className="w-full btn-primary glow-primary"
             >
               {isUploading ? "Uploading..." : "Upload Artwork"}
             </Button>

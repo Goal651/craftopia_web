@@ -13,18 +13,18 @@ function generateBlurDataURL(width: number = 10, height: number = 10): string {
   canvas.width = width
   canvas.height = height
   const ctx = canvas.getContext('2d')
-  
+
   if (!ctx) return ''
-  
+
   // Create a simple gradient blur effect
   const gradient = ctx.createLinearGradient(0, 0, width, height)
-  gradient.addColorStop(0, '#1f2937')
-  gradient.addColorStop(0.5, '#374151')
-  gradient.addColorStop(1, '#1f2937')
-  
+  gradient.addColorStop(0, '#3b82f6') // primary-like
+  gradient.addColorStop(0.5, '#10b981') // secondary-like
+  gradient.addColorStop(1, '#3b82f6')
+
   ctx.fillStyle = gradient
   ctx.fillRect(0, 0, width, height)
-  
+
   return canvas.toDataURL()
 }
 
@@ -96,7 +96,7 @@ export function OptimizedImage({
   const [blurData, setBlurData] = useState<string>(blurDataURL || DEFAULT_BLUR_DATA_URL)
   const imageRef = useRef<HTMLImageElement>(null)
   const observerRef = useRef<IntersectionObserver | null>(null)
-  
+
   // Performance monitoring
   const performanceContext = useImagePerformance()
 
@@ -151,7 +151,7 @@ export function OptimizedImage({
 
   const handleImageLoad = useCallback(() => {
     const loadTime = Date.now() - imageState.loadStartTime
-    
+
     setImageState(prev => ({
       ...prev,
       isLoading: false,
@@ -174,12 +174,12 @@ export function OptimizedImage({
 
   const handleImageError = useCallback(() => {
     const now = Date.now()
-    
+
     setImageState(prevState => {
       // If we haven't reached max retries and enough time has passed
       if (prevState.retryCount < maxRetries && (now - prevState.loadStartTime) > retryDelay) {
         const cacheBustingSrc = `${src}?retry=${prevState.retryCount + 1}&t=${now}`
-        
+
         return {
           ...prevState,
           currentSrc: cacheBustingSrc,
@@ -190,14 +190,14 @@ export function OptimizedImage({
       } else {
         // Max retries reached
         const errorMessage = `Failed to load image after ${prevState.retryCount} retries`
-        
+
         // Track error
         if (performanceContext?.trackImageError) {
           performanceContext.trackImageError(src, errorMessage)
         }
-        
+
         onError?.(errorMessage)
-        
+
         return {
           ...prevState,
           hasError: true,
@@ -211,7 +211,7 @@ export function OptimizedImage({
   const handleManualRetry = useCallback(() => {
     const now = Date.now()
     const cacheBustingSrc = `${src}?manual_retry=${now}`
-    
+
     setImageState(prev => ({
       ...prev,
       currentSrc: cacheBustingSrc,
@@ -226,9 +226,9 @@ export function OptimizedImage({
   // Error state UI
   if (imageState.hasError) {
     return (
-      <div 
+      <div
         className={cn(
-          "flex flex-col items-center justify-center bg-gray-800/50 border border-gray-700/50 rounded-lg",
+          "flex flex-col items-center justify-center bg-muted/30 border border-border/50 rounded-lg",
           fill ? "absolute inset-0" : "",
           aspectRatio && `aspect-[${aspectRatio}]`,
           className
@@ -237,24 +237,24 @@ export function OptimizedImage({
       >
         <div className="text-center p-4 space-y-3">
           <div className="w-12 h-12 mx-auto glass rounded-full flex items-center justify-center">
-            <ImageOff className="w-6 h-6 text-gray-400" />
+            <ImageOff className="w-6 h-6 text-muted-foreground" />
           </div>
-          
+
           <div className="space-y-1">
-            <p className="text-sm font-medium text-gray-300">
+            <p className="text-sm font-medium text-foreground">
               Image failed to load
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Tried {imageState.retryCount} time{imageState.retryCount !== 1 ? 's' : ''}
             </p>
           </div>
-          
+
           <Button
             size="sm"
             variant="outline"
             onClick={handleManualRetry}
             disabled={imageState.isRetrying}
-            className="glass border-0 bg-transparent text-gray-300 hover:text-white hover:bg-white/10"
+            className="glass border-border/50 bg-background/50 text-muted-foreground hover:text-foreground"
           >
             <RefreshCw className={cn(
               "w-3 h-3 mr-1",
@@ -303,15 +303,15 @@ export function OptimizedImage({
       <div {...containerProps}>
         {/* Loading skeleton */}
         {imageState.isLoading && enableProgressiveLoading && (
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-700 animate-pulse" />
+          <div className="absolute inset-0 bg-gradient-to-br from-muted/50 to-muted/20 animate-pulse" />
         )}
-        
+
         <Image {...imageProps} fill />
-        
+
         {/* Loading indicator */}
         {imageState.isRetrying && (
           <div className="absolute top-2 right-2 glass rounded-full p-1">
-            <RefreshCw className="w-3 h-3 text-white animate-spin" />
+            <RefreshCw className="w-3 h-3 text-primary animate-spin" />
           </div>
         )}
       </div>
@@ -324,13 +324,13 @@ export function OptimizedImage({
       {imageState.isLoading && enableProgressiveLoading && (
         <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-700 animate-pulse" />
       )}
-      
+
       <Image
         {...imageProps}
         width={width}
         height={height}
       />
-      
+
       {/* Loading indicator */}
       {imageState.isRetrying && (
         <div className="absolute top-2 right-2 glass rounded-full p-1">
@@ -374,10 +374,10 @@ export function OptimizedArtworkImage({
         enableProgressiveLoading={true}
         enableLazyLoading={!props.priority}
       />
-      
+
       {/* Load time indicator (development only) */}
       {showLoadingTime && loadTime && process.env.NODE_ENV === 'development' && (
-        <div className="absolute bottom-2 left-2 glass rounded px-2 py-1 text-xs text-white/80">
+        <div className="absolute bottom-2 left-2 glass rounded px-2 py-1 text-xs text-foreground/80">
           {loadTime}ms
         </div>
       )}

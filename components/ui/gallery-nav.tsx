@@ -44,31 +44,31 @@ export function GalleryNav({ className }: GalleryNavProps) {
         <Link key={item.href} href={item.href} className="flex-1">
           <div className={cn(
             "glass-card rounded-lg p-4 transition-all duration-300 hover:scale-105 border-0",
-            item.active && "ring-2 ring-blue-500/50 bg-blue-500/10",
-            item.highlight && "bg-gradient-to-r from-blue-500/20 to-green-500/20"
+            item.active && "ring-2 ring-primary/50 bg-primary/10",
+            item.highlight && "bg-gradient-to-r from-primary/10 to-secondary/10"
           )}>
             <div className="flex items-center gap-3 mb-2">
               <div className={cn(
                 "w-8 h-8 rounded-lg flex items-center justify-center",
-                item.active ? "bg-blue-500 text-white" : "bg-gray-700/50 text-gray-400"
+                item.active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
               )}>
                 <item.icon className="w-4 h-4" />
               </div>
               <div className="flex items-center gap-2">
                 <h3 className={cn(
                   "font-semibold text-sm",
-                  item.active ? "text-blue-400" : "text-white"
+                  item.active ? "text-primary" : "text-foreground"
                 )}>
                   {item.name}
                 </h3>
                 {item.active && (
-                  <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 text-xs">
+                  <Badge variant="secondary" className="bg-primary/20 text-primary text-xs">
                     Current
                   </Badge>
                 )}
               </div>
             </div>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               {item.description}
             </p>
           </div>

@@ -208,7 +208,7 @@ function PublicGalleryPageContent() {
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
     >
-      <Card className="group cursor-pointer overflow-hidden border-0 glass-card card-hover">
+      <Card className="group cursor-pointer overflow-hidden border-border/50 glass-card card-hover bg-card/30">
         <Link href={`/gallery/${artwork.id}`}>
           <div className="relative aspect-[3/4] overflow-hidden">
             <ArtworkImage
@@ -224,7 +224,7 @@ function PublicGalleryPageContent() {
               aspectRatio="3/4"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <div className="flex gap-2">
@@ -236,8 +236,8 @@ function PublicGalleryPageContent() {
             </div>
 
             {artwork.view_count > 0 && (
-              <div className="absolute top-3 right-3 glass rounded-full px-2 py-1">
-                <div className="flex items-center gap-1 text-xs text-white">
+              <div className="absolute top-3 right-3 glass rounded-full px-2 py-1 border-border/50">
+                <div className="flex items-center gap-1 text-xs text-foreground">
                   <Eye className="w-3 h-3" />
                   <span>{artwork.view_count}</span>
                 </div>
@@ -247,16 +247,16 @@ function PublicGalleryPageContent() {
 
           <CardContent className="p-4">
             <div className="space-y-3">
-              <Badge variant="secondary" className="bg-gray-700/50 text-gray-300 text-xs">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-xs">
                 {artwork.category.replace('-', ' ')}
               </Badge>
-              <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors line-clamp-1">
+              <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                 <SearchHighlight
                   text={artwork.title}
                   searchTerm={searchQuery}
                 />
               </h3>
-              <p className="text-gray-400 text-sm leading-relaxed line-clamp-2">
+              <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
                 <SearchHighlight
                   text={artwork.description || 'No description provided'}
                   searchTerm={searchQuery}
@@ -265,16 +265,16 @@ function PublicGalleryPageContent() {
               <div className="flex items-center justify-between pt-2">
                 <Link
                   href={`/gallery/artist/${artwork.artist_id}`}
-                  className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                  className="text-xs text-primary hover:text-primary/80 transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
                   by <SearchHighlight
                     text={artwork.artist_name}
                     searchTerm={searchQuery}
-                    className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                    className="text-xs text-primary hover:text-primary/80 transition-colors"
                   />
                 </Link>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted-foreground">
                   {new Date(artwork.created_at).toLocaleDateString()}
                 </span>
               </div>
@@ -288,13 +288,13 @@ function PublicGalleryPageContent() {
   const LoadingSkeleton = () => (
     <div className="gallery-grid">
       {Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
-        <Card key={index} className="overflow-hidden border-0 glass-card">
-          <Skeleton className="aspect-[3/4] w-full bg-gray-700/50" />
+        <Card key={index} className="overflow-hidden border-border/50 glass-card bg-card/30">
+          <Skeleton className="aspect-[3/4] w-full bg-muted/50" />
           <CardContent className="p-4 space-y-3">
-            <Skeleton className="h-4 w-16 bg-gray-700/50" />
-            <Skeleton className="h-5 w-3/4 bg-gray-700/50" />
-            <Skeleton className="h-4 w-full bg-gray-700/50" />
-            <Skeleton className="h-4 w-2/3 bg-gray-700/50" />
+            <Skeleton className="h-4 w-16 bg-muted/50" />
+            <Skeleton className="h-5 w-3/4 bg-muted/50" />
+            <Skeleton className="h-4 w-full bg-muted/50" />
+            <Skeleton className="h-4 w-2/3 bg-muted/50" />
           </CardContent>
         </Card>
       ))}
@@ -305,11 +305,11 @@ function PublicGalleryPageContent() {
     <div className="text-center py-16">
       <div className="space-y-6">
         <div className="w-24 h-24 mx-auto glass rounded-full flex items-center justify-center">
-          <AlertCircle className="w-8 h-8 text-red-400" />
+          <AlertCircle className="w-8 h-8 text-destructive" />
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-semibold text-white">Failed to Load Gallery</h3>
-          <p className="text-gray-400 max-w-md mx-auto">{error}</p>
+          <h3 className="text-xl font-semibold text-foreground">Failed to Load Gallery</h3>
+          <p className="text-muted-foreground max-w-md mx-auto">{error}</p>
         </div>
         <Button
           onClick={handleRetry}
@@ -327,11 +327,11 @@ function PublicGalleryPageContent() {
     <div className="text-center py-16">
       <div className="space-y-6">
         <div className="w-24 h-24 mx-auto glass rounded-full flex items-center justify-center">
-          <Palette className="w-8 h-8 text-gray-400" />
+          <Palette className="w-8 h-8 text-muted-foreground" />
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-semibold text-white">No Artworks Yet</h3>
-          <p className="text-gray-400 max-w-md mx-auto">
+          <h3 className="text-xl font-semibold text-foreground">No Artworks Yet</h3>
+          <p className="text-muted-foreground max-w-md mx-auto">
             The public gallery is waiting for artists to share their creations. Be the first to upload!
           </p>
         </div>
@@ -371,7 +371,7 @@ function PublicGalleryPageContent() {
           size="sm"
           onClick={() => handlePageChange(currentPagination.currentPage - 1)}
           disabled={!currentPagination.hasPrevPage || isLoading}
-          className="glass border-0 bg-transparent text-gray-300 hover:text-white hover:bg-white/10"
+          className="glass border-border/50 bg-background/50 text-muted-foreground hover:text-foreground hover:bg-muted"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
           Previous
@@ -403,7 +403,7 @@ function PublicGalleryPageContent() {
           size="sm"
           onClick={() => handlePageChange(currentPagination.currentPage + 1)}
           disabled={!currentPagination.hasNextPage || isLoading}
-          className="glass border-0 bg-transparent text-gray-300 hover:text-white hover:bg-white/10"
+          className="glass border-border/50 bg-background/50 text-muted-foreground hover:text-foreground hover:bg-muted"
         >
           Next
           <ChevronRight className="w-4 h-4 ml-1" />
@@ -414,7 +414,7 @@ function PublicGalleryPageContent() {
 
   return (
     <GalleryErrorBoundary>
-      <div className="min-h-screen pt-20 bg-black">
+      <div className="min-h-screen pt-20 bg-background">
         <div className="container mx-auto container-padding py-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
             <BreadcrumbNav
@@ -424,10 +424,10 @@ function PublicGalleryPageContent() {
             />
 
             <div className="text-center space-y-4">
-              <h1 className="text-4xl lg:text-5xl font-light text-white">
-                Public <span className="text-gradient-blue font-medium">Gallery</span>
+              <h1 className="text-4xl lg:text-5xl font-light text-foreground">
+                Public <span className="text-gradient-primary font-medium">Gallery</span>
               </h1>
-              <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Discover amazing artworks from our community of talented artists. Each piece tells a unique story.
               </p>
             </div>
@@ -446,22 +446,22 @@ function PublicGalleryPageContent() {
               <div className="glass-card rounded-2xl p-4">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <Filter className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm font-medium text-gray-300">Filter by category:</span>
+                    <Filter className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm font-medium text-muted-foreground">Filter by category:</span>
                   </div>
                   <Select
                     value={selectedCategory}
                     onValueChange={(value: ArtworkCategory | 'all') => handleCategoryChange(value)}
                   >
-                    <SelectTrigger className="w-48 glass border-0 text-white">
+                    <SelectTrigger className="w-48 glass border-border/50 bg-background/50 text-foreground">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
-                    <SelectContent className="glass-strong border-0">
+                    <SelectContent className="glass-strong border-border/50">
                       {CATEGORY_OPTIONS.map((option) => (
                         <SelectItem
                           key={option.value}
                           value={option.value}
-                          className="text-white hover:bg-white/10"
+                          className="text-foreground hover:bg-muted"
                         >
                           {option.label}
                         </SelectItem>
@@ -473,7 +473,7 @@ function PublicGalleryPageContent() {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleCategoryChange('all')}
-                      className="text-gray-400 hover:text-white hover:bg-white/10"
+                      className="text-muted-foreground hover:text-foreground hover:bg-muted"
                     >
                       Clear filter
                     </Button>
@@ -484,13 +484,13 @@ function PublicGalleryPageContent() {
 
             {isSearchMode && hasResults && (
               <div className="text-center space-y-2">
-                <h2 className="text-xl font-medium text-white">
+                <h2 className="text-xl font-medium text-foreground">
                   Search Results for "{currentQuery}"
                   {currentCategory && currentCategory !== 'all' && (
-                    <span className="text-gray-400"> in {CATEGORY_OPTIONS.find(opt => opt.value === currentCategory)?.label}</span>
+                    <span className="text-muted-foreground"> in {CATEGORY_OPTIONS.find(opt => opt.value === currentCategory)?.label}</span>
                   )}
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-muted-foreground">
                   Found {searchResults?.pagination.totalItems} artwork{searchResults?.pagination.totalItems !== 1 ? 's' : ''}
                 </p>
               </div>
@@ -498,10 +498,10 @@ function PublicGalleryPageContent() {
 
             {!isSearchMode && selectedCategory !== 'all' && !loading && !error && (
               <div className="text-center space-y-2">
-                <h2 className="text-xl font-medium text-white">
+                <h2 className="text-xl font-medium text-foreground">
                   {CATEGORY_OPTIONS.find(opt => opt.value === selectedCategory)?.label} Artworks
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-muted-foreground">
                   Showing {pagination.totalItems} artwork{pagination.totalItems !== 1 ? 's' : ''}
                 </p>
               </div>

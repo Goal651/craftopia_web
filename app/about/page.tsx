@@ -81,9 +81,9 @@ export default function AboutPage() {
           {/* Hero Section */}
           <motion.section variants={itemVariants} className="text-center space-y-6">
             <div className="space-y-4">
-              <Badge className="bg-gold/20 text-gold border-gold/30">About the Artist</Badge>
+              <Badge className="bg-primary/20 text-primary border-primary/30">About CRAFTOPIA</Badge>
               <h1 className="text-4xl lg:text-6xl font-light text-foreground">
-                Meet <span className="text-gold font-medium">Elena Vasquez</span>
+                The Future of <span className="text-gradient-primary">Digital Art</span>
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 A contemporary artist whose work explores the intersection of emotion and form, creating pieces that
@@ -109,21 +109,21 @@ export default function AboutPage() {
 
               {/* Quick Stats */}
               <div className="grid grid-cols-3 gap-4">
-                <Card className="text-center p-4 card-3d">
+                <Card className="text-center p-4 card-modern">
                   <CardContent className="p-0">
-                    <div className="text-2xl font-bold text-gold">15+</div>
-                    <div className="text-sm text-muted-foreground">Years Experience</div>
+                    <div className="text-2xl font-bold text-primary">10k+</div>
+                    <div className="text-sm text-muted-foreground">Original Pieces</div>
                   </CardContent>
                 </Card>
-                <Card className="text-center p-4 card-3d">
+                <Card className="text-center p-4 card-modern">
                   <CardContent className="p-0">
-                    <div className="text-2xl font-bold text-gold">50+</div>
-                    <div className="text-sm text-muted-foreground">Artworks</div>
+                    <div className="text-2xl font-bold text-primary">500+</div>
+                    <div className="text-sm text-muted-foreground">Global Artists</div>
                   </CardContent>
                 </Card>
-                <Card className="text-center p-4 card-3d">
+                <Card className="text-center p-4 card-modern">
                   <CardContent className="p-0">
-                    <div className="text-2xl font-bold text-gold">200+</div>
+                    <div className="text-2xl font-bold text-primary">50k+</div>
                     <div className="text-sm text-muted-foreground">Collectors</div>
                   </CardContent>
                 </Card>
@@ -149,28 +149,28 @@ export default function AboutPage() {
                 <h3 className="text-xl font-semibold text-foreground">Get in Touch</h3>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <Mail className="w-5 h-5 text-gold" />
-                    <span className="text-muted-foreground">{aboutContent.contactInfo.email}</span>
+                    <Mail className="w-5 h-5 text-primary" />
+                    <span className="text-muted-foreground">hello@craftopia.com</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Phone className="w-5 h-5 text-gold" />
-                    <span className="text-muted-foreground">{aboutContent.contactInfo.phone}</span>
+                    <Phone className="w-5 h-5 text-primary" />
+                    <span className="text-muted-foreground">+1 (555) 000-1234</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-gold" />
-                    <span className="text-muted-foreground">{aboutContent.contactInfo.address}</span>
+                    <MapPin className="w-5 h-5 text-primary" />
+                    <span className="text-muted-foreground">San Francisco, CA</span>
                   </div>
                 </div>
 
                 {/* Social Media */}
                 <div className="flex items-center gap-4 pt-4">
-                  <Button variant="outline" size="icon" className="hover:bg-gold/20 hover:text-gold bg-transparent">
+                  <Button variant="outline" size="icon" className="hover:bg-primary/10 hover:text-primary border-primary/20 bg-transparent">
                     <Instagram className="w-5 h-5" />
                   </Button>
-                  <Button variant="outline" size="icon" className="hover:bg-gold/20 hover:text-gold bg-transparent">
+                  <Button variant="outline" size="icon" className="hover:bg-primary/10 hover:text-primary border-primary/20 bg-transparent">
                     <Facebook className="w-5 h-5" />
                   </Button>
-                  <Button variant="outline" size="icon" className="hover:bg-gold/20 hover:text-gold bg-transparent">
+                  <Button variant="outline" size="icon" className="hover:bg-primary/10 hover:text-primary border-primary/20 bg-transparent">
                     <Twitter className="w-5 h-5" />
                   </Button>
                 </div>
@@ -182,7 +182,7 @@ export default function AboutPage() {
           <motion.section variants={itemVariants} className="space-y-8">
             <div className="text-center space-y-4">
               <h2 className="text-3xl lg:text-4xl font-light text-foreground">
-                Awards & <span className="text-gold font-medium">Recognition</span>
+                Platform <span className="text-gradient-primary">Milestones</span>
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Elena's work has been recognized by prestigious institutions and art organizations worldwide.
@@ -198,10 +198,10 @@ export default function AboutPage() {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="p-6 card-3d hover:shadow-lg transition-shadow">
+                  <Card className="p-6 card-modern hover:shadow-lg transition-shadow">
                     <CardContent className="p-0 flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center">
-                        <Award className="w-6 h-6 text-gold" />
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                        <Award className="w-6 h-6 text-primary" />
                       </div>
                       <div>
                         <h3 className="font-semibold text-foreground">{achievement}</h3>
@@ -218,7 +218,7 @@ export default function AboutPage() {
           <motion.section variants={itemVariants} className="space-y-8">
             <div className="text-center space-y-4">
               <h2 className="text-3xl lg:text-4xl font-light text-foreground">
-                Recent <span className="text-gold font-medium">Exhibitions</span>
+                Art <span className="text-gradient-primary">Innovation</span>
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Elena's artworks have been featured in galleries and exhibitions around the world.
@@ -259,7 +259,7 @@ export default function AboutPage() {
           <motion.section variants={itemVariants} className="space-y-8">
             <div className="text-center space-y-4">
               <h2 className="text-3xl lg:text-4xl font-light text-foreground">
-                Behind the <span className="text-gold font-medium">Scenes</span>
+                Behind the <span className="text-gradient-primary">Gallery</span>
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Take a glimpse into Elena's creative process and studio environment.
@@ -294,25 +294,26 @@ export default function AboutPage() {
           <motion.section variants={itemVariants} className="text-center space-y-8">
             <div className="space-y-4">
               <h2 className="text-3xl lg:text-4xl font-light text-foreground">
-                Explore Elena's <span className="text-gold font-medium">Collection</span>
+                Explore Our <span className="text-gradient-primary">Curated Collection</span>
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Discover the full range of Elena's contemporary artworks and find the perfect piece for your collection.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="gradient-gold text-white hover:opacity-90 transition-opacity mobile-button" asChild>
+              <Button size="lg" className="btn-primary glow-primary" asChild>
                 <a href="/artworks">
-                  View Collection
+                  Explore Now
                   <ExternalLink className="w-4 h-4 ml-2" />
                 </a>
               </Button>
               <Button
+                size="lg"
                 variant="outline"
-                className="border-gold text-gold hover:bg-gold hover:text-white mobile-button bg-transparent"
+                className="btn-outline"
                 asChild
               >
-                <a href="/contact">Commission Artwork</a>
+                <a href="/contact">Get in Touch</a>
               </Button>
             </div>
           </motion.section>

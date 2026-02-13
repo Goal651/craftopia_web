@@ -16,33 +16,33 @@ interface BreadcrumbNavProps {
 
 export function BreadcrumbNav({ items, className }: BreadcrumbNavProps) {
   return (
-    <nav 
-      aria-label="Breadcrumb" 
+    <nav
+      aria-label="Breadcrumb"
       className={cn("flex items-center space-x-2 text-sm", className)}
     >
-      <Link 
-        href="/" 
-        className="flex items-center text-gray-400 hover:text-white transition-colors"
+      <Link
+        href="/"
+        className="flex items-center text-muted-foreground hover:text-foreground transition-colors"
         aria-label="Home"
       >
         <Home className="w-4 h-4" />
       </Link>
-      
+
       {items.map((item, index) => (
         <React.Fragment key={index}>
-          <ChevronRight className="w-4 h-4 text-gray-500" />
+          <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
           {item.href && !item.current ? (
-            <Link 
+            <Link
               href={item.href}
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
               {item.label}
             </Link>
           ) : (
-            <span 
+            <span
               className={cn(
                 "font-medium",
-                item.current ? "text-white" : "text-gray-400"
+                item.current ? "text-foreground" : "text-muted-foreground"
               )}
               aria-current={item.current ? "page" : undefined}
             >

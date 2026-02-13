@@ -58,26 +58,26 @@ export function SearchBar({
   return (
     <form onSubmit={handleSubmit} className={cn("relative", className)}>
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
           type="text"
           placeholder={placeholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="pl-12 pr-12 h-12 glass border-0 text-lg focus:ring-2 focus:ring-blue-500/50 text-white placeholder:text-gray-400"
+          className="pl-12 pr-12 h-12 glass border-border/50 bg-background/50 text-lg focus:ring-2 focus:ring-primary/50 text-foreground placeholder:text-muted-foreground"
         />
-        
+
         {/* Loading indicator or clear button */}
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
           {loading ? (
-            <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
+            <Loader2 className="h-5 w-5 text-muted-foreground animate-spin" />
           ) : query.length > 0 ? (
             <Button
               type="button"
               variant="ghost"
               size="sm"
               onClick={handleClear}
-              className="h-6 w-6 p-0 hover:bg-transparent text-gray-400 hover:text-white"
+              className="h-6 w-6 p-0 hover:bg-transparent text-muted-foreground hover:text-foreground"
             >
               <X className="h-4 w-4" />
             </Button>

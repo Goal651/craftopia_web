@@ -135,12 +135,7 @@ export default function HomePage() {
   }, [])
 
   const handleContactOwner = (artworkTitle: string, artist: string) => {
-    // Navigate to contact page with artwork details
     window.location.href = `/contact?artwork=${encodeURIComponent(artworkTitle)}&artist=${encodeURIComponent(artist)}`
-  }
-
-  if (!mounted) {
-    return null
   }
 
   return (
@@ -168,11 +163,11 @@ export default function HomePage() {
 
               <h1 className="text-5xl md:text-7xl lg:text-9xl text-hero mb-8">
                 <span className="block">Discover</span>
-                <span className="block bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent relative">
+                <span className="block text-gradient-primary relative">
                   Extraordinary
-                  <div className="absolute -top-4 -right-4 w-8 h-8 bg-blue-500/20 rounded-full blur-xl animate-pulse" />
+                  <div className="absolute -top-4 -right-4 w-8 h-8 bg-primary/20 rounded-full blur-xl animate-pulse" />
                 </span>
-                <span className="block text-white">Art</span>
+                <span className="block text-foreground">Art</span>
               </h1>
 
               <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
@@ -181,7 +176,7 @@ export default function HomePage() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                <MagneticButton asChild size="lg" className="btn-primary glow-blue text-lg px-8 py-4">
+                <MagneticButton asChild size="lg" className="btn-primary glow-primary text-lg px-8 py-4">
                   <Link href="/artworks">
                     Explore Gallery
                     <ArrowRight className="ml-2 w-5 h-5" />
@@ -202,10 +197,10 @@ export default function HomePage() {
               className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20"
             >
               {stats.map((stat, index) => (
-                <div key={stat.label} className="glass-card rounded-2xl p-6 text-center border border-gray-800">
-                  <stat.icon className="w-8 h-8 mx-auto mb-3 text-blue-400" />
-                  <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent mb-1">{stat.value}</div>
-                  <div className="text-sm text-gray-400">{stat.label}</div>
+                <div key={stat.label} className="glass-card rounded-2xl p-6 text-center border border-border/10">
+                  <stat.icon className="w-8 h-8 mx-auto mb-3 text-primary" />
+                  <div className="text-2xl md:text-3xl font-bold text-gradient-primary mb-1">{stat.value}</div>
+                  <div className="text-sm text-muted-foreground">{stat.label}</div>
                 </div>
               ))}
             </motion.div>
@@ -239,13 +234,12 @@ export default function HomePage() {
               }}
             >
               <div
-                className={`w-full h-full bg-gradient-to-br particle-float ${
-                  i % 3 === 0 
-                    ? "from-blue-500/40 to-blue-600/40" 
-                    : i % 3 === 1
-                    ? "from-gray-400/40 to-gray-600/40"
-                    : "from-blue-300/40 to-gray-500/40"
-                } rounded-xl blur-sm`}
+                className={`w-full h-full bg-gradient-to-br particle-float ${i % 3 === 0
+                  ? "from-primary/40 to-primary/20"
+                  : i % 3 === 1
+                    ? "from-secondary/40 to-secondary/20"
+                    : "from-primary/30 to-secondary/30"
+                  } rounded-xl blur-sm`}
               />
             </motion.div>
           ))}
@@ -264,7 +258,7 @@ export default function HomePage() {
           >
             <Badge className="mb-6 glass px-4 py-2">Explore Our Galleries</Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Choose Your <span className="text-gradient-blue">Art Journey</span>
+              Choose Your <span className="text-gradient-primary">Art Journey</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Discover curated masterpieces or explore community-driven creativity
@@ -294,7 +288,7 @@ export default function HomePage() {
           >
             <Badge className="mb-6 glass px-4 py-2">Featured Collection</Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Curated <span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">Masterpieces</span>
+              Curated <span className="text-gradient-primary">Masterpieces</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Handpicked artworks that showcase exceptional creativity and artistic vision
@@ -363,11 +357,11 @@ export default function HomePage() {
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">${artwork.price.toLocaleString()}</span>
+                      <span className="text-2xl font-bold text-gradient-primary">${artwork.price.toLocaleString()}</span>
 
                       <Button
                         onClick={() => handleContactOwner(artwork.title, artwork.artist)}
-                        className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
+                        className="btn-primary"
                       >
                         <Mail className="w-4 h-4 mr-2" />
                         Contact Owner
@@ -402,7 +396,7 @@ export default function HomePage() {
           >
             <Badge className="mb-6 glass px-4 py-2">Explore Categories</Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Art <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">Categories</span>
+              Art <span className="text-gradient-primary">Categories</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Discover artworks across different mediums and styles
@@ -454,7 +448,7 @@ export default function HomePage() {
             className="text-center glass-strong rounded-3xl p-12 lg:p-20"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Ready to Start Your <span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">Art Journey</span>?
+              Ready to Start Your <span className="text-gradient-primary">Art Journey</span>?
             </h2>
             <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
               Join thousands of art enthusiasts who have discovered their perfect pieces through our gallery
