@@ -9,6 +9,7 @@ import { ArtProvider } from "@/contexts/ArtContext"
 import { Navbar } from "@/components/layout/navbar"
 import { Toaster } from "@/components/ui/sonner"
 import { AppErrorBoundary } from "@/components/error-boundaries"
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -114,6 +115,7 @@ export default function RootLayout({
             </AuthProvider>
           </ThemeProvider>
         </AppErrorBoundary>
+        <Analytics />
       </body>
     </html>
   )
