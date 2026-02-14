@@ -116,7 +116,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen px-10">
       {/* Hero Section with Glassmorphic Design */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         {/* Animated Background Elements */}
@@ -285,18 +285,18 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="group"
+                  className="group h-52"
                 >
-                  <Card className="glass-enhanced rounded-3xl overflow-hidden border-0 card-hover">
+                  <Card className="glass-enhanced rounded-2xl overflow-hidden border-0 card-hover text-md"
+                  >
                     <div className="relative overflow-hidden">
                       <ArtworkImage
                         src={artwork.image_url}
                         alt={artwork.title}
                         title={artwork.title}
                         category={artwork.category}
-                        width={400}
-                        height={320}
-                        className="w-full h-80 transition-transform duration-700 group-hover:scale-110"
+                       fill
+                        className="w-full h-72 transition-transform duration-700 group-hover:scale-110"
                       />
 
                       {/* Overlay */}
