@@ -19,7 +19,6 @@ import { ArtworkRecord, ArtworkCategory } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { GalleryErrorBoundary } from '@/components/error-boundaries'
 import { ArtworkImage } from '@/components/ui/artwork-image'
-import { ImagePerformanceMonitor } from '@/components/ui/image-performance-monitor'
 import { Eye, Heart, ChevronLeft, ChevronRight, AlertCircle, Palette, RefreshCw, Search as SearchIcon, Filter } from "lucide-react"
 
 const ITEMS_PER_PAGE = 12
@@ -414,8 +413,8 @@ function PublicGalleryPageContent() {
 
   return (
     <GalleryErrorBoundary>
-      <div className="min-h-screen pt-20 bg-background">
-        <div className="container mx-auto container-padding py-8">
+      <div className="min-h-screen pt-24">
+        <div className="container mx-auto px-4 py-12">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
             <BreadcrumbNav
               items={[
@@ -608,7 +607,6 @@ function PublicGalleryPageContent() {
             )}
           </motion.div>
         </div>
-        <ImagePerformanceMonitor showDetails={true} />
       </div>
     </GalleryErrorBoundary>
   )

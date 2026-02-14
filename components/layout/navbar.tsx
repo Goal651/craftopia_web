@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -50,6 +50,7 @@ export function Navbar() {
   const { user, signOut, isAdmin } = useAuth()
   const { theme, setTheme } = useTheme()
   const pathname = usePathname()
+  const router=useRouter()
 
   useEffect(() => {
     setMounted(true)
@@ -83,28 +84,29 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-2 group">
+            <div className="flex items-center space-x-2 group"
+            onClick={()=>router.push('/')}>
               <div className="w-9 h-9 gradient-blue-green rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-primary/20">
                 <Palette className="w-5 h-5 text-white" />
               </div>
               <span className="font-bold text-xl tracking-tight text-gradient-primary">
                 CRAFTOPIA
               </span>
-            </Link>
+            </div>
 
             {/* Desktop Navigation Links */}
             <div className="hidden lg:flex items-center space-x-1">
               {navigation.map((item) => (
-                <Link
+                <div
                   key={item.name}
-                  href={item.href}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${pathname === item.href
+                  onClick={()=>router.push(item.href)}
+                  className={`px-4 cursor-pointer py-2 text-sm font-medium rounded-lg transition-all duration-200 ${pathname === item.href
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                     }`}
                 >
                   {item.name}
-                </Link>
+                </div>
               ))}
             </div>
 
@@ -137,9 +139,9 @@ export function Navbar() {
                   asChild
                   className="text-muted-foreground hover:text-foreground hover:bg-muted"
                 >
-                  <Link href="/upload" aria-label="Upload Artwork">
+                  <div onClick={()=>router.push('/upload')} aria-label="Upload Artwork">
                     <Upload className="w-4 h-4" />
-                  </Link>
+                  </div>
                 </Button>
               )}
 
@@ -166,7 +168,13 @@ export function Navbar() {
                     <DropdownMenuItem asChild className="text-gray-300 hover:text-white hover:bg-gray-800">
                       <Link href="/profile" className="cursor-pointer">
                         <User className="w-4 h-4 mr-2" />
-                        Profile
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="text-gray-300 hover:text-white hover:bg-gray-800">
+                      <Link href="/upload" className="cursor-pointer">
+                        <Upload className="w-4 h-4 mr-2" />
+                        Upload Art
                       </Link>
                     </DropdownMenuItem>
                     {isAdmin() && (

@@ -87,8 +87,8 @@ export default function ArtworksPage() {
   ]
 
   return (
-    <div className="min-h-screen pt-20 bg-background text-foreground">
-      <div className="container mx-auto container-padding py-8">
+    <div className="min-h-screen pt-24">
+      <div className="container mx-auto px-4 py-12">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
           {/* Breadcrumb Navigation */}
           <BreadcrumbNav
@@ -267,9 +267,11 @@ export default function ArtworksPage() {
                         </div>
 
                         {/* Price Badge */}
-                        <div className="absolute top-3 right-3 glass rounded-full px-3 py-1 border-border/50">
-                          <span className="text-sm font-semibold text-foreground">${artwork.price.toLocaleString()}</span>
-                        </div>
+                        {artwork.price != null && (
+                          <div className="absolute top-3 right-3 glass rounded-full px-3 py-1 border-border/50">
+                            <span className="text-sm font-semibold text-foreground">${artwork.price.toLocaleString()}</span>
+                          </div>
+                        )}
 
                         {/* Featured Badge */}
                         {artwork.featured && (
@@ -315,9 +317,11 @@ export default function ArtworksPage() {
                           />
 
                           {/* Price Badge */}
-                          <div className="absolute top-3 right-3 glass rounded-full px-3 py-1">
-                            <span className="text-sm font-semibold text-white">${artwork.price.toLocaleString()}</span>
-                          </div>
+                          {artwork.price != null && (
+                            <div className="absolute top-3 right-3 glass rounded-full px-3 py-1">
+                              <span className="text-sm font-semibold text-white">${artwork.price.toLocaleString()}</span>
+                            </div>
+                          )}
                         </div>
 
                         <CardContent className="flex-1 p-6">

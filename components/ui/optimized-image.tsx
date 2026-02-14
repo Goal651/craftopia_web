@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { ImageOff, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useImagePerformance } from './image-performance-monitor'
 
 // Generate a simple blur data URL for progressive loading
 function generateBlurDataURL(width: number = 10, height: number = 10): string {
@@ -97,16 +96,6 @@ export function OptimizedImage({
   const imageRef = useRef<HTMLImageElement>(null)
   const observerRef = useRef<IntersectionObserver | null>(null)
 
-  // Performance monitoring
-  const performanceContext = useImagePerformance()
-
-  // Register image for monitoring
-  useEffect(() => {
-    if (performanceContext?.registerImage) {
-      performanceContext.registerImage(src)
-    }
-  }, [src, performanceContext])
-
   // Generate blur data URL on client side for better quality
   useEffect(() => {
     if (enableProgressiveLoading && !blurDataURL && typeof window !== 'undefined') {
@@ -159,18 +148,13 @@ export function OptimizedImage({
       isRetrying: false
     }))
 
-    // Track performance
-    if (performanceContext?.trackImageLoad) {
-      performanceContext.trackImageLoad(src, loadTime)
-    }
-
     onLoad?.()
 
     // Log performance in development
     if (process.env.NODE_ENV === 'development') {
       console.log(`Image loaded in ${loadTime}ms:`, src)
     }
-  }, [imageState.loadStartTime, onLoad, src, performanceContext])
+  }, [imageState.loadStartTime, onLoad, src])
 
   const handleImageError = useCallback(() => {
     const now = Date.now()
@@ -191,11 +175,6 @@ export function OptimizedImage({
         // Max retries reached
         const errorMessage = `Failed to load image after ${prevState.retryCount} retries`
 
-        // Track error
-        if (performanceContext?.trackImageError) {
-          performanceContext.trackImageError(src, errorMessage)
-        }
-
         onError?.(errorMessage)
 
         return {
@@ -206,7 +185,7 @@ export function OptimizedImage({
         }
       }
     })
-  }, [src, maxRetries, retryDelay, onError, performanceContext])
+  }, [src, maxRetries, retryDelay, onError])
 
   const handleManualRetry = useCallback(() => {
     const now = Date.now()

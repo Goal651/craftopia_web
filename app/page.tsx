@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { motion } from "framer-motion"
@@ -8,43 +8,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MagneticButton } from "@/components/ui/magnetic-button"
-import { Card3D } from "@/components/ui/card-3d"
 import { ArtworkImage } from "@/components/ui/artwork-image"
 import { GalleryNav } from "@/components/ui/gallery-nav"
 import { getArtworkImage, categoryImages } from "@/lib/generate-images"
 import { ArrowRight, Star, Heart, Eye, Sparkles, TrendingUp, Users, Award, Mail, Loader2, RefreshCw } from "lucide-react"
 import { useArt } from "@/contexts/ArtContext"
 
-const categories = [
-  {
-    name: "Abstract Art",
-    count: 24,
-    image: categoryImages["Abstract Art"],
-    href: "/artworks?category=abstract",
-    color: "from-blue-500 to-blue-600",
-  },
-  {
-    name: "Digital Art",
-    count: 18,
-    image: categoryImages["Digital Art"],
-    href: "/artworks?category=digital",
-    color: "from-green-500 to-green-600",
-  },
-  {
-    name: "Sculptures",
-    count: 12,
-    image: categoryImages["Sculptures"],
-    href: "/artworks?category=sculptures",
-    color: "from-blue-400 to-green-500",
-  },
-  {
-    name: "Photography",
-    count: 15,
-    image: categoryImages["Photography"],
-    href: "/artworks?category=photography",
-    color: "from-green-400 to-blue-500",
-  },
-]
+// Categories state managed inside component
+
 
 const stats = [
   { label: "Artworks", value: "500+", icon: Sparkles },
@@ -54,12 +25,91 @@ const stats = [
 ]
 
 export default function HomePage() {
+
   const [mounted, setMounted] = useState(false)
   const { featuredArtworks, loading } = useArt()
+  const [categories, setCategories] = useState<{
+    name: string;
+    count: number;
+    image: string;
+    href: string;
+    color: string;
+  }[]>([])
+
+  // Generate stable particle positions to avoid hydration errors
+  const particles = useMemo(() => {
+    return Array.from({ length: 12 }, (_, i) => ({
+      id: i,
+      left: (i * 8.33 + (i % 3) * 5) % 100,
+      top: (i * 7.5 + (i % 4) * 10) % 100,
+      width: 16 + (i % 5) * 6,
+      height: 16 + ((i + 2) % 5) * 6,
+      xOffset: (i % 3) * 7 - 10,
+    }))
+  }, [])
 
   useEffect(() => {
     setMounted(true)
+    fetchCategories()
   }, [])
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch('/api/categories')
+      const data = await res.json()
+
+      const mappedCategories = data.categories.map((cat: { name: string, count: number }) => {
+        let displayName = "Abstract Art"
+        let color = "from-blue-500 to-blue-600"
+        let imageKey = "Abstract Art"
+
+        switch (cat.name) {
+          case 'painting':
+            displayName = "Paintings"
+            color = "from-blue-500 to-blue-600"
+            imageKey = "Paintings"
+            break
+          case 'digital-art':
+            displayName = "Digital Art"
+            color = "from-green-500 to-green-600"
+            imageKey = "Digital Art"
+            break
+          case 'sculpture':
+            displayName = "Sculptures"
+            color = "from-blue-400 to-green-500"
+            imageKey = "Sculptures"
+            break
+          case 'photography':
+            displayName = "Photography"
+            color = "from-green-400 to-blue-500"
+            imageKey = "Photography"
+            break
+          case 'mixed-media':
+            displayName = "Mixed Media"
+            color = "from-purple-500 to-pink-500"
+            imageKey = "Mixed Media"
+            break
+          default:
+            displayName = cat.name.charAt(0).toUpperCase() + cat.name.slice(1).replace('-', ' ')
+            color = "from-indigo-500 to-purple-600"
+            imageKey = "Abstract Art"
+        }
+
+        return {
+          name: displayName,
+          count: cat.count,
+          image: categoryImages[imageKey as keyof typeof categoryImages] || categoryImages["Abstract Art"],
+          href: `/artworks?category=${cat.name}`,
+          color: color
+        }
+      })
+
+      setCategories(mappedCategories)
+    } catch (err) {
+      console.error("Failed to fetch categories", err)
+      // Fallback or static if failed? keeping empty for now
+    }
+  }
 
   const handleContactOwner = (artworkTitle: string, artist: string) => {
     window.location.href = `/contact?artwork=${encodeURIComponent(artworkTitle)}&artist=${encodeURIComponent(artist)}`
@@ -76,7 +126,7 @@ export default function HomePage() {
           <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl float" />
         </div>
 
-        <div className="container-padding relative z-10">
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -136,34 +186,34 @@ export default function HomePage() {
 
         {/* Enhanced Floating Particles */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(12)].map((_, i) => (
+          {particles.map((particle) => (
             <motion.div
-              key={i}
+              key={particle.id}
               className="absolute opacity-20"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                width: `${16 + Math.random() * 32}px`,
-                height: `${16 + Math.random() * 32}px`,
+                left: `${particle.left}%`,
+                top: `${particle.top}%`,
+                width: `${particle.width}px`,
+                height: `${particle.height}px`,
               }}
               animate={{
                 y: [0, -40, 0],
-                x: [0, Math.random() * 20 - 10, 0],
+                x: [0, particle.xOffset, 0],
                 rotate: [0, 360],
                 scale: [0.8, 1.2, 0.8],
                 opacity: [0.1, 0.3, 0.1],
               }}
               transition={{
-                duration: 20 + i * 3,
+                duration: 20 + particle.id * 3,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
-                delay: i * 0.5,
+                delay: particle.id * 0.5,
               }}
             >
               <div
-                className={`w-full h-full bg-gradient-to-br particle-float ${i % 3 === 0
+                className={`w-full h-full bg-gradient-to-br particle-float ${particle.id % 3 === 0
                   ? "from-primary/40 to-primary/20"
-                  : i % 3 === 1
+                  : particle.id % 3 === 1
                     ? "from-secondary/40 to-secondary/20"
                     : "from-primary/30 to-secondary/30"
                   } rounded-xl blur-sm`}
@@ -175,7 +225,7 @@ export default function HomePage() {
 
       {/* Gallery Navigation Section */}
       <section className="py-16 lg:py-24">
-        <div className="container-padding">
+        <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -237,7 +287,7 @@ export default function HomePage() {
                   viewport={{ once: true }}
                   className="group"
                 >
-                  <Card3D className="glass-enhanced rounded-3xl overflow-hidden border-0 card-hover">
+                  <Card className="glass-enhanced rounded-3xl overflow-hidden border-0 card-hover">
                     <div className="relative overflow-hidden">
                       <ArtworkImage
                         src={artwork.image_url}
@@ -302,7 +352,7 @@ export default function HomePage() {
                         </Button>
                       </div>
                     </CardContent>
-                  </Card3D>
+                  </Card>
                 </motion.div>
               ))
             ) : (

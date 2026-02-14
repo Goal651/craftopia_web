@@ -23,16 +23,16 @@ export default function UploadPage() {
 
   if (uploadedArtwork) {
     return (
-      <div className="min-h-screen bg-black p-4">
-        <div className="container mx-auto max-w-2xl pt-8">
-          <Card className="glass border-0 bg-white/5 backdrop-blur-xl border border-gray-800">
+      <div className="min-h-screen bg-black p-4 pt-24">
+        <div className="container mx-auto max-w-2xl">
+          <Card className="glass bg-white/5 backdrop-blur-xl border border-gray-800">
             <CardContent className="p-8 text-center">
               <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-400" />
               <h1 className="text-2xl font-bold mb-4 text-white">Upload Successful!</h1>
               <p className="text-gray-400 mb-6">
                 Your artwork "{uploadedArtwork.title}" has been uploaded to the public gallery.
               </p>
-              
+
               <div className="space-y-4">
                 <Button
                   onClick={() => router.push(`/artworks/${uploadedArtwork.id}`)}
@@ -40,7 +40,7 @@ export default function UploadPage() {
                 >
                   View Your Artwork
                 </Button>
-                
+
                 <Button
                   variant="outline"
                   onClick={() => router.push('/gallery')}
@@ -48,7 +48,7 @@ export default function UploadPage() {
                 >
                   Browse Gallery
                 </Button>
-                
+
                 <Button
                   variant="ghost"
                   onClick={() => {
@@ -68,8 +68,8 @@ export default function UploadPage() {
 
   return (
     <UploadErrorBoundary>
-      <div className="min-h-screen bg-black p-4">
-        <div className="container mx-auto max-w-2xl pt-8">
+      <div className="min-h-screen bg-black p-4 pt-24">
+        <div className="container mx-auto max-w-2xl">
           {/* Header */}
           <div className="mb-8">
             <Button
@@ -80,7 +80,7 @@ export default function UploadPage() {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
-            
+
             <Card className="glass border-0 bg-white/5 backdrop-blur-xl">
               <CardHeader>
                 <CardTitle className="text-center text-2xl">

@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { CartProvider } from "@/contexts/CartContext"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { ArtProvider } from "@/contexts/ArtContext"
-import { ImagePerformanceProvider } from "@/components/ui/image-performance-monitor"
 import { Navbar } from "@/components/layout/navbar"
 import { Toaster } from "@/components/ui/sonner"
 import { AppErrorBoundary } from "@/components/error-boundaries"
@@ -96,22 +95,20 @@ export default function RootLayout({
             <AuthProvider>
               <ArtProvider>
                 <CartProvider>
-                  <ImagePerformanceProvider>
-                    <div className="relative min-h-screen bg-background text-foreground">
-                      <Navbar />
-                      <main className="relative">{children}</main>
-                      <Toaster
-                        position="top-right"
-                        toastOptions={{
-                          style: {
-                            background: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
-                            color: "hsl(var(--foreground))",
-                          },
-                        }}
-                      />
-                    </div>
-                  </ImagePerformanceProvider>
+                  <div className="relative min-h-screen bg-background text-foreground">
+                    <Navbar />
+                    <main className="relative">{children}</main>
+                    <Toaster
+                      position="top-right"
+                      toastOptions={{
+                        style: {
+                          background: "hsl(var(--card))",
+                          border: "1px solid hsl(var(--border))",
+                          color: "hsl(var(--foreground))",
+                        },
+                      }}
+                    />
+                  </div>
                 </CartProvider>
               </ArtProvider>
             </AuthProvider>
