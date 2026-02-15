@@ -7,7 +7,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { CommandPalette } from "@/components/ui/command-palette"
+import { LiveVisualSearch } from "@/components/ui/live-visual-search"
+import { useArt } from "@/contexts/ArtContext"
 import { useAuth } from "@/contexts/AuthContext"
 import {
   User,
@@ -24,6 +25,8 @@ import {
   Upload,
   Sun,
   Moon,
+  BarChart3,
+  Brush,
 } from "lucide-react"
 import { useTheme } from "next-themes"
 import {
@@ -45,12 +48,13 @@ const navigation = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const { user, signOut, isAdmin } = useAuth()
+  const { artworks } = useArt()
   const { theme, setTheme } = useTheme()
   const pathname = usePathname()
-  const router=useRouter()
+  const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
@@ -64,13 +68,24 @@ export function Navbar() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
-        setCommandPaletteOpen(true)
+        setSearchOpen(true)
+      }
+      if (e.key === 'Escape' && searchOpen) {
+        setSearchOpen(false)
       }
     }
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [])
+  }, [searchOpen])
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+    if (query.trim()) {
+      router.push(`/artworks?q=${encodeURIComponent(query)}`)
+      setSearchOpen(false)
+    }
+  }
 
   return (
     <>
@@ -108,6 +123,33 @@ export function Navbar() {
                   {item.name}
                 </div>
               ))}
+              
+              {/* Artist Navigation */}
+              {user && (
+                <>
+                  <div className="w-px h-6 bg-border mx-2" />
+                  <div
+                    onClick={()=>router.push('/dashboard')}
+                    className={`px-4 cursor-pointer py-2 text-sm font-medium rounded-lg transition-all duration-200 flex items-center gap-2 ${pathname === '/dashboard'
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
+                  >
+                    <BarChart3 className="w-4 h-4" />
+                    Dashboard
+                  </div>
+                  <div
+                    onClick={()=>router.push('/my-artworks')}
+                    className={`px-4 cursor-pointer py-2 text-sm font-medium rounded-lg transition-all duration-200 flex items-center gap-2 ${pathname === '/my-artworks'
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
+                  >
+                    <Brush className="w-4 h-4" />
+                    My Artworks
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Desktop Actions */}
@@ -125,7 +167,7 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setCommandPaletteOpen(true)}
+                onClick={() => setSearchOpen(true)}
                 className="text-muted-foreground hover:text-foreground hover:bg-muted h-11 w-11"
                 aria-label="Search"
               >
@@ -256,14 +298,19 @@ export function Navbar() {
             >
               <div className="px-4 py-4 space-y-2">
                 {/* Mobile Search */}
-                <div className="relative mb-4">
-                  <Input
-                    placeholder="Search artworks..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="bg-muted border-border pl-10"
+                <div className="mb-4">
+                  <LiveVisualSearch
+                    onSearch={(query) => {
+                      if (query.trim()) {
+                        router.push(`/artworks?q=${encodeURIComponent(query)}`)
+                        setIsOpen(false)
+                      }
+                    }}
+                    onClear={() => setSearchQuery("")}
+                    placeholder="Search artworks, artists..."
+                    artworks={artworks}
+                    className="w-full"
                   />
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                 </div>
 
                 {/* Mobile Navigation Links */}
@@ -287,6 +334,50 @@ export function Navbar() {
                     </Link>
                   </motion.div>
                 ))}
+
+                {/* Artist Navigation for Mobile */}
+                {user && (
+                  <>
+                    <div className="border-t border-border my-2" />
+                    <div className="px-3 py-2">
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Artist Tools</p>
+                    </div>
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: navigation.length * 0.1 }}
+                    >
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setIsOpen(false)}
+                        className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${pathname === '/dashboard'
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                          }`}
+                      >
+                        <BarChart3 className="w-4 h-4" />
+                        <span className="font-medium">Dashboard</span>
+                      </Link>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: (navigation.length + 1) * 0.1 }}
+                    >
+                      <Link
+                        href="/my-artworks"
+                        onClick={() => setIsOpen(false)}
+                        className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${pathname === '/my-artworks'
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                          }`}
+                      >
+                        <Brush className="w-4 h-4" />
+                        <span className="font-medium">My Artworks</span>
+                      </Link>
+                    </motion.div>
+                  </>
+                )}
 
                 {/* Mobile User Section */}
                 <div className="pt-4 border-t border-border">
@@ -347,11 +438,48 @@ export function Navbar() {
       {/* Spacer for fixed navbar */}
       <div className="h-16" />
 
-      {/* Command Palette */}
-      <CommandPalette
-        isOpen={commandPaletteOpen}
-        onClose={() => setCommandPaletteOpen(false)}
-      />
+      {/* Global Live Visual Search Modal */}
+      <AnimatePresence>
+        {searchOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-start justify-center pt-[20vh] px-4"
+            onClick={() => setSearchOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -20 }}
+              transition={{ duration: 0.2 }}
+              className="w-full max-w-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="glass-strong border-border/50 rounded-2xl p-6 shadow-2xl">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-foreground">Search Artworks</h3>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSearchOpen(false)}
+                    className="h-8 w-8"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+                <LiveVisualSearch
+                  onSearch={handleSearch}
+                  onClear={() => setSearchQuery("")}
+                  placeholder="Search for artworks, artists, or styles..."
+                  artworks={artworks}
+                  className="w-full"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }

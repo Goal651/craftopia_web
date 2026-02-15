@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { GalleryNav } from "@/components/ui/gallery-nav"
 import { PremiumArtCard } from "@/components/ui/premium-art-card"
 import { AnimatedCounter } from "@/components/ui/animated-counter"
+import { LiveVisualSearch } from "@/components/ui/live-visual-search"
 import { categoryImages } from "@/lib/generate-images"
 import { ArrowRight, Sparkles, TrendingUp, Users, Award, RefreshCw, Zap, Shield, Globe } from "lucide-react"
 import { useArt } from "@/contexts/ArtContext"
@@ -126,11 +127,24 @@ export default function HomePage() {
               <span className="block">Art</span>
             </h1>
 
-            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-10 md:mb-14 max-w-4xl mx-auto leading-relaxed font-light px-4">
+            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-8 md:mb-10 max-w-4xl mx-auto leading-relaxed font-light px-4">
               Explore a curated collection of contemporary masterpieces from talented artists around the world
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mb-16 md:mb-20">
+            {/* Live Visual Search in Hero */}
+            <div className="max-w-2xl mx-auto mb-10 md:mb-12">
+              <LiveVisualSearch
+                onSearch={(query) => {
+                  // Navigate to artworks page with search query
+                  window.location.href = `/artworks?q=${encodeURIComponent(query)}`
+                }}
+                placeholder="Search for artworks, artists, or styles..."
+                artworks={featuredArtworks}
+                className="w-full"
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mb-12 md:mb-16">
               <Button asChild size="lg" className="btn-primary text-base md:text-lg px-8 md:px-10 py-4 md:py-5 w-full sm:w-auto shadow-xl">
                 <Link href="/artworks">
                   Explore Gallery

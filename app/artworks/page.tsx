@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ProductModal } from "@/components/product-modal"
 import { useArt } from "@/contexts/ArtContext"
 import { ArtCard } from "@/components/ui/art-card"
+import { LiveVisualSearch } from "@/components/ui/live-visual-search"
 import { Search, Grid, List, Filter, RefreshCw, Loader2 } from "lucide-react"
 
 export default function ArtworksPage() {
@@ -102,14 +103,15 @@ export default function ArtworksPage() {
 
           {/* Search and Filters */}
           <div className="space-y-4 md:space-y-6">
-            {/* Search Bar */}
+            {/* Live Visual Search Bar */}
             <div className="relative max-w-2xl mx-auto">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
-              <Input
-                placeholder="Search artworks, artists, or descriptions..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 md:pl-12 h-11 md:h-12 glass border-0 text-base md:text-lg focus:ring-2 focus:ring-primary/50 text-foreground placeholder:text-muted-foreground"
+              <LiveVisualSearch
+                onSearch={setSearchTerm}
+                onClear={() => setSearchTerm("")}
+                placeholder="Search artworks, artists, or styles..."
+                loading={loading}
+                artworks={artworks}
+                className="w-full"
               />
             </div>
 

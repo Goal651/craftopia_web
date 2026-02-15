@@ -10,6 +10,7 @@ import { Button } from "./button"
 import { cn } from "@/lib/utils"
 import { useState, useEffect } from "react"
 import { useAuth } from "@/contexts/AuthContext"
+import { viewTracker, initializeViewTracking, canTrackView, trackArtworkView } from "@/lib/utils/view-tracking"
 import {
   Dialog,
   DialogContent,
@@ -46,9 +47,22 @@ export function ArtCard({
   const [showContactDialog, setShowContactDialog] = useState(false)
   const [artistInfo, setArtistInfo] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+  const [isLiked, setIsLiked] = useState(false)
+  const [likeCount, setLikeCount] = useState(Math.floor(artwork.view_count * 0.12))
+  const [viewCount, setViewCount] = useState(artwork.view_count)
 
   // Check if current user is the owner of this artwork
   const isOwner = user && artwork.artist_id === user.id
+
+  // Initialize view tracking when user is available
+  useEffect(() => {
+    if (user?.id) {
+      initializeViewTracking(user.id)
+      // Check if user has already liked this artwork (in a real app, this would come from an API)
+      const likedArtworks = JSON.parse(localStorage.getItem('liked_artworks') || '{}')
+      setIsLiked(likedArtworks[artwork.id] || false)
+    }
+  }, [user, artwork.id])
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -77,6 +91,102 @@ export function ArtCard({
     }
   }
 
+  const handleLike = async (e: React.MouseEvent) => {
+    e.preventDefault() // Prevent navigation
+    e.stopPropagation() // Prevent card click
+    
+    if (!user) {
+      // Redirect to login or show login modal
+      alert('Please log in to like artworks')
+      return
+    }
+
+    if (isOwner) {
+      alert('You cannot like your own artwork')
+      return
+    }
+
+    try {
+      // Update local state immediately for better UX
+      const newLikedState = !isLiked
+      setIsLiked(newLikedState)
+      setLikeCount(prev => newLikedState ? prev + 1 : prev - 1)
+
+      // Save to localStorage
+      const likedArtworks = JSON.parse(localStorage.getItem('liked_artworks') || '{}')
+      likedArtworks[artwork.id] = newLikedState
+      localStorage.setItem('liked_artworks', JSON.stringify(likedArtworks))
+
+      // Make API call to update like status
+      const response = await fetch(`/api/artworks/${artwork.id}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ liked: newLikedState }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to update like status')
+      }
+
+      const data = await response.json()
+      // Update like count with server response
+      setLikeCount(data.like_count)
+    } catch (error) {
+      console.error('Failed to update like:', error)
+      // Revert state on error - use the opposite of current state
+      setIsLiked(isLiked)
+      setLikeCount(prev => isLiked ? prev - 1 : prev + 1)
+    }
+  }
+
+  const handleView = async (e: React.MouseEvent) => {
+    e.preventDefault() // Prevent navigation
+    e.stopPropagation() // Prevent card click
+    
+    if (!user) {
+      // For non-logged in users, just navigate to the artwork
+      window.location.href = `/artworks/${artwork.id}`
+      return
+    }
+
+    // Check if user can track view (hasn't viewed before)
+    if (canTrackView(artwork.id)) {
+      try {
+        // Update local state
+        setViewCount(prev => prev + 1)
+        
+        // Track the view
+        trackArtworkView(artwork.id)
+
+        // Make API call to increment view count
+        const response = await fetch(`/api/artworks/${artwork.id}/views`, {
+          method: 'POST',
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to track view')
+        }
+
+        const data = await response.json()
+        // Update view count with server response
+        setViewCount(data.view_count)
+      } catch (error) {
+        console.error('Failed to track view:', error)
+        // Revert state on error
+        setViewCount(prev => prev - 1)
+      }
+    }
+
+    // Navigate to artwork detail page
+    window.location.href = `/artworks/${artwork.id}`
+  }
+
+  const handleCardClick = () => {
+    window.location.href = `/artworks/${artwork.id}`
+  }
+
   const handleEdit = () => {
     // Navigate to upload page with edit mode - we'll need to modify this later
     // For now, let's go to upload page and handle editing there
@@ -92,7 +202,9 @@ export function ArtCard({
       viewport={{ once: true }}
       className="group"
     >
-      <div className="glass-enhanced rounded-xl sm:rounded-2xl overflow-hidden border-0 card-hover text-md h-full flex flex-col"
+      <div 
+        className="glass-enhanced rounded-xl sm:rounded-2xl overflow-hidden border-0 card-hover text-md h-full flex flex-col cursor-pointer"
+        onClick={handleCardClick}
       >
         <div className="relative overflow-hidden">
           <ArtworkImage
@@ -109,10 +221,22 @@ export function ArtCard({
 
           {/* Action Buttons */}
           <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-1 sm:gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Button size="icon" className="glass w-8 h-8 sm:w-10 sm:h-10 hover:bg-white/20" aria-label="Add to wishlist">
-              <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
+            <Button 
+              size="icon" 
+              className={`glass w-8 h-8 sm:w-10 sm:h-10 hover:bg-white/20 transition-colors ${
+                isLiked ? 'bg-red-500/20 hover:bg-red-500/30' : ''
+              }`} 
+              aria-label="Add to wishlist"
+              onClick={handleLike}
+            >
+              <Heart className={`w-3 h-3 sm:w-4 sm:h-4 ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
             </Button>
-            <Button size="icon" className="glass w-8 h-8 sm:w-10 sm:h-10 hover:bg-white/20" aria-label="Quick view">
+            <Button 
+              size="icon" 
+              className="glass w-8 h-8 sm:w-10 sm:h-10 hover:bg-white/20 transition-colors" 
+              aria-label="Quick view"
+              onClick={handleView}
+            >
               <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
             </Button>
           </div>
@@ -126,6 +250,7 @@ export function ArtCard({
           <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 flex items-center gap-1 glass px-2 sm:px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-green-400 text-green-400" />
             <span className="text-xs sm:text-sm font-medium text-white">{(4.5 + (artwork.view_count % 5) / 10).toFixed(1)}</span>
+            <span className="text-xs text-white/70">({likeCount})</span>
           </div>
         </div>
 
@@ -139,7 +264,7 @@ export function ArtCard({
             </div>
             <div className="flex items-center gap-1 text-muted-foreground flex-shrink-0 ml-2">
               <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="text-xs sm:text-sm">{artwork.view_count}</span>
+              <span className="text-xs sm:text-sm">{viewCount}</span>
             </div>
           </div>
 

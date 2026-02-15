@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { SearchBar } from "@/components/ui/search-bar"
+import { LiveVisualSearch } from "@/components/ui/live-visual-search"
 import { SearchHighlight } from "@/components/ui/search-highlight"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useArtworkSearch } from "@/hooks/use-artwork-search"
@@ -333,12 +333,13 @@ function PublicGalleryPageContent() {
             </div>
 
             <div className="max-w-2xl mx-auto">
-              <SearchBar
+              <LiveVisualSearch
                 onSearch={handleSearch}
                 onClear={handleClearSearch}
-                placeholder="Search artworks, artists, or descriptions..."
+                placeholder="Search artworks, artists, or styles..."
                 loading={searchLoading}
                 initialValue={currentQuery}
+                artworks={artworks}
               />
             </div>
 

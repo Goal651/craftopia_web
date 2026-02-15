@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import { useUserProfile } from "@/hooks/use-user-profile"
 import { User, Mail, Edit, Save, Loader2, Palette, Eye } from "lucide-react"
 import { useState, useEffect } from "react"
+import { formatDateSafe } from "@/lib/utils/date-utils"
 import { toast } from "sonner"
 
 export default function ProfilePage() {
@@ -310,10 +311,7 @@ export default function ProfilePage() {
                 <div>
                   <h3 className="font-medium text-white">Member Since</h3>
                   <p className="text-sm text-gray-400">
-                    {profile?.created_at
-                      ? new Date(profile.created_at).toLocaleDateString()
-                      : new Date().toLocaleDateString()
-                    }
+                    {formatDateSafe(profile?.created_at, { format: 'medium' })}
                   </p>
                 </div>
               </div>
@@ -323,7 +321,7 @@ export default function ProfilePage() {
                   <div>
                     <h3 className="font-medium text-white">Last Updated</h3>
                     <p className="text-sm text-gray-400">
-                      {new Date(profile.updated_at).toLocaleDateString()}
+                      {formatDateSafe(profile.updated_at, { format: 'medium' })}
                     </p>
                   </div>
                 </div>
