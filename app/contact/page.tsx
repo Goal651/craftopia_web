@@ -64,31 +64,31 @@ function ContactForm() {
 
   return (
     <Card className="border-0 shadow-2xl bg-white/80 dark:bg-card/80 backdrop-blur-sm">
-      <CardContent className="p-8">
+      <CardContent className="p-6 md:p-8">
         <div className="space-y-6">
           <div className="space-y-2">
-            <h2 className="text-2xl font-light text-charcoal dark:text-white">Send a Message</h2>
-            <p className="text-muted-foreground">
+            <h2 className="text-xl md:text-2xl font-light text-charcoal dark:text-white">Send a Message</h2>
+            <p className="text-sm md:text-base text-muted-foreground">
               Fill out the form below to connect.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Name *</Label>
+                <Label htmlFor="name" className="text-sm">Name *</Label>
                 <Input
                   id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded-xl"
+                  className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded-xl h-11"
                   placeholder="Your full name"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email *</Label>
+                <Label htmlFor="email" className="text-sm">Email *</Label>
                 <Input
                   id="email"
                   name="email"
@@ -96,27 +96,27 @@ function ContactForm() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded-xl"
+                  className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded-xl h-11"
                   placeholder="your@email.com"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="subject">Subject *</Label>
+              <Label htmlFor="subject" className="text-sm">Subject *</Label>
               <Input
                 id="subject"
                 name="subject"
                 value={formData.subject}
                 onChange={handleChange}
                 required
-                className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded-xl"
+                className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded-xl h-11"
                 placeholder="What would you like to discuss?"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="message">Message *</Label>
+              <Label htmlFor="message" className="text-sm">Message *</Label>
               <Textarea
                 id="message"
                 name="message"
@@ -132,7 +132,7 @@ function ContactForm() {
             <Button
               type="submit"
               size="lg"
-              className="w-full gradient-gold text-white hover:opacity-90 transition-opacity"
+              className="w-full gradient-gold text-white hover:opacity-90 transition-opacity h-12"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -183,26 +183,26 @@ export default function ContactPage() {
   ]
 
   return (
-    <div className="min-h-screen pt-24">
-      <div className="container mx-auto px-4 py-12">
-        <div className="space-y-16">
+    <div className="min-h-screen pt-20 md:pt-24">
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="space-y-12 md:space-y-16">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center space-y-6"
+            className="text-center space-y-4 md:space-y-6"
           >
             <Badge className="bg-gold/20 text-gold border-gold/30">Get in Touch</Badge>
-            <h1 className="text-4xl lg:text-6xl font-light text-charcoal dark:text-white">
+            <h1 className="text-3xl md:text-4xl lg:text-6xl font-light text-charcoal dark:text-white px-4">
               Contact <span className="text-gold font-medium">Us</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
               Have questions about a particular artwork, interested in commissioning a piece, or want to learn more? We'd love to hear from you.
             </p>
           </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-16">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
             {/* Contact Form */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -219,17 +219,17 @@ export default function ContactPage() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="space-y-8"
+              className="space-y-6 md:space-y-8"
             >
-              <div className="space-y-4">
-                <h2 className="text-2xl font-light text-charcoal dark:text-white">Get in Touch</h2>
-                <p className="text-muted-foreground leading-relaxed">
+              <div className="space-y-3 md:space-y-4">
+                <h2 className="text-xl md:text-2xl font-light text-charcoal dark:text-white">Get in Touch</h2>
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                   Whether you're a collector, art enthusiast, or simply curious, we're here to help.
                   Reach out through any of the channels below.
                 </p>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 {contactInfo.map((info, index) => (
                   <motion.div
                     key={index}
@@ -238,15 +238,15 @@ export default function ContactPage() {
                     transition={{ delay: 0.6 + index * 0.1 }}
                   >
                     <Card className="border-0 shadow-lg bg-white/80 dark:bg-card/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
-                      <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 gradient-gold rounded-full flex items-center justify-center flex-shrink-0">
-                            <info.icon className="w-6 h-6 text-white" />
+                      <CardContent className="p-4 md:p-6">
+                        <div className="flex items-start gap-3 md:gap-4">
+                          <div className="w-10 h-10 md:w-12 md:h-12 gradient-gold rounded-full flex items-center justify-center flex-shrink-0">
+                            <info.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
                           </div>
-                          <div className="space-y-1">
-                            <h3 className="font-semibold text-charcoal dark:text-white">{info.title}</h3>
-                            <p className="text-gold font-medium">{info.details}</p>
-                            <p className="text-sm text-muted-foreground">{info.description}</p>
+                          <div className="space-y-1 flex-1 min-w-0">
+                            <h3 className="font-semibold text-sm md:text-base text-charcoal dark:text-white">{info.title}</h3>
+                            <p className="text-sm md:text-base text-gold font-medium break-words">{info.details}</p>
+                            <p className="text-xs md:text-sm text-muted-foreground">{info.description}</p>
                           </div>
                         </div>
                       </CardContent>

@@ -57,20 +57,6 @@ function PublicGalleryPageContent() {
     hasPrevPage: false
   })
   const [selectedCategory, setSelectedCategory] = useState<ArtworkCategory | 'all'>('all')
-
-  useEffect(() => {
-    const categoryParam = searchParams.get('category') as ArtworkCategory | null
-    const searchParam = searchParams.get('q')
-
-    if (categoryParam && CATEGORY_OPTIONS.some(opt => opt.value === categoryParam)) {
-      setSelectedCategory(categoryParam)
-    }
-
-    if (searchParam) {
-      setIsSearchMode(true)
-    }
-  }, [searchParams])
-
   const [isSearchMode, setIsSearchMode] = useState(false)
 
   const {
@@ -89,6 +75,98 @@ function PublicGalleryPageContent() {
     initialQuery: searchParams.get('q') || '',
     initialCategory: (searchParams.get('category') as ArtworkCategory) || 'all'
   })
+
+  useEffect(() => {
+    const categoryParam = searchParams.get('category') as ArtworkCategory | null
+    const searchParam = searchParams.get('q')
+
+    if (categoryParam && CATEGORY_OPTIONS.some(opt => opt.value === categoryParam)) {
+      setSelectedCategory(categoryParam)
+    }
+
+    if (searchParam) {
+      setIsSearchMode(true)
+    }
+  }, [searchParams])
+
+  // Update pagination when artworks change
+  useEffect(() => {
+    if (artworks.length > 0) {
+      setPagination({
+        currentPage: 1,
+        totalPages: Math.ceil(artworks.length / ITEMS_PER_PAGE),
+        totalItems: artworks.length,
+        hasNextPage: artworks.length > ITEMS_PER_PAGE,
+        hasPrevPage: false
+      })
+    }
+  }, [artworks])
+
+  const handleSearch = (query: string) => {
+    if (query.trim()) {
+      setIsSearchMode(true)
+      search(query)
+      updateURL({ q: query, category: selectedCategory !== 'all' ? selectedCategory : undefined })
+    }
+  }
+
+  const handleClearSearch = () => {
+    setIsSearchMode(false)
+    clearSearch()
+    updateURL({})
+  }
+
+  const handleCategoryChange = (category: ArtworkCategory | 'all') => {
+    setSelectedCategory(category)
+    if (isSearchMode && currentQuery) {
+      searchWithCategory(currentQuery, category)
+    }
+    updateURL({ 
+      q: currentQuery || undefined, 
+      category: category !== 'all' ? category : undefined 
+    })
+  }
+
+  const handleClearCategory = () => {
+    setSelectedCategory('all')
+    if (isSearchMode && currentQuery) {
+      searchWithCategory(currentQuery, 'all')
+    }
+    updateURL({ q: currentQuery || undefined })
+  }
+
+  const handlePageChange = (page: number) => {
+    if (isSearchMode) {
+      searchGoToPage(page)
+    } else {
+      setPagination(prev => ({
+        ...prev,
+        currentPage: page,
+        hasNextPage: page < prev.totalPages,
+        hasPrevPage: page > 1
+      }))
+    }
+    updateURL({ 
+      q: currentQuery || undefined,
+      category: selectedCategory !== 'all' ? selectedCategory : undefined,
+      page: page.toString()
+    })
+  }
+
+  const handleRetry = () => {
+    if (isSearchMode && currentQuery) {
+      search(currentQuery)
+    } else {
+      fetchArtworks()
+    }
+  }
+
+  const handleBrowseAll = () => {
+    setIsSearchMode(false)
+    clearSearch()
+    setSelectedCategory('all')
+    updateURL({})
+  }
 
 
 
@@ -197,7 +275,7 @@ function PublicGalleryPageContent() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => { }}
+          onClick={() => handlePageChange(currentPagination.currentPage - 1)}
           disabled={!currentPagination.hasPrevPage || isLoading}
           className="glass border-border/50 bg-background/50 text-muted-foreground hover:text-foreground hover:bg-muted"
         >
@@ -211,7 +289,7 @@ function PublicGalleryPageContent() {
               key={index}
               variant={page === currentPagination.currentPage ? "default" : "outline"}
               size="sm"
-              onClick={() => typeof page === 'number' ? {}: undefined}
+              onClick={() => typeof page === 'number' ? handlePageChange(page) : undefined}
               disabled={typeof page !== 'number' || isLoading}
               className={
                 page === currentPagination.currentPage
@@ -229,7 +307,7 @@ function PublicGalleryPageContent() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => { }}
+          onClick={() => handlePageChange(currentPagination.currentPage + 1)}
           disabled={!currentPagination.hasNextPage || isLoading}
           className="glass border-border/50 bg-background/50 text-muted-foreground hover:text-foreground hover:bg-muted"
         >
@@ -256,8 +334,8 @@ function PublicGalleryPageContent() {
 
             <div className="max-w-2xl mx-auto">
               <SearchBar
-                onSearch={() => { }}
-                onClear={() => { }}
+                onSearch={handleSearch}
+                onClear={handleClearSearch}
                 placeholder="Search artworks, artists, or descriptions..."
                 loading={searchLoading}
                 initialValue={currentQuery}
@@ -266,16 +344,16 @@ function PublicGalleryPageContent() {
 
             <div className="flex justify-center">
               <div className="glass-card rounded-2xl p-4">
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-center gap-4">
                   <div className="flex items-center gap-2">
                     <Filter className="w-4 h-4 text-muted-foreground" />
                     <span className="text-sm font-medium text-muted-foreground">Filter by category:</span>
                   </div>
                   <Select
                     value={selectedCategory}
-                    onValueChange={(value: ArtworkCategory | 'all') => { }}
+                    onValueChange={handleCategoryChange}
                   >
-                    <SelectTrigger className="w-48 glass border-border/50 bg-background/50 text-foreground">
+                    <SelectTrigger className="w-full sm:w-48 glass border-border/50 bg-background/50 text-foreground">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent className="glass-strong border-border/50">
@@ -294,7 +372,7 @@ function PublicGalleryPageContent() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() =>  { }}
+                      onClick={handleClearCategory}
                       className="text-muted-foreground hover:text-foreground hover:bg-muted"
                     >
                       Clear filter

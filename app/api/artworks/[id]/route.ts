@@ -4,11 +4,12 @@ import Artwork from '@/lib/db/models/Artwork'
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbConnect()
-        const artwork = await Artwork.findById(params.id).lean()
+        const { id } = await params
+        const artwork = await Artwork.findById(id).lean()
 
         if (!artwork) {
             return NextResponse.json(

@@ -5,11 +5,12 @@ import Artwork from '@/lib/db/models/Artwork'
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbConnect()
-        const artist = await User.findById(params.id).select('-password').lean()
+        const { id } = await params
+        const artist = await User.findById(id).select('-password').lean()
 
         if (!artist) {
             return NextResponse.json(
@@ -20,9 +21,9 @@ export async function GET(
 
         // Calculate stats
         const [artworkCount, totalViewsResult] = await Promise.all([
-            Artwork.countDocuments({ artist_id: params.id }),
+            Artwork.countDocuments({ artist_id: id }),
             Artwork.aggregate([
-                { $match: { artist_id: params.id } },
+                { $match: { artist_id: id } },
                 { $group: { _id: null, totalViews: { $sum: "$view_count" } } }
             ])
         ])

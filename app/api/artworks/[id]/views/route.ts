@@ -4,11 +4,12 @@ import Artwork from '@/lib/db/models/Artwork'
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbConnect()
-        const artworkId = params.id
+        const { id } = await params
+        const artworkId = id
 
         const updatedArtwork = await Artwork.findByIdAndUpdate(
             artworkId,

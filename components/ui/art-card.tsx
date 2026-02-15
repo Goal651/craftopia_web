@@ -2,14 +2,21 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { Eye, Heart, Star, Mail } from "lucide-react"
+import { Eye, Heart, Star, Mail, User, MessageSquare } from "lucide-react"
 import { ArtworkRecord } from "@/types"
 import { ArtworkImage } from "./artwork-image"
 import { Badge } from "./badge"
 import { Button } from "./button"
-import { Card, CardContent } from "./card"
-import { SearchHighlight } from "./search-highlight"
 import { cn } from "@/lib/utils"
+import { useState, useEffect } from "react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./dialog"
+import { Avatar, AvatarFallback, AvatarImage } from "./avatar"
 
 interface ArtCardProps {
   artwork: ArtworkRecord
@@ -34,6 +41,9 @@ export function ArtCard({
 }: ArtCardProps) {
   const isDashboard = variant === "dashboard"
   const isCompact = variant === "compact"
+  const [showContactDialog, setShowContactDialog] = useState(false)
+  const [artistInfo, setArtistInfo] = useState<any>(null)
+  const [loading, setLoading] = useState(false)
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -44,8 +54,22 @@ export function ArtCard({
     }
   }
 
-  const handleContactOwner = (artworkTitle: string, artist: string) => {
-    window.location.href = `/contact?artwork=${encodeURIComponent(artworkTitle)}&artist=${encodeURIComponent(artist)}`
+  const handleContactOwner = async () => {
+    setShowContactDialog(true)
+    if (!artistInfo && artwork.artist_id) {
+      setLoading(true)
+      try {
+        const response = await fetch(`/api/artists/${artwork.artist_id}`)
+        if (response.ok) {
+          const data = await response.json()
+          setArtistInfo(data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch artist info:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
   }
 
   return (
@@ -55,9 +79,9 @@ export function ArtCard({
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       viewport={{ once: true }}
-      className="group h-52"
+      className="group"
     >
-      <Card className="glass-enhanced rounded-2xl overflow-hidden border-0 card-hover text-md"
+      <div className="glass-enhanced rounded-2xl overflow-hidden border-0 card-hover text-md h-full flex flex-col"
       >
         <div className="relative overflow-hidden">
           <ArtworkImage
@@ -94,35 +118,130 @@ export function ArtCard({
           </div>
         </div>
 
-        <CardContent className="p-6">
+        <div className="p-4 md:p-6 flex-1 flex flex-col">
           <div className="flex items-start justify-between mb-3">
-            <div>
-              <h3 className="text-xl font-bold mb-1 group-hover:text-blue-400 transition-colors">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg md:text-xl font-bold mb-1 group-hover:text-blue-400 transition-colors truncate">
                 {artwork.title}
               </h3>
-              <p className="text-muted-foreground">by {artwork.artist_name}</p>
+              <p className="text-sm md:text-base text-muted-foreground truncate">by {artwork.artist_name}</p>
             </div>
-            <div className="flex items-center gap-1 text-muted-foreground">
+            <div className="flex items-center gap-1 text-muted-foreground flex-shrink-0 ml-2">
               <Eye className="w-4 h-4" />
               <span className="text-sm">{artwork.view_count}</span>
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <span className="text-2xl font-bold text-gradient-primary">
+          <div className="flex items-center justify-between mt-auto pt-4">
+            <span className="text-xl md:text-2xl font-bold text-gradient-primary">
               Gallery Piece
             </span>
 
             <Button
-              onClick={() => handleContactOwner(artwork.title, artwork.artist_name)}
-              className="btn-primary"
+              onClick={handleContactOwner}
+              className="btn-primary text-sm md:text-base"
+              size="sm"
             >
               <Mail className="w-4 h-4 mr-2" />
-              Contact Artist
+              <span className="hidden sm:inline">Contact Artist</span>
+              <span className="sm:hidden">Contact</span>
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      {/* Contact Artist Dialog */}
+      <Dialog open={showContactDialog} onOpenChange={setShowContactDialog}>
+        <DialogContent className="glass-strong border-primary/20">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">Contact Artist</DialogTitle>
+            <DialogDescription>
+              Get in touch with the artist about "{artwork.title}"
+            </DialogDescription>
+          </DialogHeader>
+
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          ) : artistInfo ? (
+            <div className="space-y-6">
+              {/* Artist Info */}
+              <div className="flex items-center gap-4 p-4 glass rounded-xl">
+                <Avatar className="h-16 w-16 border-2 border-primary/20">
+                  <AvatarImage src={artistInfo.avatar_url} alt={artistInfo.display_name} />
+                  <AvatarFallback className="bg-primary/10 text-primary text-lg">
+                    {artistInfo.display_name?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-lg">{artistInfo.display_name}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {artistInfo.artwork_count || 0} artworks • {artistInfo.total_views || 0} total views
+                  </p>
+                </div>
+              </div>
+
+              {/* Bio */}
+              {artistInfo.bio && (
+                <div className="p-4 glass rounded-xl">
+                  <h4 className="font-semibold mb-2 flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    About the Artist
+                  </h4>
+                  <p className="text-sm text-muted-foreground">{artistInfo.bio}</p>
+                </div>
+              )}
+
+              {/* Contact Info */}
+              <div className="p-4 glass rounded-xl space-y-3">
+                <h4 className="font-semibold mb-2 flex items-center gap-2">
+                  <Mail className="w-4 h-4" />
+                  Contact Information
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-muted-foreground">Email:</span>
+                    <a 
+                      href={`mailto:${artistInfo.email}?subject=Inquiry about "${artwork.title}"`}
+                      className="text-primary hover:underline"
+                    >
+                      {artistInfo.email}
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <Button 
+                  asChild
+                  className="btn-primary flex-1"
+                >
+                  <a href={`mailto:${artistInfo.email}?subject=Inquiry about "${artwork.title}"`}>
+                    <Mail className="w-4 h-4 mr-2" />
+                    Send Email
+                  </a>
+                </Button>
+                <Button 
+                  asChild
+                  variant="outline"
+                  className="flex-1"
+                >
+                  <Link href={`/gallery/artist/${artwork.artist_id}`}>
+                    <User className="w-4 h-4 mr-2" />
+                    View Profile
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              Unable to load artist information
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </motion.div>
   )
 }

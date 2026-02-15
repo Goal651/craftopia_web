@@ -3,31 +3,44 @@
 import { useState, useEffect, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { motion } from "framer-motion"
+import { motion, useScroll, useTransform } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MagneticButton } from "@/components/ui/magnetic-button"
-import { ArtworkImage } from "@/components/ui/artwork-image"
 import { GalleryNav } from "@/components/ui/gallery-nav"
-import { getArtworkImage, categoryImages } from "@/lib/generate-images"
-import { ArrowRight, Star, Heart, Eye, Sparkles, TrendingUp, Users, Award, Mail, Loader2, RefreshCw } from "lucide-react"
+import { PremiumArtCard } from "@/components/ui/premium-art-card"
+import { RevealText, RevealTextStagger, RevealTextChild } from "@/components/ui/reveal-text"
+import { AnimatedCounter } from "@/components/ui/animated-counter"
+import { categoryImages } from "@/lib/generate-images"
+import { ArrowRight, Sparkles, TrendingUp, Users, Award, RefreshCw, Zap, Shield, Globe } from "lucide-react"
 import { useArt } from "@/contexts/ArtContext"
-import { ArtCard } from "@/components/ui/art-card"
-
-// Categories state managed inside component
-
 
 const stats = [
-  { label: "Artworks", value: "500+", icon: Sparkles },
-  { label: "Artists", value: "50+", icon: Users },
-  { label: "Collectors", value: "1000+", icon: Award },
-  { label: "Growth", value: "25%", icon: TrendingUp },
+  { label: "Artworks", value: "500+", icon: Sparkles, color: "from-blue-500 to-cyan-500" },
+  { label: "Artists", value: "50+", icon: Users, color: "from-purple-500 to-pink-500" },
+  { label: "Collectors", value: "1000+", icon: Award, color: "from-green-500 to-emerald-500" },
+  { label: "Growth", value: "25%", icon: TrendingUp, color: "from-orange-500 to-red-500" },
+]
+
+const features = [
+  {
+    icon: Zap,
+    title: "Instant Discovery",
+    description: "Find your perfect artwork with our intelligent search and filtering system"
+  },
+  {
+    icon: Shield,
+    title: "Verified Artists",
+    description: "Every artist is carefully vetted to ensure authenticity and quality"
+  },
+  {
+    icon: Globe,
+    title: "Global Collection",
+    description: "Access artworks from talented creators around the world"
+  }
 ]
 
 export default function HomePage() {
-
-  const [mounted, setMounted] = useState(false)
   const { featuredArtworks, loading } = useArt()
   const [categories, setCategories] = useState<{
     name: string;
@@ -37,20 +50,11 @@ export default function HomePage() {
     color: string;
   }[]>([])
 
-  // Generate stable particle positions to avoid hydration errors
-  const particles = useMemo(() => {
-    return Array.from({ length: 12 }, (_, i) => ({
-      id: i,
-      left: (i * 8.33 + (i % 3) * 5) % 100,
-      top: (i * 7.5 + (i % 4) * 10) % 100,
-      width: 16 + (i % 5) * 6,
-      height: 16 + ((i + 2) % 5) * 6,
-      xOffset: (i % 3) * 7 - 10,
-    }))
-  }, [])
+  const { scrollYProgress } = useScroll()
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 300])
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
 
   useEffect(() => {
-    setMounted(true)
     fetchCategories()
   }, [])
 
@@ -108,185 +112,239 @@ export default function HomePage() {
       setCategories(mappedCategories)
     } catch (err) {
       console.error("Failed to fetch categories", err)
-      // Fallback or static if failed? keeping empty for now
     }
   }
 
-
-
   return (
-    <div className="min-h-screen px-10">
-      {/* Hero Section with Glassmorphic Design */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl float" />
-          <div className="absolute top-40 right-20 w-96 h-96 bg-green-500/20 rounded-full blur-3xl float-delayed" />
-          <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl float" />
+    <div className="min-h-screen">
+      {/* Premium Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Animated Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
+        
+        {/* Mesh Gradient Orbs */}
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary/30 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1
+            }}
+            className="absolute top-1/3 -right-1/4 w-[500px] h-[500px] bg-secondary/20 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.25, 0.45, 0.25],
+            }}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2
+            }}
+            className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"
+          />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            >
-              <Badge className="mb-6 glass px-4 py-2 text-sm font-medium">
-                <Sparkles className="w-4 h-4 mr-2" />
+        <motion.div
+          style={{ y: heroY, opacity: heroOpacity }}
+          className="container mx-auto px-4 md:px-6 lg:px-10 relative z-10 pt-20"
+        >
+          <div className="text-center max-w-6xl mx-auto">
+            <RevealText delay={0.2}>
+              <Badge className="mb-6 md:mb-8 glass-strong px-6 py-3 text-sm md:text-base font-medium shadow-xl">
+                <Sparkles className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                 Contemporary Art Collection
               </Badge>
+            </RevealText>
 
-              <h1 className="text-5xl md:text-7xl lg:text-9xl text-hero mb-8">
-                <span className="block">Discover</span>
-                <span className="block text-gradient-primary relative">
-                  Extraordinary
-                  <div className="absolute -top-4 -right-4 w-8 h-8 bg-primary/20 rounded-full blur-xl animate-pulse" />
-                </span>
-                <span className="block text-foreground">Art</span>
-              </h1>
+            <RevealTextStagger>
+              <RevealTextChild>
+                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold mb-6 md:mb-8 leading-[1.1] tracking-tight">
+                  <span className="block bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">
+                    Discover
+                  </span>
+                  <span className="block bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-primary animate-gradient-x">
+                    Extraordinary
+                  </span>
+                  <span className="block bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">
+                    Art
+                  </span>
+                </h1>
+              </RevealTextChild>
 
-              <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
-                Explore a curated collection of contemporary masterpieces from talented artists around the world. Find
-                the perfect piece to transform your space.
-              </p>
+              <RevealTextChild>
+                <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-muted-foreground mb-10 md:mb-14 max-w-4xl mx-auto leading-relaxed font-light px-4">
+                  Explore a curated collection of contemporary masterpieces from talented artists around the world
+                </p>
+              </RevealTextChild>
 
-              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                <MagneticButton asChild size="lg" className="btn-primary glow-primary text-lg px-8 py-4">
-                  <Link href="/artworks">
-                    Explore Gallery
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Link>
-                </MagneticButton>
+              <RevealTextChild>
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mb-16 md:mb-20">
+                  <MagneticButton asChild size="lg" className="btn-primary glow-primary text-base md:text-lg px-8 md:px-10 py-4 md:py-5 w-full sm:w-auto shadow-2xl shadow-primary/25">
+                    <Link href="/artworks">
+                      Explore Gallery
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Link>
+                  </MagneticButton>
 
-                <MagneticButton asChild variant="outline" size="lg" className="glass-enhanced text-lg px-8 py-4 bg-transparent">
-                  <Link href="/about">Learn More</Link>
-                </MagneticButton>
-              </div>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20"
-            >
-              {stats.map((stat, index) => (
-                <div key={stat.label} className="glass-card rounded-2xl p-6 text-center border border-border/10">
-                  <stat.icon className="w-8 h-8 mx-auto mb-3 text-primary" />
-                  <div className="text-2xl md:text-3xl font-bold text-gradient-primary mb-1">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  <MagneticButton asChild variant="outline" size="lg" className="glass-strong text-base md:text-lg px-8 md:px-10 py-4 md:py-5 w-full sm:w-auto border-2">
+                    <Link href="/about">Learn More</Link>
+                  </MagneticButton>
                 </div>
-              ))}
-            </motion.div>
-          </div>
-        </div>
+              </RevealTextChild>
+            </RevealTextStagger>
 
-        {/* Enhanced Floating Particles */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {particles.map((particle) => (
+            {/* Premium Stats Grid */}
+            <RevealTextStagger className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto">
+              {stats.map((stat, index) => (
+                <RevealTextChild key={stat.label}>
+                  <motion.div
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    className="relative group"
+                  >
+                    <div className="glass-strong rounded-2xl md:rounded-3xl p-6 md:p-8 text-center border border-border/50 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden">
+                      {/* Gradient Background on Hover */}
+                      <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                      
+                      <div className="relative z-10">
+                        <div className={`w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${stat.color} p-0.5`}>
+                          <div className="w-full h-full bg-background rounded-2xl flex items-center justify-center">
+                            <stat.icon className="w-6 h-6 md:w-7 md:h-7 text-primary" />
+                          </div>
+                        </div>
+                        <AnimatedCounter
+                          value={stat.value}
+                          className="text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary mb-2"
+                        />
+                        <div className="text-xs md:text-sm text-muted-foreground font-medium">{stat.label}</div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </RevealTextChild>
+              ))}
+            </RevealTextStagger>
+          </div>
+        </motion.div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          animate={{
+            y: [0, 10, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden md:block"
+        >
+          <div className="w-6 h-10 border-2 border-muted-foreground/30 rounded-full flex justify-center p-2">
             <motion.div
-              key={particle.id}
-              className="absolute opacity-20"
-              style={{
-                left: `${particle.left}%`,
-                top: `${particle.top}%`,
-                width: `${particle.width}px`,
-                height: `${particle.height}px`,
-              }}
               animate={{
-                y: [0, -40, 0],
-                x: [0, particle.xOffset, 0],
-                rotate: [0, 360],
-                scale: [0.8, 1.2, 0.8],
-                opacity: [0.1, 0.3, 0.1],
+                y: [0, 12, 0],
+                opacity: [1, 0, 1]
               }}
               transition={{
-                duration: 20 + particle.id * 3,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-                delay: particle.id * 0.5,
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
               }}
-            >
-              <div
-                className={`w-full h-full bg-gradient-to-br particle-float ${particle.id % 3 === 0
-                  ? "from-primary/40 to-primary/20"
-                  : particle.id % 3 === 1
-                    ? "from-secondary/40 to-secondary/20"
-                    : "from-primary/30 to-secondary/30"
-                  } rounded-xl blur-sm`}
-              />
-            </motion.div>
-          ))}
+              className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full"
+            />
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 md:py-32 relative">
+        <div className="container mx-auto px-4 md:px-6 lg:px-10">
+          <RevealTextStagger className="grid md:grid-cols-3 gap-8 md:gap-12">
+            {features.map((feature, index) => (
+              <RevealTextChild key={feature.title}>
+                <motion.div
+                  whileHover={{ y: -10 }}
+                  className="text-center group"
+                >
+                  <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                    <feature.icon className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold mb-4">{feature.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                </motion.div>
+              </RevealTextChild>
+            ))}
+          </RevealTextStagger>
         </div>
       </section>
 
       {/* Gallery Navigation Section */}
-      <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <Badge className="mb-6 glass px-4 py-2">Explore Our Galleries</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+      <section className="py-16 md:py-24 lg:py-32">
+        <div className="container mx-auto px-4 md:px-6 lg:px-10">
+          <RevealText className="text-center mb-12 md:mb-16">
+            <Badge className="mb-6 md:mb-8 glass-strong px-6 py-3 shadow-lg">Explore Our Galleries</Badge>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
               Choose Your <span className="text-gradient-primary">Art Journey</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Discover curated masterpieces or explore community-driven creativity
+            <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto font-light">
+              Browse our professionally curated collection or explore community-driven creativity
             </p>
-          </motion.div>
+          </RevealText>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
+          <RevealText delay={0.2}>
             <GalleryNav />
-          </motion.div>
+          </RevealText>
         </div>
       </section>
 
-      {/* Featured Artworks */}
-      <section className="py-20 lg:py-32">
-        <div className="container-padding">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Badge className="mb-6 glass px-4 py-2">Featured Collection</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+      {/* Featured Artworks with Premium Cards */}
+      <section className="py-16 md:py-24 lg:py-32 relative">
+        <div className="container mx-auto px-4 md:px-6 lg:px-10">
+          <RevealText className="text-center mb-12 md:mb-16">
+            <Badge className="mb-6 md:mb-8 glass-strong px-6 py-3 shadow-lg">Featured Collection</Badge>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
               Curated <span className="text-gradient-primary">Masterpieces</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto font-light">
               Handpicked artworks that showcase exceptional creativity and artistic vision
             </p>
-          </motion.div>
+          </RevealText>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {loading ? (
               [...Array(6)].map((_, i) => (
-                <div key={i} className="h-96 glass rounded-3xl animate-pulse" />
+                <div key={i} className="h-[600px] glass-strong rounded-3xl animate-pulse" />
               ))
             ) : featuredArtworks.length > 0 ? (
               featuredArtworks.map((artwork, index) => (
-              <ArtCard
-              index={index}
-              artwork={artwork}
-              />
+                <PremiumArtCard
+                  key={artwork.id}
+                  artwork={artwork}
+                  index={index}
+                />
               ))
             ) : (
-              <div className="col-span-full py-20 text-center glass rounded-3xl">
-                <p className="text-xl text-muted-foreground">No featured artworks found.</p>
-                <Button variant="outline" className="mt-6" onClick={() => window.location.reload()}>
+              <div className="col-span-full py-20 text-center glass-strong rounded-3xl">
+                <p className="text-xl text-muted-foreground mb-6">No featured artworks found.</p>
+                <Button variant="outline" className="glass-strong" onClick={() => window.location.reload()}>
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Reload Collection
                 </Button>
@@ -294,98 +352,91 @@ export default function HomePage() {
             )}
           </div>
 
-          <div className="text-center mt-16">
-            <MagneticButton asChild variant="outline" size="lg" className="glass-enhanced text-lg px-8 py-4 bg-transparent">
+          <RevealText delay={0.3} className="text-center mt-16">
+            <MagneticButton asChild variant="outline" size="lg" className="glass-strong text-lg px-10 py-5 border-2">
               <Link href="/artworks">
                 View All Artworks
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </MagneticButton>
-          </div>
+          </RevealText>
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="py-20 lg:py-32 ">
-        <div className="container-padding">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Badge className="mb-6 glass px-4 py-2">Explore Categories</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+      {/* Categories with Enhanced Hover */}
+      <section className="py-16 md:py-24 lg:py-32">
+        <div className="container mx-auto px-4 md:px-6 lg:px-10">
+          <RevealText className="text-center mb-12 md:mb-16">
+            <Badge className="mb-6 md:mb-8 glass-strong px-6 py-3 shadow-lg">Explore Categories</Badge>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
               Art <span className="text-gradient-primary">Categories</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto font-light">
               Discover artworks across different mediums and styles
             </p>
-          </motion.div>
+          </RevealText>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {categories.map((category, index) => (
-              <motion.div
-                key={category.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
+              <RevealText key={category.name} delay={index * 0.1}>
                 <Link href={category.href}>
-                  <Card className="glass-card rounded-3xl overflow-hidden border-0 card-hover group">
-                    <div className="relative overflow-hidden">
-                      <Image
-                        src={category.image || "/placeholder.svg"}
-                        alt={category.name}
-                        width={300}
-                        height={300}
-                        className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-60`} />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                      <div className="absolute bottom-6 left-6 text-white">
-                        <h3 className="text-2xl font-bold mb-2">{category.name}</h3>
-                        <p className="text-sm opacity-90">{category.count} artworks</p>
+                  <motion.div
+                    whileHover={{ y: -10, scale: 1.02 }}
+                    className="glass-strong rounded-3xl overflow-hidden border border-border/50 shadow-xl hover:shadow-2xl transition-all duration-500 group"
+                  >
+                    <div className="relative overflow-hidden aspect-[4/5]">
+                      <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <Image
+                          src={category.image || "/placeholder.svg"}
+                          alt={category.name}
+                          width={400}
+                          height={500}
+                          className="w-full h-full object-cover"
+                        />
+                      </motion.div>
+                      <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-40 group-hover:opacity-60 transition-opacity duration-500`} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                      <div className="absolute bottom-6 left-6 right-6 text-white">
+                        <h3 className="text-2xl md:text-3xl font-bold mb-2">{category.name}</h3>
+                        <p className="text-sm md:text-base opacity-90">{category.count} artworks</p>
                       </div>
                     </div>
-                  </Card>
+                  </motion.div>
                 </Link>
-              </motion.div>
+              </RevealText>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 lg:py-32">
-        <div className="container-padding">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center rounded-3xl p-12 lg:p-20"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Ready to Start Your <span className="text-gradient-primary">Art Journey</span>?
-            </h2>
-            <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-              Join thousands of art enthusiasts who have discovered their perfect pieces through our gallery
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Button asChild size="lg" className="btn-primary text-lg px-8 py-4">
-                <Link href="/artworks">
-                  Browse Collection
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="glass text-lg px-8 py-4 bg-transparent">
-                <Link href="/contact">Get in Touch</Link>
-              </Button>
+      {/* Premium CTA Section */}
+      <section className="py-20 md:py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10" />
+        <div className="container mx-auto px-4 md:px-6 lg:px-10 relative z-10">
+          <RevealText className="text-center max-w-4xl mx-auto">
+            <div className="glass-strong rounded-3xl p-12 md:p-16 lg:p-20 border border-border/50 shadow-2xl">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                Ready to Start Your <span className="text-gradient-primary">Art Journey</span>?
+              </h2>
+              <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-10 font-light">
+                Join thousands of art enthusiasts who have discovered their perfect pieces
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
+                <Button asChild size="lg" className="btn-primary text-lg px-10 py-5 shadow-xl shadow-primary/25">
+                  <Link href="/artworks">
+                    Browse Collection
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="glass-strong text-lg px-10 py-5 border-2">
+                  <Link href="/contact">Get in Touch</Link>
+                </Button>
+              </div>
             </div>
-          </motion.div>
+          </RevealText>
         </div>
       </section>
     </div>

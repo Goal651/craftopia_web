@@ -116,20 +116,20 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="text-muted-foreground hover:text-foreground hover:bg-muted"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted h-11 w-11"
                 aria-label="Toggle theme"
               >
-                {mounted && (theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />)}
+                {mounted && (theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />)}
               </Button>
 
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setCommandPaletteOpen(true)}
-                className="text-muted-foreground hover:text-foreground hover:bg-muted"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted h-11 w-11"
                 aria-label="Search"
               >
-                <Search className="w-4 h-4" />
+                <Search className="w-5 h-5" />
               </Button>
 
               {user && (
@@ -137,10 +137,10 @@ export function Navbar() {
                   variant="ghost"
                   size="icon"
                   asChild
-                  className="text-muted-foreground hover:text-foreground hover:bg-muted"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted h-11 w-11"
                 >
                   <div onClick={()=>router.push('/upload')} aria-label="Upload Artwork">
-                    <Upload className="w-4 h-4" />
+                    <Upload className="w-5 h-5" />
                   </div>
                 </Button>
               )}
@@ -151,11 +151,11 @@ export function Navbar() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-muted-foreground hover:text-foreground hover:bg-muted"
+                      className="text-muted-foreground hover:text-foreground hover:bg-muted h-11 w-11"
                       aria-label="User menu"
                     >
-                      <div className="w-8 h-8 gradient-blue-green rounded-full flex items-center justify-center border border-white/20 shadow-sm">
-                        <User className="w-4 h-4 text-white" />
+                      <div className="w-9 h-9 gradient-blue-green rounded-full flex items-center justify-center border border-white/20 shadow-sm">
+                        <User className="w-5 h-5 text-white" />
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
@@ -198,7 +198,7 @@ export function Navbar() {
               ) : (
                 <Button
                   asChild
-                  variant="vibrant"
+                  className="btn-primary"
                   size="sm"
                 >
                   <Link href="/login">Sign In</Link>
@@ -213,10 +213,10 @@ export function Navbar() {
                   variant="ghost"
                   size="icon"
                   asChild
-                  className="text-gray-400 hover:text-white"
+                  className="text-gray-400 hover:text-white h-11 w-11"
                 >
                   <Link href="/upload">
-                    <Upload className="w-4 h-4" />
+                    <Upload className="w-5 h-5" />
                   </Link>
                 </Button>
               )}
@@ -225,20 +225,20 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="text-gray-400 hover:text-white"
+                className="text-gray-400 hover:text-white h-11 w-11"
                 aria-label="Toggle theme"
               >
-                {mounted && (theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />)}
+                {mounted && (theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />)}
               </Button>
 
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsOpen(!isOpen)}
-                className="text-gray-400 hover:text-white"
+                className="text-gray-400 hover:text-white h-11 w-11"
                 aria-label="Toggle menu"
               >
-                {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </Button>
             </div>
           </div>
@@ -329,9 +329,8 @@ export function Navbar() {
                     <div className="px-3 py-2">
                       <Button
                         asChild
-                        variant="vibrant"
+                        className="btn-primary w-full h-11"
                         size="sm"
-                        className="w-full"
                         onClick={() => setIsOpen(false)}
                       >
                         <Link href="/login">Sign In</Link>
