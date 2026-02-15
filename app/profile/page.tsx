@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useAuth } from "@/contexts/AuthContext"
 import { useUserProfile } from "@/hooks/use-user-profile"
-import { User, Mail, Edit, Save, Loader2 } from "lucide-react"
+import { User, Mail, Edit, Save, Loader2, Palette, Eye } from "lucide-react"
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
 
@@ -19,6 +19,25 @@ export default function ProfilePage() {
   const [displayName, setDisplayName] = useState("")
   const [bio, setBio] = useState("")
   const [isSaving, setIsSaving] = useState(false)
+  const [stats, setStats] = useState({ artwork_count: 0, total_views: 0 })
+  const [statsLoading, setStatsLoading] = useState(false)
+
+  // Fetch user stats from database
+  const fetchStats = async () => {
+    if (!user?.id) return
+    try {
+      setStatsLoading(true)
+      const response = await fetch(`/api/users/stats?userId=${user.id}`)
+      if (response.ok) {
+        const data = await response.json()
+        setStats(data)
+      }
+    } catch (error) {
+      console.error('Error fetching user stats:', error)
+    } finally {
+      setStatsLoading(false)
+    }
+  }
 
   // Update form fields when profile data loads
   useEffect(() => {
@@ -28,6 +47,10 @@ export default function ProfilePage() {
     } else if (user) {
       setDisplayName(user.display_name || user.email.split('@')[0])
       setBio("")
+    }
+    
+    if (user?.id) {
+      fetchStats()
     }
   }, [profile, user])
 
@@ -127,6 +150,41 @@ export default function ProfilePage() {
               <p className="text-gray-400">{user.email}</p>
             </CardHeader>
           </Card>
+
+          {/* User Statistics */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="glass-strong border-0">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-400 mb-1">Your Artworks</p>
+                    <p className="text-3xl font-bold text-white">
+                      {statsLoading ? <Loader2 className="w-6 h-6 animate-spin inline" /> : stats.artwork_count}
+                    </p>
+                  </div>
+                  <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                    <Palette className="w-6 h-6 text-blue-400" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glass-strong border-0">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-400 mb-1">Total Views</p>
+                    <p className="text-3xl font-bold text-white">
+                      {statsLoading ? <Loader2 className="w-6 h-6 animate-spin inline" /> : stats.total_views.toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                    <Eye className="w-6 h-6 text-purple-400" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
           {/* Profile Information */}
           <Card className="glass-strong border-0">

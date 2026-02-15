@@ -2,13 +2,14 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { Eye, Heart, Star, Mail, User, MessageSquare } from "lucide-react"
+import { Eye, Heart, Star, Mail, User, MessageSquare, Edit } from "lucide-react"
 import { ArtworkRecord } from "@/types"
 import { ArtworkImage } from "./artwork-image"
 import { Badge } from "./badge"
 import { Button } from "./button"
 import { cn } from "@/lib/utils"
 import { useState, useEffect } from "react"
+import { useAuth } from "@/contexts/AuthContext"
 import {
   Dialog,
   DialogContent,
@@ -39,11 +40,15 @@ export function ArtCard({
   aspectRatio = "3/4",
   showContactButton = true,
 }: ArtCardProps) {
+  const { user } = useAuth()
   const isDashboard = variant === "dashboard"
   const isCompact = variant === "compact"
   const [showContactDialog, setShowContactDialog] = useState(false)
   const [artistInfo, setArtistInfo] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+
+  // Check if current user is the owner of this artwork
+  const isOwner = user && artwork.artist_id === user.id
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -72,6 +77,12 @@ export function ArtCard({
     }
   }
 
+  const handleEdit = () => {
+    // Navigate to upload page with edit mode - we'll need to modify this later
+    // For now, let's go to upload page and handle editing there
+    window.location.href = `/upload?edit=${artwork.id}`
+  }
+
   return (
     <motion.div
       key={artwork.id}
@@ -81,7 +92,7 @@ export function ArtCard({
       viewport={{ once: true }}
       className="group"
     >
-      <div className="glass-enhanced rounded-2xl overflow-hidden border-0 card-hover text-md h-full flex flex-col"
+      <div className="glass-enhanced rounded-xl sm:rounded-2xl overflow-hidden border-0 card-hover text-md h-full flex flex-col"
       >
         <div className="relative overflow-hidden">
           <ArtworkImage
@@ -90,62 +101,76 @@ export function ArtCard({
             title={artwork.title}
             category={artwork.category}
             fill
-            className="w-full h-72 transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-48 sm:h-56 md:h-64 lg:h-72 transition-transform duration-700 group-hover:scale-110"
           />
 
           {/* Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Action Buttons */}
-          <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Button size="icon" className="glass w-10 h-10 hover:bg-white/20" aria-label="Add to wishlist">
-              <Heart className="w-4 h-4" />
+          <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-1 sm:gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <Button size="icon" className="glass w-8 h-8 sm:w-10 sm:h-10 hover:bg-white/20" aria-label="Add to wishlist">
+              <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
             </Button>
-            <Button size="icon" className="glass w-10 h-10 hover:bg-white/20" aria-label="Quick view">
-              <Eye className="w-4 h-4" />
+            <Button size="icon" className="glass w-8 h-8 sm:w-10 sm:h-10 hover:bg-white/20" aria-label="Quick view">
+              <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
             </Button>
           </div>
 
           {/* Category Badge */}
-          <Badge className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-green-500 text-white border-0">
+          <Badge className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-gradient-to-r from-blue-500 to-green-500 text-white border-0 text-xs sm:text-sm px-2 sm:px-3 py-1">
             {artwork.category}
           </Badge>
 
           {/* Rating (Simulated if missing) */}
-          <div className="absolute bottom-4 left-4 flex items-center gap-1 glass px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Star className="w-4 h-4 fill-green-400 text-green-400" />
-            <span className="text-sm font-medium text-white">{(4.5 + (artwork.view_count % 5) / 10).toFixed(1)}</span>
+          <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 flex items-center gap-1 glass px-2 sm:px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-green-400 text-green-400" />
+            <span className="text-xs sm:text-sm font-medium text-white">{(4.5 + (artwork.view_count % 5) / 10).toFixed(1)}</span>
           </div>
         </div>
 
-        <div className="p-4 md:p-6 flex-1 flex flex-col">
-          <div className="flex items-start justify-between mb-3">
+        <div className="p-3 sm:p-4 md:p-6 flex-1 flex flex-col">
+          <div className="flex items-start justify-between mb-2 sm:mb-3">
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg md:text-xl font-bold mb-1 group-hover:text-blue-400 transition-colors truncate">
+              <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 group-hover:text-blue-400 transition-colors truncate">
                 {artwork.title}
               </h3>
-              <p className="text-sm md:text-base text-muted-foreground truncate">by {artwork.artist_name}</p>
+              <p className="text-xs sm:text-sm md:text-base text-muted-foreground truncate">by {artwork.artist_name}</p>
             </div>
             <div className="flex items-center gap-1 text-muted-foreground flex-shrink-0 ml-2">
-              <Eye className="w-4 h-4" />
-              <span className="text-sm">{artwork.view_count}</span>
+              <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="text-xs sm:text-sm">{artwork.view_count}</span>
             </div>
           </div>
 
-          <div className="flex items-center justify-between mt-auto pt-4">
-            <span className="text-xl md:text-2xl font-bold text-gradient-primary">
+          <div className="flex items-center justify-between mt-auto pt-2 sm:pt-4">
+            <span className="text-lg sm:text-xl md:text-2xl font-bold text-gradient-primary">
               Gallery Piece
             </span>
 
-            <Button
-              onClick={handleContactOwner}
-              className="btn-primary text-sm md:text-base"
-              size="sm"
-            >
-              <Mail className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Contact Artist</span>
-              <span className="sm:hidden">Contact</span>
-            </Button>
+            {showContactButton && (
+              isOwner ? (
+                <Button
+                  onClick={handleEdit}
+                  className="btn-primary text-xs sm:text-sm md:text-base"
+                  size="sm"
+                >
+                  <Edit className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <span className="hidden xs:inline sm:hidden">Edit</span>
+                  <span className="hidden sm:inline">Edit Artwork</span>
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleContactOwner}
+                  className="btn-primary text-xs sm:text-sm md:text-base"
+                  size="sm"
+                >
+                  <Mail className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <span className="hidden xs:inline sm:hidden">Contact</span>
+                  <span className="hidden sm:inline">Contact Artist</span>
+                </Button>
+              )
+            )}
           </div>
         </div>
       </div>
@@ -176,6 +201,9 @@ export function ArtCard({
                 </Avatar>
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg">{artistInfo.display_name}</h3>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(artwork.createdAt || artwork.created_at || Date.now()).toLocaleDateString()}
+                  </span>
                   <p className="text-sm text-muted-foreground">
                     {artistInfo.artwork_count || 0} artworks • {artistInfo.total_views || 0} total views
                   </p>

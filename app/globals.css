@@ -283,40 +283,290 @@
       0 0 60px hsl(var(--primary) / 0.3);
   }
 
-  /* Typography */
+  /* Typography - Responsive Scaling */
   .text-hero {
-    @apply text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.1] tracking-tight;
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.1] tracking-tight;
     font-feature-settings: "ss01" 1, "ss02" 1;
   }
 
   .text-display {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight;
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight;
   }
 
   .text-heading {
-    @apply text-2xl md:text-3xl font-semibold leading-tight;
+    @apply text-xl sm:text-2xl md:text-3xl font-semibold leading-tight;
   }
 
-  /* Layout */
+  .text-subheading {
+    @apply text-lg sm:text-xl md:text-2xl font-medium leading-tight;
+  }
+
+  /* Layout - Responsive Containers */
   .container-modern {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12;
+  }
+
+  .container-compact {
+    @apply max-w-5xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-wide {
+    @apply max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12;
   }
 
   .section-padding {
-    @apply py-20 lg:py-32;
+    @apply py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32;
   }
 
-  /* Gallery Grid */
+  .section-padding-sm {
+    @apply py-8 sm:py-12 md:py-16 lg:py-20;
+  }
+
+  /* Responsive Grid Systems */
+  .grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  .grid-responsive-2 {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  .grid-responsive-3 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  /* Gallery Grid - Enhanced Responsive */
   .gallery-grid {
-    @apply grid gap-8;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    @apply grid gap-4 sm:gap-6 md:gap-8;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+
+  @media (min-width: 640px) {
+    .gallery-grid {
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
   }
 
   @media (min-width: 768px) {
     .gallery-grid {
-      @apply gap-10;
+      @apply gap-8;
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
     }
+  }
+
+  @media (min-width: 1024px) {
+    .gallery-grid {
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    }
+  }
+
+  /* Responsive Flexbox */
+  .flex-responsive {
+    @apply flex flex-col sm:flex-row;
+  }
+
+  .flex-responsive-reverse {
+    @apply flex flex-col-reverse sm:flex-row;
+  }
+
+  /* Responsive Spacing */
+  .space-responsive {
+    @apply space-y-4 sm:space-y-6 md:space-y-8;
+  }
+
+  .space-responsive-x {
+    @apply space-x-2 sm:space-x-4 md:space-x-6;
+  }
+
+  /* Responsive Buttons */
+  .btn-responsive {
+    @apply px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base;
+  }
+
+  .btn-responsive-lg {
+    @apply px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg;
+  }
+
+  /* Responsive Cards */
+  .card-responsive {
+    @apply p-4 sm:p-6 md:p-8;
+  }
+
+  /* Responsive Navigation */
+  .nav-desktop {
+    @apply hidden md:flex;
+  }
+
+  .nav-mobile {
+    @apply md:hidden;
+  }
+
+  /* Responsive Text Alignment */
+  .text-center-mobile {
+    @apply text-center md:text-left;
+  }
+
+  .text-left-mobile {
+    @apply text-left md:text-center;
+  }
+
+  /* Responsive Visibility */
+  .mobile-only {
+    @apply block sm:hidden;
+  }
+
+  .tablet-up {
+    @apply hidden sm:block;
+  }
+
+  .desktop-up {
+    @apply hidden lg:block;
+  }
+
+  .mobile-down {
+    @apply block lg:hidden;
+  }
+
+  /* Responsive Tables */
+  .table-responsive {
+    @apply block overflow-x-auto whitespace-nowrap;
+  }
+
+  /* Responsive Forms */
+  .form-responsive {
+    @apply space-y-4 sm:space-y-6;
+  }
+
+  .form-grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6;
+  }
+
+  /* Responsive Modals */
+  .modal-responsive {
+    @apply mx-4 max-w-lg sm:mx-auto sm:max-w-2xl md:max-w-4xl;
+  }
+
+  /* Responsive Images */
+  .img-responsive {
+    @apply w-full h-auto object-cover;
+  }
+
+  .img-responsive-contain {
+    @apply w-full h-auto object-contain;
+  }
+
+  /* Mobile-First Touch Targets */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+
+  .touch-target-sm {
+    @apply min-h-[40px] min-w-[40px] flex items-center justify-center;
+  }
+
+  .touch-target-lg {
+    @apply min-h-[48px] min-w-[48px] flex items-center justify-center;
+  }
+
+  /* Mobile-First Spacing */
+  .space-y-mobile {
+    @apply space-y-3 sm:space-y-4 md:space-y-6;
+  }
+
+  .space-x-mobile {
+    @apply space-x-2 sm:space-x-3 md:space-x-4;
+  }
+
+  /* Mobile-First Text */
+  .text-mobile {
+    @apply text-sm sm:text-base;
+  }
+
+  .text-mobile-lg {
+    @apply text-base sm:text-lg md:text-xl;
+  }
+
+  /* Mobile-First Cards */
+  .card-mobile {
+    @apply p-3 sm:p-4 md:p-6;
+  }
+
+  /* Mobile-First Inputs */
+  .input-mobile {
+    @apply h-10 sm:h-11 md:h-12 text-sm sm:text-base px-3 sm:px-4;
+  }
+
+  /* Mobile-First Buttons */
+  .btn-mobile {
+    @apply px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base min-h-[44px];
+  }
+
+  .btn-mobile-sm {
+    @apply px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm min-h-[40px];
+  }
+
+  .btn-mobile-lg {
+    @apply px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg min-h-[48px];
+  }
+
+  /* Mobile-First Navigation */
+  .nav-mobile-desktop {
+    @apply flex flex-col sm:flex-row gap-2 sm:gap-4;
+  }
+
+  /* Mobile-First Grid */
+  .grid-mobile {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6;
+  }
+
+  .grid-mobile-2 {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6;
+  }
+
+  /* Mobile-First Modal */
+  .modal-mobile {
+    @apply mx-4 sm:mx-auto max-w-lg sm:max-w-xl md:max-w-2xl;
+  }
+
+  /* Mobile-First Container */
+  .container-mobile {
+    @apply px-4 sm:px-6 md:px-8 lg:px-12;
+  }
+
+  /* Responsive Hide/Show */
+  .hide-mobile {
+    @apply hidden sm:block;
+  }
+
+  .hide-desktop {
+    @apply block sm:hidden;
+  }
+
+  /* Mobile-First Flex */
+  .flex-mobile {
+    @apply flex flex-col sm:flex-row gap-3 sm:gap-4;
+  }
+
+  .flex-mobile-reverse {
+    @apply flex flex-col-reverse sm:flex-row gap-3 sm:gap-4;
+  }
+
+  /* Mobile-First Stack */
+  .stack-mobile {
+    @apply space-y-2 sm:space-y-3 md:space-y-4;
+  }
+
+  /* Responsive Aspect Ratios */
+  .aspect-mobile {
+    @apply aspect-[4/5] sm:aspect-[3/4] md:aspect-[16/9];
+  }
+
+  .aspect-portrait {
+    @apply aspect-[3/4] sm:aspect-[2/3];
+  }
+
+  .aspect-square {
+    aspect-ratio: 1 / 1;
   }
 
   /* Animations */

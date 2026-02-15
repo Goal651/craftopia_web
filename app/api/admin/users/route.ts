@@ -24,7 +24,12 @@ export async function GET(request: NextRequest) {
           display_name: user.display_name,
           avatar_url: user.avatar_url || '',
           bio: user.bio || '',
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
           created_at: user.createdAt,
+          updated_at: user.updatedAt,
+          role: user.role || 'user',
+          status: user.status || 'active',
           artwork_count: artworkCount,
           total_views: totalViews
         }

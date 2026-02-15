@@ -67,8 +67,10 @@ export interface ArtworkRecord {
   image_path: string
   artist_id: string
   artist_name: string
-  created_at: string
-  updated_at: string
+  createdAt: string
+  updatedAt: string
+  created_at?: string // Optional for backward compatibility
+  updated_at?: string // Optional for backward compatibility
   view_count: number
   price: number
   stock_quantity: number
