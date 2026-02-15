@@ -6,7 +6,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { formatDateSafe, getRelativeTime } from "@/lib/utils/date-utils"
-import { viewTracker, initializeViewTracking, canTrackView, trackArtworkView } from "@/lib/utils/view-tracking"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -60,21 +59,44 @@ export default function ArtworkDetailPage() {
   const [isBookmarked, setIsBookmarked] = useState(false)
   const [showShareMenu, setShowShareMenu] = useState(false)
   const [comment, setComment] = useState("")
-  const [comments, setComments] = useState<Array<{id: string, author: string, text: string, date: string}>>([])
+  const [comments, setComments] = useState<Array<any>>([])
   const [showComments, setShowComments] = useState(false)
   const [copiedToClipboard, setCopiedToClipboard] = useState(false)
+  const [commentsLoading, setCommentsLoading] = useState(false)
 
   const artworkId = Array.isArray(params.id) ? params.id[0] : params.id
 
   // Initialize view tracking when user is available
   useEffect(() => {
     if (user?.id && artworkId) {
-      initializeViewTracking(user.id)
-      // Check if user has already liked this artwork
-      const likedArtworks = JSON.parse(localStorage.getItem('liked_artworks') || '{}')
-      setIsLiked(likedArtworks[artworkId] || false)
+      fetchLikeStatus()
+      fetchViewStatus()
     }
   }, [user, artworkId])
+
+  const fetchLikeStatus = async () => {
+    try {
+      const response = await fetch(`/api/artworks/${artworkId}/like`)
+      if (response.ok) {
+        const data = await response.json()
+        setIsLiked(data.is_liked)
+      }
+    } catch (error) {
+      console.error('Failed to fetch like status:', error)
+    }
+  }
+
+  const fetchViewStatus = async () => {
+    try {
+      const response = await fetch(`/api/artworks/${artworkId}/views`)
+      if (response.ok) {
+        const data = await response.json()
+        setViewCountUpdated(data.has_viewed)
+      }
+    } catch (error) {
+      console.error('Failed to fetch view status:', error)
+    }
+  }
 
   const fetchArtwork = async () => {
     try {
@@ -108,25 +130,18 @@ export default function ArtworkDetailPage() {
   const incrementViewCount = async () => {
     if (!artwork || viewCountUpdated) return
 
-    // Check if user can track view (hasn't viewed before)
-    if (user?.id && artworkId && !canTrackView(artworkId)) {
-      console.log('User already viewed this artwork, skipping view count increment')
-      return
-    }
-
     try {
       const response = await fetch(`/api/artworks/${artworkId}/views`, {
         method: 'POST'
       })
+      
       if (response.ok) {
         const data = await response.json()
         setArtwork(prev => prev ? { ...prev, view_count: data.view_count } : null)
         setViewCountUpdated(true)
-        
-        // Mark as viewed in user tracking
-        if (user?.id && artworkId) {
-          trackArtworkView(artworkId)
-        }
+      } else if (response.status === 401) {
+        // Not authenticated, don't track view
+        console.log('User not authenticated, skipping view tracking')
       }
     } catch (err) {
       console.warn('Failed to increment view count:', err)
@@ -186,11 +201,6 @@ export default function ArtworkDetailPage() {
       const newLikedState = !isLiked
       setIsLiked(newLikedState)
 
-      // Save to localStorage
-      const likedArtworks = JSON.parse(localStorage.getItem('liked_artworks') || '{}')
-      likedArtworks[artworkId] = newLikedState
-      localStorage.setItem('liked_artworks', JSON.stringify(likedArtworks))
-
       // Make API call
       const response = await fetch(`/api/artworks/${artworkId}/like`, {
         method: 'POST',
@@ -201,7 +211,14 @@ export default function ArtworkDetailPage() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to update like status')
+        const errorData = await response.json()
+        if (errorData.error === 'Cannot like your own artwork') {
+          alert('You cannot like your own artwork')
+        } else {
+          throw new Error('Failed to update like status')
+        }
+        setIsLiked(!newLikedState) // Revert on error
+        return
       }
     } catch (error) {
       console.error('Failed to update like:', error)
@@ -209,18 +226,67 @@ export default function ArtworkDetailPage() {
     }
   }
 
-  const handleCommentSubmit = () => {
-    if (comment.trim()) {
-      const newComment = {
-        id: Date.now().toString(),
-        author: "Guest User",
-        text: comment.trim(),
-        date: new Date().toISOString()
+  const handleCommentSubmit = async () => {
+    if (!comment.trim()) {
+      return
+    }
+
+    if (!user) {
+      alert('Please log in to comment')
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/artworks/${artworkId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: comment.trim()
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to post comment')
       }
-      setComments([newComment, ...comments])
+
+      const data = await response.json()
+      // Add new comment to the beginning of the list
+      setComments(prev => [data.comment, ...prev])
       setComment("")
+      
+      // Refresh comments list
+      fetchComments()
+    } catch (error) {
+      console.error('Failed to post comment:', error)
+      alert('Failed to post comment. Please try again.')
     }
   }
+
+  const fetchComments = async () => {
+    if (!artworkId) return
+    
+    setCommentsLoading(true)
+    try {
+      const response = await fetch(`/api/artworks/${artworkId}/comments`)
+      if (response.ok) {
+        const data = await response.json()
+        setComments(data.comments || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch comments:', error)
+    } finally {
+      setCommentsLoading(false)
+    }
+  }
+
+  // Fetch comments when showing comments section
+  useEffect(() => {
+    if (showComments && artworkId) {
+      fetchComments()
+    }
+  }, [showComments, artworkId])
 
   // Generate structured data for SEO
   const generateStructuredData = () => {
@@ -660,22 +726,32 @@ export default function ArtworkDetailPage() {
                         <div className="space-y-4 pt-4 border-t border-white/10">
                           {comments.map((comment) => (
                             <motion.div
-                              key={comment.id}
+                              key={comment._id}
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               className="flex gap-3"
                             >
-                              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center flex-shrink-0">
-                                <User className="w-4 h-4 text-white" />
+                              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                                {comment.user_id?.avatar_url ? (
+                                  <img 
+                                    src={comment.user_id.avatar_url} 
+                                    alt={comment.user_id.display_name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <User className="w-4 h-4 text-white" />
+                                )}
                               </div>
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
-                                  <span className="font-medium text-white text-sm">{comment.author}</span>
+                                  <span className="font-medium text-white text-sm">
+                                    {comment.user_id?.display_name || 'Anonymous User'}
+                                  </span>
                                   <span className="text-xs text-gray-500">
-                                    {getRelativeTime(comment.date)}
+                                    {getRelativeTime(comment.created_at)}
                                   </span>
                                 </div>
-                                <p className="text-gray-300 text-sm leading-relaxed">{comment.text}</p>
+                                <p className="text-gray-300 text-sm leading-relaxed">{comment.content}</p>
                                 <div className="flex items-center gap-4 mt-2">
                                   <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white h-6 px-2">
                                     <ThumbsUp className="w-3 h-3 mr-1" />
@@ -686,9 +762,47 @@ export default function ArtworkDetailPage() {
                                     <span className="text-xs">Reply</span>
                                   </Button>
                                 </div>
+                                
+                                {/* Show replies */}
+                                {comment.replies && comment.replies.length > 0 && (
+                                  <div className="mt-3 space-y-2 pl-4 border-l-2 border-white/10">
+                                    {comment.replies.map((reply: any) => (
+                                      <div key={reply._id} className="flex gap-2">
+                                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                                          {reply.user_id?.avatar_url ? (
+                                            <img 
+                                              src={reply.user_id.avatar_url} 
+                                              alt={reply.user_id.display_name}
+                                              className="w-full h-full object-cover"
+                                            />
+                                          ) : (
+                                            <User className="w-3 h-3 text-white" />
+                                          )}
+                                        </div>
+                                        <div className="flex-1">
+                                          <div className="flex items-center gap-2 mb-1">
+                                            <span className="font-medium text-white text-xs">
+                                              {reply.user_id?.display_name || 'Anonymous User'}
+                                            </span>
+                                            <span className="text-xs text-gray-500">
+                                              {getRelativeTime(reply.created_at)}
+                                            </span>
+                                          </div>
+                                          <p className="text-gray-300 text-xs leading-relaxed">{reply.content}</p>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             </motion.div>
                           ))}
+                        </div>
+                      )}
+
+                      {commentsLoading && (
+                        <div className="flex items-center justify-center py-4">
+                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                         </div>
                       )}
                     </div>

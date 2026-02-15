@@ -52,6 +52,7 @@
     "lucide-react": "^0.454.0",
     "mongoose": "^9.2.1",
     "next": "^16.1.6",
+    "next-auth": "^4.24.13",
     "next-themes": "latest",
     "piexifjs": "^1.0.6",
     "react": "^19.2.4",
@@ -90,5 +91,5 @@
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   },
-  "packageManager": "pnpm@10.17.0+sha256.bd9ec5417641391e0acb3912b2912bd5b0385407a82da94744a7407b567fdb4f"
+  "packageManager": "pnpm@10.29.3+sha256.a74f4dbd3f5a7ca874d004135271f0b697b683bf1fd2fc2133961161cd25b29c"
 }

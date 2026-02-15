@@ -10,7 +10,6 @@ import { Button } from "./button"
 import { cn } from "@/lib/utils"
 import { useState, useEffect } from "react"
 import { useAuth } from "@/contexts/AuthContext"
-import { viewTracker, initializeViewTracking, canTrackView, trackArtworkView } from "@/lib/utils/view-tracking"
 import {
   Dialog,
   DialogContent,
@@ -48,21 +47,46 @@ export function ArtCard({
   const [artistInfo, setArtistInfo] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
-  const [likeCount, setLikeCount] = useState(Math.floor(artwork.view_count * 0.12))
+  const [likeCount, setLikeCount] = useState(0)
   const [viewCount, setViewCount] = useState(artwork.view_count)
+  const [hasViewed, setHasViewed] = useState(false)
 
   // Check if current user is the owner of this artwork
   const isOwner = user && artwork.artist_id === user.id
 
-  // Initialize view tracking when user is available
+  // Fetch like status when user is available
   useEffect(() => {
-    if (user?.id) {
-      initializeViewTracking(user.id)
-      // Check if user has already liked this artwork (in a real app, this would come from an API)
-      const likedArtworks = JSON.parse(localStorage.getItem('liked_artworks') || '{}')
-      setIsLiked(likedArtworks[artwork.id] || false)
+    if (user?.id && !isOwner) {
+      fetchLikeStatus()
+      fetchViewStatus()
     }
-  }, [user, artwork.id])
+  }, [user, artwork.id, isOwner])
+
+  const fetchLikeStatus = async () => {
+    try {
+      const response = await fetch(`/api/artworks/${artwork.id}/like`)
+      if (response.ok) {
+        const data = await response.json()
+        setIsLiked(data.is_liked)
+        setLikeCount(data.like_count)
+      }
+    } catch (error) {
+      console.error('Failed to fetch like status:', error)
+    }
+  }
+
+  const fetchViewStatus = async () => {
+    try {
+      const response = await fetch(`/api/artworks/${artwork.id}/views`)
+      if (response.ok) {
+        const data = await response.json()
+        setHasViewed(data.has_viewed)
+        setViewCount(data.view_count)
+      }
+    } catch (error) {
+      console.error('Failed to fetch view status:', error)
+    }
+  }
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -112,11 +136,6 @@ export function ArtCard({
       setIsLiked(newLikedState)
       setLikeCount(prev => newLikedState ? prev + 1 : prev - 1)
 
-      // Save to localStorage
-      const likedArtworks = JSON.parse(localStorage.getItem('liked_artworks') || '{}')
-      likedArtworks[artwork.id] = newLikedState
-      localStorage.setItem('liked_artworks', JSON.stringify(likedArtworks))
-
       // Make API call to update like status
       const response = await fetch(`/api/artworks/${artwork.id}/like`, {
         method: 'POST',
@@ -127,7 +146,16 @@ export function ArtCard({
       })
 
       if (!response.ok) {
-        throw new Error('Failed to update like status')
+        const errorData = await response.json()
+        if (errorData.error === 'Cannot like your own artwork') {
+          alert('You cannot like your own artwork')
+        } else {
+          throw new Error('Failed to update like status')
+        }
+        // Revert state on error
+        setIsLiked(!newLikedState)
+        setLikeCount(prev => newLikedState ? prev - 1 : prev + 1)
+        return
       }
 
       const data = await response.json()
@@ -151,31 +179,37 @@ export function ArtCard({
       return
     }
 
-    // Check if user can track view (hasn't viewed before)
-    if (canTrackView(artwork.id)) {
+    // Check if user has already viewed this artwork
+    if (!hasViewed) {
       try {
-        // Update local state
+        // Update local state immediately for better UX
         setViewCount(prev => prev + 1)
-        
-        // Track the view
-        trackArtworkView(artwork.id)
+        setHasViewed(true)
 
-        // Make API call to increment view count
+        // Make API call to track view
         const response = await fetch(`/api/artworks/${artwork.id}/views`, {
           method: 'POST',
         })
 
         if (!response.ok) {
+          // If already viewed, just get current count
+          if (response.status === 401) {
+            // Not authenticated, just navigate
+            window.location.href = `/artworks/${artwork.id}`
+            return
+          }
           throw new Error('Failed to track view')
         }
 
         const data = await response.json()
         // Update view count with server response
         setViewCount(data.view_count)
+        setHasViewed(data.already_viewed)
       } catch (error) {
         console.error('Failed to track view:', error)
         // Revert state on error
         setViewCount(prev => prev - 1)
+        setHasViewed(false)
       }
     }
 

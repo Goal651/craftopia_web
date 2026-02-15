@@ -228,7 +228,7 @@ export default function GalleryArtworkDetailPage() {
                       <span>Created</span>
                     </div>
                     <div className="font-medium text-white">
-                      {new Date(artwork.created_at).toLocaleDateString('en-US', {
+                      {new Date(artwork.created_at || artwork.createdAt || Date.now()).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
