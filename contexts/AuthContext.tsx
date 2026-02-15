@@ -124,7 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const isAdmin = (): boolean => {
-    const adminEmails = ["admin@artgallery.com", "admin@craftopia.com"]
+    const adminEmails = ["admin@artgallery.com", "admin@craftopia.com", "bugiriwilson651@gmail.com"]
     return user ? adminEmails.includes(user.email) : false
   }
 

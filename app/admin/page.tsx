@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -114,6 +113,17 @@ export default function AdminPanel() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [viewMode, setViewMode] = useState<"table" | "grid">("table")
 
+  // All available categories
+  const allCategories = [
+    { id: 'painting', label: 'Painting' },
+    { id: 'digital-art', label: 'Digital Art' },
+    { id: 'photography', label: 'Photography' },
+    { id: 'sculpture', label: 'Sculpture' },
+    { id: 'mixed-media', label: 'Mixed Media' },
+    { id: 'drawing', label: 'Drawing' },
+    { id: 'other', label: 'Other' }
+  ]
+
   // Mock data - in real app, this would come from API
   const [artworks, setArtworks] = useState<Artwork[]>([
     {
@@ -222,15 +232,23 @@ export default function AdminPanel() {
   ])
 
   const stats = {
-    totalRevenue: orders.reduce((sum, order) => sum + order.amount, 0),
     totalArtworks: artworks.length,
     totalCustomers: customers.length,
-    totalOrders: orders.length,
-    pendingOrders: orders.filter((order) => order.status === "pending").length,
-    averageOrderValue: orders.length > 0 ? orders.reduce((sum, order) => sum + order.amount, 0) / orders.length : 0,
-    topCategory: "Abstract",
-    conversionRate: 3.2,
+    totalViews: artworks.reduce((sum, artwork) => sum + artwork.views, 0),
+    activeArtists: new Set(artworks.map(a => a.artist)).size,
   }
+
+  // Calculate category counts
+  const categoryCounts = allCategories.map(cat => {
+    const count = artworks.filter(artwork => 
+      artwork.category.toLowerCase().replace(' ', '-') === cat.id
+    ).length
+    return {
+      ...cat,
+      count,
+      percentage: artworks.length > 0 ? (count / artworks.length) * 100 : 0
+    }
+  }).sort((a, b) => b.count - a.count) // Sort by count descending
 
   const filteredArtworks = artworks.filter((artwork) => {
     const matchesSearch =
@@ -256,8 +274,8 @@ export default function AdminPanel() {
 
   return (
     <div className="min-h-screen pt-32 pb-20">
-      <div className="container-padding">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-7xl mx-auto">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
             <div>
@@ -271,16 +289,16 @@ export default function AdminPanel() {
           </div>
 
           {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
             <Card className="glass-card rounded-2xl border-0">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Revenue</p>
-                    <p className="text-2xl font-bold text-gradient-violet">${stats.totalRevenue.toLocaleString()}</p>
-                    <p className="text-xs text-green-600 mt-1">+12.5% from last month</p>
+                    <p className="text-sm text-muted-foreground mb-1">Total Artworks</p>
+                    <p className="text-2xl font-bold text-gradient-primary">{stats.totalArtworks}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Across all categories</p>
                   </div>
-                  <DollarSign className="w-8 h-8 text-blue-400" />
+                  <Package className="w-8 h-8 text-primary flex-shrink-0" />
                 </div>
               </CardContent>
             </Card>
@@ -289,11 +307,11 @@ export default function AdminPanel() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Artworks</p>
-                    <p className="text-2xl font-bold text-gradient-aqua">{stats.totalArtworks}</p>
-                    <p className="text-xs text-green-600 mt-1">+3 this month</p>
+                    <p className="text-sm text-muted-foreground mb-1">Total Users</p>
+                    <p className="text-2xl font-bold text-gradient-primary">{stats.totalCustomers}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Registered members</p>
                   </div>
-                  <Package className="w-8 h-8 text-cyan-500" />
+                  <Users className="w-8 h-8 text-secondary flex-shrink-0" />
                 </div>
               </CardContent>
             </Card>
@@ -302,11 +320,11 @@ export default function AdminPanel() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Customers</p>
-                    <p className="text-2xl font-bold text-gradient-violet">{stats.totalCustomers}</p>
-                    <p className="text-xs text-green-600 mt-1">+8 this month</p>
+                    <p className="text-sm text-muted-foreground mb-1">Total Views</p>
+                    <p className="text-2xl font-bold text-gradient-primary">{stats.totalViews.toLocaleString()}</p>
+                    <p className="text-xs text-muted-foreground mt-1">All time views</p>
                   </div>
-                  <Users className="w-8 h-8 text-green-400" />
+                  <Eye className="w-8 h-8 text-accent flex-shrink-0" />
                 </div>
               </CardContent>
             </Card>
@@ -315,11 +333,11 @@ export default function AdminPanel() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Conversion Rate</p>
-                    <p className="text-2xl font-bold text-gradient-aqua">{stats.conversionRate}%</p>
-                    <p className="text-xs text-green-600 mt-1">+0.3% from last month</p>
+                    <p className="text-sm text-muted-foreground mb-1">Active Artists</p>
+                    <p className="text-2xl font-bold text-gradient-primary">{stats.activeArtists}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Contributing creators</p>
                   </div>
-                  <TrendingUp className="w-8 h-8 text-cyan-500" />
+                  <TrendingUp className="w-8 h-8 text-primary flex-shrink-0" />
                 </div>
               </CardContent>
             </Card>
@@ -327,21 +345,15 @@ export default function AdminPanel() {
 
           {/* Main Content */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="glass-strong rounded-2xl p-1 grid w-full grid-cols-2 lg:grid-cols-5">
+            <TabsList className="glass-strong rounded-2xl p-1 grid w-full grid-cols-2 lg:grid-cols-3">
               <TabsTrigger value="overview" className="rounded-xl">
                 Overview
               </TabsTrigger>
               <TabsTrigger value="artworks" className="rounded-xl">
                 Artworks
               </TabsTrigger>
-              <TabsTrigger value="orders" className="rounded-xl">
-                Orders
-              </TabsTrigger>
-              <TabsTrigger value="customers" className="rounded-xl">
-                Customers
-              </TabsTrigger>
-              <TabsTrigger value="analytics" className="rounded-xl">
-                Analytics
+              <TabsTrigger value="users" className="rounded-xl">
+                Users
               </TabsTrigger>
             </TabsList>
 
@@ -355,21 +367,21 @@ export default function AdminPanel() {
                       Recent Activity
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-3">
                     <div className="flex items-center gap-3 p-3 glass rounded-xl">
-                      <div className="w-2 h-2 bg-green-500 rounded-full" />
-                      <span className="text-sm">New order from John Smith</span>
-                      <span className="text-xs text-muted-foreground ml-auto">2h ago</span>
+                      <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
+                      <span className="text-sm flex-1">New order from John Smith</span>
+                      <span className="text-xs text-muted-foreground">2h ago</span>
                     </div>
                     <div className="flex items-center gap-3 p-3 glass rounded-xl">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                      <span className="text-sm">Artwork "Digital Dreams" updated</span>
-                      <span className="text-xs text-muted-foreground ml-auto">4h ago</span>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                      <span className="text-sm flex-1">Artwork "Digital Dreams" updated</span>
+                      <span className="text-xs text-muted-foreground">4h ago</span>
                     </div>
                     <div className="flex items-center gap-3 p-3 glass rounded-xl">
-                      <div className="w-2 h-2 bg-green-500 rounded-full" />
-                      <span className="text-sm">New customer registration</span>
-                      <span className="text-xs text-muted-foreground ml-auto">6h ago</span>
+                      <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
+                      <span className="text-sm flex-1">New customer registration</span>
+                      <span className="text-xs text-muted-foreground">6h ago</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -378,37 +390,31 @@ export default function AdminPanel() {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <PieChart className="w-5 h-5" />
-                      Top Categories
+                      Art Categories
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span>Abstract Art</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="w-3/4 h-full gradient-violet rounded-full" />
+                  <CardContent className="space-y-3">
+                    {categoryCounts.map((category) => (
+                      <div key={category.id} className="flex justify-between items-center">
+                        <span className="text-sm">{category.label}</span>
+                        <div className="flex items-center gap-3">
+                          <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-500" 
+                              style={{ width: `${category.percentage}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-medium w-12 text-right">
+                            {category.count}
+                          </span>
                         </div>
-                        <span className="text-sm font-medium">45%</span>
                       </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Digital Art</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="w-3/5 h-full gradient-aqua rounded-full" />
-                        </div>
-                        <span className="text-sm font-medium">30%</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Sculptures</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="w-1/4 h-full bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full" />
-                        </div>
-                        <span className="text-sm font-medium">25%</span>
-                      </div>
-                    </div>
+                    ))}
+                    {artworks.length === 0 && (
+                      <p className="text-sm text-muted-foreground text-center py-4">
+                        No artworks yet. Add your first artwork to see category distribution.
+                      </p>
+                    )}
                   </CardContent>
                 </Card>
               </div>
@@ -454,10 +460,13 @@ export default function AdminPanel() {
                         </SelectTrigger>
                         <SelectContent className="glass-strong border-0">
                           <SelectItem value="all">All Categories</SelectItem>
-                          <SelectItem value="abstract">Abstract</SelectItem>
-                          <SelectItem value="digital art">Digital Art</SelectItem>
-                          <SelectItem value="sculpture">Sculpture</SelectItem>
+                          <SelectItem value="painting">Painting</SelectItem>
+                          <SelectItem value="digital-art">Digital Art</SelectItem>
                           <SelectItem value="photography">Photography</SelectItem>
+                          <SelectItem value="sculpture">Sculpture</SelectItem>
+                          <SelectItem value="mixed-media">Mixed Media</SelectItem>
+                          <SelectItem value="drawing">Drawing</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -574,8 +583,8 @@ export default function AdminPanel() {
                       </Table>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                      {filteredArtworks.map((artwork, index) => (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredArtworks.map((artwork) => (
                         <ArtCard
                           key={artwork.id}
                           artwork={{
@@ -590,7 +599,7 @@ export default function AdminPanel() {
                             category: artwork.category.toLowerCase().replace(" ", "-") as any,
                             image_path: ""
                           }}
-                          index={index}
+                          index={0}
                           variant="dashboard"
                           showActions={true}
                         />
@@ -601,94 +610,21 @@ export default function AdminPanel() {
               </Card>
             </TabsContent>
 
-            {/* Orders Tab */}
-            <TabsContent value="orders" className="space-y-6">
+            {/* Users Tab (renamed from Customers) */}
+            <TabsContent value="users" className="space-y-6">
               <Card className="glass-card rounded-3xl border-0">
                 <CardHeader>
-                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                    <CardTitle>Order Management</CardTitle>
-                    <div className="flex gap-3">
-                      <Button variant="outline" className="glass border-0 bg-transparent">
-                        <Download className="w-4 h-4 mr-2" />
-                        Export
-                      </Button>
-                      <Button variant="outline" className="glass border-0 bg-transparent">
-                        <Filter className="w-4 h-4 mr-2" />
-                        Filter
-                      </Button>
-                    </div>
-                  </div>
+                  <CardTitle>User Management</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow className="border-white/10">
-                          <TableHead>Order ID</TableHead>
-                          <TableHead>Customer</TableHead>
-                          <TableHead>Artwork</TableHead>
-                          <TableHead>Amount</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead>Date</TableHead>
-                          <TableHead>Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {orders.map((order) => (
-                          <TableRow key={order.id} className="border-white/10">
-                            <TableCell className="font-medium">{order.id}</TableCell>
-                            <TableCell>
-                              <div>
-                                <div className="font-medium">{order.customerName}</div>
-                                <div className="text-sm text-muted-foreground">{order.customerEmail}</div>
-                              </div>
-                            </TableCell>
-                            <TableCell>{order.artworkTitle}</TableCell>
-                            <TableCell className="font-medium">${order.amount.toLocaleString()}</TableCell>
-                            <TableCell>
-                              <Badge
-                                className={`${order.status === "delivered"
-                                  ? "bg-green-500"
-                                  : order.status === "shipped"
-                                    ? "bg-blue-500"
-                                    : order.status === "processing"
-                                      ? "bg-green-500"
-                                      : "bg-blue-400"
-                                  } text-white border-0`}
-                              >
-                                {order.status}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>{order.date}</TableCell>
-                            <TableCell>
-                              <Button variant="outline" size="icon" className="glass w-8 h-8 border-0 bg-transparent">
-                                <Eye className="w-4 h-4" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* Customers Tab */}
-            <TabsContent value="customers" className="space-y-6">
-              <Card className="glass-card rounded-3xl border-0">
-                <CardHeader>
-                  <CardTitle>Customer Management</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="border-white/10">
-                          <TableHead>Customer</TableHead>
+                          <TableHead>User</TableHead>
                           <TableHead>Contact</TableHead>
-                          <TableHead>Orders</TableHead>
-                          <TableHead>Total Spent</TableHead>
+                          <TableHead>Artworks</TableHead>
+                          <TableHead>Total Views</TableHead>
                           <TableHead>Status</TableHead>
                           <TableHead>Actions</TableHead>
                         </TableRow>
@@ -698,7 +634,7 @@ export default function AdminPanel() {
                           <TableRow key={customer.id} className="border-white/10">
                             <TableCell>
                               <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 gradient-violet-aqua rounded-full flex items-center justify-center text-white font-medium">
+                                <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-white font-medium">
                                   {customer.name.charAt(0)}
                                 </div>
                                 <div>
@@ -720,7 +656,7 @@ export default function AdminPanel() {
                               </div>
                             </TableCell>
                             <TableCell>{customer.totalOrders}</TableCell>
-                            <TableCell className="font-medium">${customer.totalSpent.toLocaleString()}</TableCell>
+                            <TableCell className="font-medium">{customer.totalSpent.toLocaleString()}</TableCell>
                             <TableCell>
                               <Badge
                                 className={
@@ -750,59 +686,8 @@ export default function AdminPanel() {
                 </CardContent>
               </Card>
             </TabsContent>
-
-            {/* Analytics Tab */}
-            <TabsContent value="analytics" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="glass-card rounded-3xl border-0">
-                  <CardHeader>
-                    <CardTitle>Sales Analytics</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="flex justify-between items-center">
-                      <span>This Month</span>
-                      <span className="text-2xl font-bold text-gradient-violet">$12,500</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Last Month</span>
-                      <span className="text-xl font-semibold">$10,200</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Growth</span>
-                      <span className="text-xl font-semibold text-green-600">+22.5%</span>
-                    </div>
-                    <div className="w-full bg-muted rounded-full h-3">
-                      <div className="gradient-violet h-3 rounded-full" style={{ width: "75%" }} />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="glass-card rounded-3xl border-0">
-                  <CardHeader>
-                    <CardTitle>Customer Insights</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="flex justify-between items-center">
-                      <span>New Customers</span>
-                      <span className="text-2xl font-bold text-gradient-aqua">15</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Returning Customers</span>
-                      <span className="text-xl font-semibold">28</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Retention Rate</span>
-                      <span className="text-xl font-semibold text-green-600">85%</span>
-                    </div>
-                    <div className="w-full bg-muted rounded-full h-3">
-                      <div className="gradient-aqua h-3 rounded-full" style={{ width: "85%" }} />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
           </Tabs>
-        </motion.div>
+        </div>
       </div>
 
       {/* Add Artwork Modal */}
@@ -832,10 +717,13 @@ export default function AdminPanel() {
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent className="glass-strong border-0">
-                    <SelectItem value="abstract">Abstract</SelectItem>
-                    <SelectItem value="digital">Digital Art</SelectItem>
-                    <SelectItem value="sculpture">Sculpture</SelectItem>
+                    <SelectItem value="painting">Painting</SelectItem>
+                    <SelectItem value="digital-art">Digital Art</SelectItem>
                     <SelectItem value="photography">Photography</SelectItem>
+                    <SelectItem value="sculpture">Sculpture</SelectItem>
+                    <SelectItem value="mixed-media">Mixed Media</SelectItem>
+                    <SelectItem value="drawing">Drawing</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
