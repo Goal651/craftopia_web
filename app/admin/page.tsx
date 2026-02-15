@@ -25,6 +25,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useAuth } from "@/contexts/AuthContext"
+import { ArtCard } from "@/components/ui/art-card"
 import {
   Plus,
   Edit,
@@ -45,6 +46,8 @@ import {
   Heart,
   Mail,
   Phone,
+  LayoutGrid,
+  Table as TableIcon
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -109,6 +112,7 @@ export default function AdminPanel() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<any>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [viewMode, setViewMode] = useState<"table" | "grid">("table")
 
   // Mock data - in real app, this would come from API
   const [artworks, setArtworks] = useState<Artwork[]>([
@@ -417,6 +421,24 @@ export default function AdminPanel() {
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                     <CardTitle>Artwork Management</CardTitle>
                     <div className="flex flex-col sm:flex-row gap-3">
+                      <div className="flex items-center gap-2 mr-2">
+                        <Button
+                          variant={viewMode === "table" ? "default" : "outline"}
+                          size="icon"
+                          onClick={() => setViewMode("table")}
+                          className={viewMode === "table" ? "btn-primary" : "glass border-0"}
+                        >
+                          <TableIcon className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant={viewMode === "grid" ? "default" : "outline"}
+                          size="icon"
+                          onClick={() => setViewMode("grid")}
+                          className={viewMode === "grid" ? "btn-primary" : "glass border-0"}
+                        >
+                          <LayoutGrid className="w-4 h-4" />
+                        </Button>
+                      </div>
                       <div className="relative">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input
@@ -442,114 +464,139 @@ export default function AdminPanel() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="border-white/10">
-                          <TableHead>Artwork</TableHead>
-                          <TableHead>Category</TableHead>
-                          <TableHead>Price</TableHead>
-                          <TableHead>Stock</TableHead>
-                          <TableHead>Performance</TableHead>
-                          <TableHead>Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {filteredArtworks.map((artwork) => (
-                          <TableRow key={artwork.id} className="border-white/10">
-                            <TableCell>
-                              <div className="flex items-center gap-3">
-                                <div className="relative w-12 h-12 rounded-lg overflow-hidden">
-                                  <Image
-                                    src={artwork.images[0] || "/placeholder.svg"}
-                                    alt={artwork.title}
-                                    fill
-                                    className="object-cover"
-                                    sizes="48px"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="font-medium">{artwork.title}</div>
-                                  <div className="text-sm text-muted-foreground">by {artwork.artist}</div>
-                                </div>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <Badge className="gradient-violet text-white border-0">{artwork.category}</Badge>
-                            </TableCell>
-                            <TableCell className="font-medium">${artwork.price.toLocaleString()}</TableCell>
-                            <TableCell>
-                              <Badge variant={artwork.stockQuantity > 0 ? "default" : "destructive"}>
-                                {artwork.stockQuantity} in stock
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-4 text-sm">
-                                <div className="flex items-center gap-1">
-                                  <Star className="w-4 h-4 fill-green-400 text-green-400" />
-                                  <span>{artwork.rating}</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Heart className="w-4 h-4 text-red-500" />
-                                  <span>{artwork.likes}</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Eye className="w-4 h-4 text-blue-500" />
-                                  <span>{artwork.views}</span>
-                                </div>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-2">
-                                <Button
-                                  variant="outline"
-                                  size="icon"
-                                  className="glass w-8 h-8 border-0 bg-transparent"
-                                  onClick={() => {
-                                    setSelectedItem(artwork)
-                                    setIsEditModalOpen(true)
-                                  }}
-                                >
-                                  <Edit className="w-4 h-4" />
-                                </Button>
-                                <AlertDialog>
-                                  <AlertDialogTrigger asChild>
-                                    <Button
-                                      variant="outline"
-                                      size="icon"
-                                      className="glass w-8 h-8 border-0 hover:bg-red-500/10 hover:text-red-600 bg-transparent"
-                                    >
-                                      <Trash2 className="w-4 h-4" />
-                                    </Button>
-                                  </AlertDialogTrigger>
-                                  <AlertDialogContent className="glass-strong border-0">
-                                    <AlertDialogHeader>
-                                      <AlertDialogTitle>Delete Artwork</AlertDialogTitle>
-                                      <AlertDialogDescription>
-                                        Are you sure you want to delete "{artwork.title}"? This action cannot be undone.
-                                      </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                      <AlertDialogCancel className="glass border-0">Cancel</AlertDialogCancel>
-                                      <AlertDialogAction
-                                        onClick={() => {
-                                          setArtworks((prev) => prev.filter((a) => a.id !== artwork.id))
-                                          toast.success("Artwork deleted successfully")
-                                        }}
-                                        className="bg-red-600 hover:bg-red-700"
-                                      >
-                                        Delete
-                                      </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                  </AlertDialogContent>
-                                </AlertDialog>
-                              </div>
-                            </TableCell>
+                  {viewMode === "table" ? (
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="border-white/10">
+                            <TableHead>Artwork</TableHead>
+                            <TableHead>Category</TableHead>
+                            <TableHead>Price</TableHead>
+                            <TableHead>Stock</TableHead>
+                            <TableHead>Performance</TableHead>
+                            <TableHead>Actions</TableHead>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
+                        </TableHeader>
+                        <TableBody>
+                          {filteredArtworks.map((artwork) => (
+                            <TableRow key={artwork.id} className="border-white/10">
+                              <TableCell>
+                                <div className="flex items-center gap-3">
+                                  <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                                    <Image
+                                      src={artwork.images[0] || "/placeholder.svg"}
+                                      alt={artwork.title}
+                                      fill
+                                      className="object-cover"
+                                      sizes="48px"
+                                    />
+                                  </div>
+                                  <div>
+                                    <div className="font-medium">{artwork.title}</div>
+                                    <div className="text-sm text-muted-foreground">by {artwork.artist}</div>
+                                  </div>
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <Badge className="gradient-violet text-white border-0">{artwork.category}</Badge>
+                              </TableCell>
+                              <TableCell className="font-medium">${artwork.price.toLocaleString()}</TableCell>
+                              <TableCell>
+                                <Badge variant={artwork.stockQuantity > 0 ? "default" : "destructive"}>
+                                  {artwork.stockQuantity} in stock
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-4 text-sm">
+                                  <div className="flex items-center gap-1">
+                                    <Star className="w-4 h-4 fill-green-400 text-green-400" />
+                                    <span>{artwork.rating}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <Heart className="w-4 h-4 text-red-500" />
+                                    <span>{artwork.likes}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <Eye className="w-4 h-4 text-blue-500" />
+                                    <span>{artwork.views}</span>
+                                  </div>
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <Button
+                                    variant="outline"
+                                    size="icon"
+                                    className="glass w-8 h-8 border-0 bg-transparent"
+                                    onClick={() => {
+                                      setSelectedItem(artwork)
+                                      setIsEditModalOpen(true)
+                                    }}
+                                  >
+                                    <Edit className="w-4 h-4" />
+                                  </Button>
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="glass w-8 h-8 border-0 hover:bg-red-500/10 hover:text-red-600 bg-transparent"
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent className="glass-strong border-0">
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>Delete Artwork</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          Are you sure you want to delete "{artwork.title}"? This action cannot be undone.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel className="glass border-0">Cancel</AlertDialogCancel>
+                                        <AlertDialogAction
+                                          onClick={() => {
+                                            setArtworks((prev) => prev.filter((a) => a.id !== artwork.id))
+                                            toast.success("Artwork deleted successfully")
+                                          }}
+                                          className="bg-red-600 hover:bg-red-700"
+                                        >
+                                          Delete
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {filteredArtworks.map((artwork, index) => (
+                        <ArtCard
+                          key={artwork.id}
+                          artwork={{
+                            ...artwork,
+                            image_url: artwork.images[0],
+                            artist_name: artwork.artist,
+                            artist_id: "admin", // Placeholder for admin view
+                            view_count: artwork.views,
+                            stock_quantity: artwork.stockQuantity,
+                            created_at: artwork.createdAt,
+                            updated_at: artwork.updatedAt,
+                            category: artwork.category.toLowerCase().replace(" ", "-") as any,
+                            image_path: ""
+                          }}
+                          index={index}
+                          variant="dashboard"
+                          showActions={true}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>

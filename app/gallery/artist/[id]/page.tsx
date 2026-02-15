@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ArtworkRecord, UserProfile } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
+import { ArtCard } from "@/components/ui/art-card"
 import { BackButton } from "@/components/ui/back-button"
 import { ArtworkImage } from "@/components/ui/artwork-image"
 import {
@@ -330,68 +331,11 @@ export default function ArtistProfilePage() {
                 <motion.div layout className="gallery-grid">
                   <AnimatePresence>
                     {artworks.map((artwork, index) => (
-                      <motion.div
+                      <ArtCard
                         key={artwork.id}
-                        layout
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.3, delay: index * 0.05 }}
-                      >
-                        <Card className="group cursor-pointer overflow-hidden border-0 glass-card card-hover">
-                          <Link href={`/gallery/${artwork.id}`}>
-                            <div className="relative aspect-[3/4] overflow-hidden">
-                              <ArtworkImage
-                                src={artwork.image_url}
-                                alt={artwork.title}
-                                title={artwork.title}
-                                category={artwork.category}
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                                variant="galleryCard"
-                                enableOptimizations={true}
-                                aspectRatio="3/4"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <Button size="sm" className="btn-primary shadow-lg">
-                                  <Eye className="w-4 h-4 mr-1" />
-                                  <span className="hidden sm:inline">View</span>
-                                </Button>
-                              </div>
-                              {artwork.view_count > 0 && (
-                                <div className="absolute top-3 right-3 glass rounded-full px-2 py-1">
-                                  <div className="flex items-center gap-1 text-xs text-white">
-                                    <Eye className="w-3 h-3" />
-                                    <span>{artwork.view_count}</span>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                            <CardContent className="p-4">
-                              <div className="space-y-3">
-                                <Badge variant="secondary" className="bg-gray-700/50 text-gray-300 text-xs">
-                                  {artwork.category.replace('-', ' ')}
-                                </Badge>
-                                <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors line-clamp-1">
-                                  {artwork.title}
-                                </h3>
-                                <p className="text-gray-400 text-sm leading-relaxed line-clamp-2">
-                                  {artwork.description || 'No description provided'}
-                                </p>
-                                <div className="flex items-center justify-between pt-2">
-                                  <span className="text-xs text-gray-500">{new Date(artwork.created_at).toLocaleDateString()}</span>
-                                  <div className="flex items-center gap-1 text-xs text-gray-400">
-                                    <Eye className="w-3 h-3" />
-                                    <span>{artwork.view_count}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Link>
-                        </Card>
-                      </motion.div>
+                        artwork={artwork}
+                        index={index}
+                      />
                     ))}
                   </AnimatePresence>
                 </motion.div>

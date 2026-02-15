@@ -19,6 +19,7 @@ import { ArtworkRecord, ArtworkCategory } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { GalleryErrorBoundary } from '@/components/error-boundaries'
 import { ArtworkImage } from '@/components/ui/artwork-image'
+import { ArtCard } from "@/components/ui/art-card"
 import { Eye, Heart, ChevronLeft, ChevronRight, AlertCircle, Palette, RefreshCw, Search as SearchIcon, Filter } from "lucide-react"
 
 const ITEMS_PER_PAGE = 12
@@ -188,101 +189,6 @@ function PublicGalleryPageContent() {
       updateURL({ category })
     }
   }
-
-  useEffect(() => {
-    const initialCategory = selectedCategory
-    fetchArtworks(1, initialCategory)
-  }, [selectedCategory])
-
-  const ArtworkCard = ({ artwork, index, searchQuery }: {
-    artwork: ArtworkRecord;
-    index: number;
-    searchQuery: string;
-  }) => (
-    <motion.div
-      key={artwork.id}
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3, delay: index * 0.05 }}
-    >
-      <Card className="group cursor-pointer overflow-hidden border-border/50 glass-card card-hover bg-card/30">
-        <Link href={`/gallery/${artwork.id}`}>
-          <div className="relative aspect-[3/4] overflow-hidden">
-            <ArtworkImage
-              src={artwork.image_url}
-              alt={artwork.title}
-              title={artwork.title}
-              category={artwork.category}
-              fill
-              className="object-cover transition-transform duration-700 group-hover:scale-110"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              variant="galleryCard"
-              enableOptimizations={true}
-              aspectRatio="3/4"
-            />
-
-            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="flex gap-2">
-                <Button size="sm" className="btn-primary shadow-lg">
-                  <Eye className="w-4 h-4 mr-1" />
-                  <span className="hidden sm:inline">View</span>
-                </Button>
-              </div>
-            </div>
-
-            {artwork.view_count > 0 && (
-              <div className="absolute top-3 right-3 glass rounded-full px-2 py-1 border-border/50">
-                <div className="flex items-center gap-1 text-xs text-foreground">
-                  <Eye className="w-3 h-3" />
-                  <span>{artwork.view_count}</span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <CardContent className="p-4">
-            <div className="space-y-3">
-              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-xs">
-                {artwork.category.replace('-', ' ')}
-              </Badge>
-              <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                <SearchHighlight
-                  text={artwork.title}
-                  searchTerm={searchQuery}
-                />
-              </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
-                <SearchHighlight
-                  text={artwork.description || 'No description provided'}
-                  searchTerm={searchQuery}
-                />
-              </p>
-              <div className="flex items-center justify-between pt-2">
-                <Link
-                  href={`/gallery/artist/${artwork.artist_id}`}
-                  className="text-xs text-primary hover:text-primary/80 transition-colors"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  by <SearchHighlight
-                    text={artwork.artist_name}
-                    searchTerm={searchQuery}
-                    className="text-xs text-primary hover:text-primary/80 transition-colors"
-                  />
-                </Link>
-                <span className="text-xs text-muted-foreground">
-                  {new Date(artwork.created_at).toLocaleDateString()}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Link>
-      </Card>
-    </motion.div>
-  )
 
   const LoadingSkeleton = () => (
     <div className="gallery-grid">
@@ -575,7 +481,7 @@ function PublicGalleryPageContent() {
                 <motion.div layout className="gallery-grid">
                   <AnimatePresence>
                     {artworks.map((artwork, index) => (
-                      <ArtworkCard
+                      <ArtCard
                         key={artwork.id}
                         artwork={artwork}
                         index={index}
@@ -593,7 +499,7 @@ function PublicGalleryPageContent() {
                 <motion.div layout className="gallery-grid">
                   <AnimatePresence>
                     {searchResults.artworks.map((artwork, index) => (
-                      <ArtworkCard
+                      <ArtCard
                         key={artwork.id}
                         artwork={artwork}
                         index={index}
