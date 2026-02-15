@@ -21,6 +21,7 @@ import { GalleryErrorBoundary } from '@/components/error-boundaries'
 import { ArtworkImage } from '@/components/ui/artwork-image'
 import { ArtCard } from "@/components/ui/art-card"
 import { Eye, Heart, ChevronLeft, ChevronRight, AlertCircle, Palette, RefreshCw, Search as SearchIcon, Filter } from "lucide-react"
+import { useArt } from "@/contexts/ArtContext"
 
 const ITEMS_PER_PAGE = 12
 
@@ -46,10 +47,8 @@ interface PaginationInfo {
 function PublicGalleryPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { fetchArtworks, artworks, loading, error } = useArt()
 
-  const [artworks, setArtworks] = useState<ArtworkRecord[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [pagination, setPagination] = useState<PaginationInfo>({
     currentPage: 1,
     totalPages: 1,
@@ -91,41 +90,8 @@ function PublicGalleryPageContent() {
     initialCategory: (searchParams.get('category') as ArtworkCategory) || 'all'
   })
 
-  const fetchArtworks = async (page: number = 1, category: ArtworkCategory | 'all' = 'all') => {
-    try {
-      setLoading(true)
-      setError(null)
 
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: ITEMS_PER_PAGE.toString()
-      })
 
-      if (category && category !== 'all') {
-        params.append('category', category)
-      }
-
-      const response = await fetch(`/api/artworks?${params}`)
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch artworks')
-      }
-
-      const data = await response.json()
-      setArtworks(data.artworks)
-      setPagination(data.pagination)
-    } catch (err) {
-      console.error('Error fetching artworks:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load artworks')
-      setArtworks([])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleRetry = () => {
-    fetchArtworks(pagination.currentPage, selectedCategory)
-  }
 
   const updateURL = (params: { q?: string; category?: string; page?: string }) => {
     const newSearchParams = new URLSearchParams(searchParams.toString())
@@ -144,51 +110,8 @@ function PublicGalleryPageContent() {
     router.replace(newURL, { scroll: false })
   }
 
-  const handlePageChange = (newPage: number) => {
-    if (isSearchMode && searchResults) {
-      searchGoToPage(newPage)
-      updateURL({ q: currentQuery, category: currentCategory, page: newPage.toString() })
-    } else {
-      if (newPage >= 1 && newPage <= pagination.totalPages && !loading) {
-        fetchArtworks(newPage, selectedCategory)
-        updateURL({ category: selectedCategory, page: newPage.toString() })
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      }
-    }
-  }
 
-  const handleSearch = (query: string) => {
-    if (query.trim()) {
-      setIsSearchMode(true)
-      searchWithCategory(query, selectedCategory)
-      updateURL({ q: query, category: selectedCategory })
-    } else {
-      handleClearSearch()
-    }
-  }
 
-  const handleClearSearch = () => {
-    setIsSearchMode(false)
-    clearSearch()
-    updateURL({ category: selectedCategory })
-    if (artworks.length === 0) {
-      fetchArtworks(1, selectedCategory)
-    }
-  }
-
-  const handleCategoryChange = (category: ArtworkCategory | 'all') => {
-    setSelectedCategory(category)
-
-    if (isSearchMode && currentQuery) {
-      searchWithCategory(currentQuery, category)
-      updateURL({ q: currentQuery, category })
-    } else {
-      setIsSearchMode(false)
-      clearSearch()
-      fetchArtworks(1, category)
-      updateURL({ category })
-    }
-  }
 
   const LoadingSkeleton = () => (
     <div className="gallery-grid">
@@ -217,7 +140,7 @@ function PublicGalleryPageContent() {
           <p className="text-muted-foreground max-w-md mx-auto">{error}</p>
         </div>
         <Button
-          onClick={handleRetry}
+          onClick={()=>{}}
           className="btn-primary"
           disabled={loading}
         >
@@ -274,7 +197,7 @@ function PublicGalleryPageContent() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => handlePageChange(currentPagination.currentPage - 1)}
+          onClick={() => { }}
           disabled={!currentPagination.hasPrevPage || isLoading}
           className="glass border-border/50 bg-background/50 text-muted-foreground hover:text-foreground hover:bg-muted"
         >
@@ -288,7 +211,7 @@ function PublicGalleryPageContent() {
               key={index}
               variant={page === currentPagination.currentPage ? "default" : "outline"}
               size="sm"
-              onClick={() => typeof page === 'number' ? handlePageChange(page) : undefined}
+              onClick={() => typeof page === 'number' ? {}: undefined}
               disabled={typeof page !== 'number' || isLoading}
               className={
                 page === currentPagination.currentPage
@@ -306,7 +229,7 @@ function PublicGalleryPageContent() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => handlePageChange(currentPagination.currentPage + 1)}
+          onClick={() => { }}
           disabled={!currentPagination.hasNextPage || isLoading}
           className="glass border-border/50 bg-background/50 text-muted-foreground hover:text-foreground hover:bg-muted"
         >
@@ -319,15 +242,9 @@ function PublicGalleryPageContent() {
 
   return (
     <GalleryErrorBoundary>
-      <div className="min-h-screen pt-24">
+      <div className="min-h-screen pt-4">
         <div className="container mx-auto px-4 py-12">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-            <BreadcrumbNav
-              items={[
-                { label: "Community Gallery", current: true }
-              ]}
-            />
-
             <div className="text-center space-y-4">
               <h1 className="text-4xl lg:text-5xl font-light text-foreground">
                 Public <span className="text-gradient-primary font-medium">Gallery</span>
@@ -339,8 +256,8 @@ function PublicGalleryPageContent() {
 
             <div className="max-w-2xl mx-auto">
               <SearchBar
-                onSearch={handleSearch}
-                onClear={handleClearSearch}
+                onSearch={() => { }}
+                onClear={() => { }}
                 placeholder="Search artworks, artists, or descriptions..."
                 loading={searchLoading}
                 initialValue={currentQuery}
@@ -356,7 +273,7 @@ function PublicGalleryPageContent() {
                   </div>
                   <Select
                     value={selectedCategory}
-                    onValueChange={(value: ArtworkCategory | 'all') => handleCategoryChange(value)}
+                    onValueChange={(value: ArtworkCategory | 'all') => { }}
                   >
                     <SelectTrigger className="w-48 glass border-border/50 bg-background/50 text-foreground">
                       <SelectValue placeholder="Select category" />
@@ -377,7 +294,7 @@ function PublicGalleryPageContent() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleCategoryChange('all')}
+                      onClick={() =>  { }}
                       className="text-muted-foreground hover:text-foreground hover:bg-muted"
                     >
                       Clear filter
@@ -467,7 +384,7 @@ function PublicGalleryPageContent() {
                     </p>
                   </div>
                   <Button
-                    onClick={handleClearSearch}
+                    onClick={()=>{}}
                     className="btn-primary"
                   >
                     Browse All Artworks

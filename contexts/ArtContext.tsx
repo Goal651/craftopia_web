@@ -38,11 +38,9 @@ export function ArtProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         fetchArtworks()
-    }, [fetchArtworks])
+    }, [])
 
     const featuredArtworks = useMemo(() => {
-        // In a real app, we might have a 'featured' flag in DB.
-        // For now, let's take the first 6 or ones with high view counts.
         return artworks.slice(0, 6)
     }, [artworks])
 
