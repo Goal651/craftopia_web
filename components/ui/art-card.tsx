@@ -175,7 +175,9 @@ export function ArtCard({
     
     if (!user) {
       // For non-logged in users, just navigate to the artwork
-      window.location.href = `/artworks/${artwork.id}`
+      if (typeof window !== 'undefined') {
+        window.location.href = `/artworks/${artwork.id}`
+      }
       return
     }
 
@@ -195,7 +197,9 @@ export function ArtCard({
           // If already viewed, just get current count
           if (response.status === 401) {
             // Not authenticated, just navigate
-            window.location.href = `/artworks/${artwork.id}`
+            if (typeof window !== 'undefined') {
+              window.location.href = `/artworks/${artwork.id}`
+            }
             return
           }
           throw new Error('Failed to track view')
@@ -214,17 +218,23 @@ export function ArtCard({
     }
 
     // Navigate to artwork detail page
-    window.location.href = `/artworks/${artwork.id}`
+    if (typeof window !== 'undefined') {
+      window.location.href = `/artworks/${artwork.id}`
+    }
   }
 
   const handleCardClick = () => {
-    window.location.href = `/artworks/${artwork.id}`
+    if (typeof window !== 'undefined') {
+      window.location.href = `/artworks/${artwork.id}`
+    }
   }
 
   const handleEdit = () => {
     // Navigate to upload page with edit mode - we'll need to modify this later
     // For now, let's go to upload page and handle editing there
-    window.location.href = `/upload?edit=${artwork.id}`
+    if (typeof window !== 'undefined') {
+      window.location.href = `/upload?edit=${artwork.id}`
+    }
   }
 
   return (

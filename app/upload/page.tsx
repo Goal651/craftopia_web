@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ArtworkUploadForm } from '@/components/upload/artwork-upload-form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -9,7 +9,7 @@ import { ArrowLeft, CheckCircle, Edit } from 'lucide-react'
 import { UploadErrorBoundary } from '@/components/error-boundaries'
 import type { ArtworkRecord } from '@/types'
 
-export default function UploadPage() {
+function UploadPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const editId = searchParams.get('edit')
@@ -156,5 +156,24 @@ export default function UploadPage() {
         </div>
       </div>
     </UploadErrorBoundary>
+  )
+}
+
+export default function UploadPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black p-4 pt-24">
+        <div className="container mx-auto max-w-2xl">
+          <Card className="glass bg-white/5 backdrop-blur-xl border border-gray-800">
+            <CardContent className="p-8 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <h1 className="text-xl font-bold text-white">Loading...</h1>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    }>
+      <UploadPageContent />
+    </Suspense>
   )
 }
