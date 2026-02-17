@@ -105,10 +105,10 @@ export default function HomePage() {
       {/* Premium Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Animated Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
+        <div className="fixed top-0 left-0 inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
         
         {/* Mesh Gradient Orbs - Simplified */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="fixed top-0 left-0 inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
           <div className="absolute top-1/3 -right-1/4 w-[500px] h-[500px] bg-secondary/15 rounded-full blur-3xl" />
           <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-accent/15 rounded-full blur-3xl" />
@@ -186,7 +186,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 md:py-32 relative">
+      <section className="py-20 md:py-32 relative z-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid md:grid-cols-3 gap-8 md:gap-12">
             {features.map((feature) => (
@@ -203,7 +203,7 @@ export default function HomePage() {
       </section>
 
       {/* Gallery Navigation Section */}
-      <section className="py-16 md:py-24 lg:py-32">
+      <section className="py-16 md:py-24 lg:py-32 z-10 relative">
         <div className="container mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-12 md:mb-16">
             <Badge className="mb-6 md:mb-8 glass-strong px-6 py-3 shadow-lg">Explore Our Galleries</Badge>
@@ -220,7 +220,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Artworks with Premium Cards */}
-      <section className="py-16 md:py-24 lg:py-32 relative">
+      <section className="py-16 md:py-24 lg:py-32 relative z-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-12 md:mb-16">
             <Badge className="mb-6 md:mb-8 glass-strong px-6 py-3 shadow-lg">Featured Collection</Badge>

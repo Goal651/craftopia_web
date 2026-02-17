@@ -97,7 +97,10 @@ export function ArtCard({
     }
   }
 
-  const handleContactOwner = async () => {
+  const handleContactOwner = async (e: React.MouseEvent) => {
+    e.preventDefault() // Prevent navigation
+    e.stopPropagation() // Prevent card click
+    
     setShowContactDialog(true)
     if (!artistInfo && artwork.artist_id) {
       setLoading(true)
@@ -225,11 +228,14 @@ export function ArtCard({
 
   const handleCardClick = () => {
     if (typeof window !== 'undefined') {
-      window.location.href = `/artworks/${artwork.id}`
+      window.location.href = `/gallery/artist/${artwork.artist_id}`
     }
   }
 
-  const handleEdit = () => {
+  const handleEdit = (e: React.MouseEvent) => {
+    e.preventDefault() // Prevent navigation
+    e.stopPropagation() // Prevent card click
+    
     // Navigate to upload page with edit mode - we'll need to modify this later
     // For now, let's go to upload page and handle editing there
     if (typeof window !== 'undefined') {

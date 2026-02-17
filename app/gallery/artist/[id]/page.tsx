@@ -226,18 +226,9 @@ export default function ArtistProfilePage() {
 
   return (
     <div className="min-h-screen pt-20 bg-black">
-      <div className="container mx-auto container-padding py-8">
+      <div className="container mx-auto container-padding-sm py-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-          <div className="flex items-center justify-between">
-            <BreadcrumbNav
-              items={[
-                { label: "Community Gallery", href: "/gallery" },
-                { label: "Artists", href: "/gallery" },
-                { label: artist.display_name || "Profile", current: true }
-              ]}
-            />
-            <BackButton href="/gallery" label="Back to Gallery" />
-          </div>
+        
 
           <Card className="border-0 glass-card">
             <CardContent className="p-8">
