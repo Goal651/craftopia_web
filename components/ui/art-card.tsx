@@ -1,15 +1,14 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import Link from "next/link"
-import { Eye, Heart, Star, Mail, User, MessageSquare, Edit } from "lucide-react"
+import { Eye, Heart, Star, Mail, ArrowUpRight, User } from "lucide-react"
 import { ArtworkRecord } from "@/types"
 import { ArtworkImage } from "./artwork-image"
 import { Badge } from "./badge"
 import { Button } from "./button"
 import { cn } from "@/lib/utils"
-import { useState, useEffect } from "react"
-import { useAuth } from "@/contexts/AuthContext"
+import { useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -19,88 +18,50 @@ import {
 } from "./dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar"
 
-interface ArtCardProps {
+interface PremiumArtCardProps {
   artwork: ArtworkRecord
   index?: number
-  searchQuery?: string
-  variant?: "default" | "compact" | "dashboard"
   className?: string
+  variant?: string
   showActions?: boolean
-  aspectRatio?: "3/4" | "square" | "video"
-  showContactButton?: boolean
+  searchQuery?: string
+  aspectRatio?: string
 }
 
-export function ArtCard({
-  artwork,
-  index = 0,
-  searchQuery = "",
-  variant = "default",
-  className,
-  showActions = true,
-  aspectRatio = "3/4",
-  showContactButton = true,
-}: ArtCardProps) {
-  const { user } = useAuth()
-  const isDashboard = variant === "dashboard"
-  const isCompact = variant === "compact"
+export function PremiumArtCard({ artwork, index = 0, className }: PremiumArtCardProps) {
+  const [isHovered, setIsHovered] = useState(false)
   const [showContactDialog, setShowContactDialog] = useState(false)
   const [artistInfo, setArtistInfo] = useState<any>(null)
   const [loading, setLoading] = useState(false)
-  const [isLiked, setIsLiked] = useState(false)
-  const [likeCount, setLikeCount] = useState(0)
-  const [viewCount, setViewCount] = useState(artwork.view_count)
-  const [hasViewed, setHasViewed] = useState(false)
+  
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
 
-  // Check if current user is the owner of this artwork
-  const isOwner = user && artwork.artist_id === user.id
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 })
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 })
 
-  // Fetch like status when user is available
-  useEffect(() => {
-    if (user?.id && !isOwner) {
-      fetchLikeStatus()
-      fetchViewStatus()
-    }
-  }, [user, artwork.id, isOwner])
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7.5deg", "-7.5deg"])
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7.5deg", "7.5deg"])
 
-  const fetchLikeStatus = async () => {
-    try {
-      const response = await fetch(`/api/artworks/${artwork.id}/like`)
-      if (response.ok) {
-        const data = await response.json()
-        setIsLiked(data.is_liked)
-        setLikeCount(data.like_count)
-      }
-    } catch (error) {
-      console.error('Failed to fetch like status:', error)
-    }
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const width = rect.width
+    const height = rect.height
+    const mouseX = e.clientX - rect.left
+    const mouseY = e.clientY - rect.top
+    const xPct = mouseX / width - 0.5
+    const yPct = mouseY / height - 0.5
+    x.set(xPct)
+    y.set(yPct)
   }
 
-  const fetchViewStatus = async () => {
-    try {
-      const response = await fetch(`/api/artworks/${artwork.id}/views`)
-      if (response.ok) {
-        const data = await response.json()
-        setHasViewed(data.has_viewed)
-        setViewCount(data.view_count)
-      }
-    } catch (error) {
-      console.error('Failed to fetch view status:', error)
-    }
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+    setIsHovered(false)
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, delay: index * 0.1 }
-    }
-  }
-
-  const handleContactOwner = async (e: React.MouseEvent) => {
-    e.preventDefault() // Prevent navigation
-    e.stopPropagation() // Prevent card click
-    
+  const handleContactOwner = async () => {
     setShowContactDialog(true)
     if (!artistInfo && artwork.artist_id) {
       setLoading(true)
@@ -118,237 +79,146 @@ export function ArtCard({
     }
   }
 
-  const handleLike = async (e: React.MouseEvent) => {
-    e.preventDefault() // Prevent navigation
-    e.stopPropagation() // Prevent card click
-    
-    if (!user) {
-      // Redirect to login or show login modal
-      alert('Please log in to like artworks')
-      return
-    }
-
-    if (isOwner) {
-      alert('You cannot like your own artwork')
-      return
-    }
-
-    try {
-      // Update local state immediately for better UX
-      const newLikedState = !isLiked
-      setIsLiked(newLikedState)
-      setLikeCount(prev => newLikedState ? prev + 1 : prev - 1)
-
-      // Make API call to update like status
-      const response = await fetch(`/api/artworks/${artwork.id}/like`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ liked: newLikedState }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        if (errorData.error === 'Cannot like your own artwork') {
-          alert('You cannot like your own artwork')
-        } else {
-          throw new Error('Failed to update like status')
-        }
-        // Revert state on error
-        setIsLiked(!newLikedState)
-        setLikeCount(prev => newLikedState ? prev - 1 : prev + 1)
-        return
-      }
-
-      const data = await response.json()
-      // Update like count with server response
-      setLikeCount(data.like_count)
-    } catch (error) {
-      console.error('Failed to update like:', error)
-      // Revert state on error - use the opposite of current state
-      setIsLiked(isLiked)
-      setLikeCount(prev => isLiked ? prev - 1 : prev + 1)
-    }
-  }
-
-  const handleView = async (e: React.MouseEvent) => {
-    e.preventDefault() // Prevent navigation
-    e.stopPropagation() // Prevent card click
-    
-    if (!user) {
-      // For non-logged in users, just navigate to the artwork
-      if (typeof window !== 'undefined') {
-        window.location.href = `/artworks/${artwork.id}`
-      }
-      return
-    }
-
-    // Check if user has already viewed this artwork
-    if (!hasViewed) {
-      try {
-        // Update local state immediately for better UX
-        setViewCount(prev => prev + 1)
-        setHasViewed(true)
-
-        // Make API call to track view
-        const response = await fetch(`/api/artworks/${artwork.id}/views`, {
-          method: 'POST',
-        })
-
-        if (!response.ok) {
-          // If already viewed, just get current count
-          if (response.status === 401) {
-            // Not authenticated, just navigate
-            if (typeof window !== 'undefined') {
-              window.location.href = `/artworks/${artwork.id}`
-            }
-            return
-          }
-          throw new Error('Failed to track view')
-        }
-
-        const data = await response.json()
-        // Update view count with server response
-        setViewCount(data.view_count)
-        setHasViewed(data.already_viewed)
-      } catch (error) {
-        console.error('Failed to track view:', error)
-        // Revert state on error
-        setViewCount(prev => prev - 1)
-        setHasViewed(false)
-      }
-    }
-
-    // Navigate to artwork detail page
-    if (typeof window !== 'undefined') {
-      window.location.href = `/artworks/${artwork.id}`
-    }
-  }
-
-  const handleCardClick = () => {
-    if (typeof window !== 'undefined') {
-      window.location.href = `/gallery/artist/${artwork.artist_id}`
-    }
-  }
-
-  const handleEdit = (e: React.MouseEvent) => {
-    e.preventDefault() // Prevent navigation
-    e.stopPropagation() // Prevent card click
-    
-    // Navigate to upload page with edit mode - we'll need to modify this later
-    // For now, let's go to upload page and handle editing there
-    if (typeof window !== 'undefined') {
-      window.location.href = `/upload?edit=${artwork.id}`
-    }
-  }
-
   return (
     <motion.div
-      key={artwork.id}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      viewport={{ once: true }}
-      className="group"
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className={cn("group perspective-1000 ", className)}
     >
-      <div 
-        className="glass-enhanced rounded-xl sm:rounded-2xl overflow-hidden border-0 card-hover text-md h-full flex flex-col cursor-pointer"
-        onClick={handleCardClick}
+      <motion.div
+        className="relative bg-card/50 backdrop-blur-xl rounded-lg overflow-hidden border border-border/50 shadow-2xl transition-shadow duration-500 hover:shadow-primary/20 h-96 flex flex-col"
       >
-        <div className="relative overflow-hidden">
-          <ArtworkImage
-            src={artwork.image_url}
-            alt={artwork.title}
-            title={artwork.title}
-            category={artwork.category}
-            fill
-            className="w-full h-48 sm:h-56 md:h-64 lg:h-72 transition-transform duration-700 group-hover:scale-110"
+        {/* Image Container */}
+        <div className="relative overflow-hidden aspect-[3/4]">
+          <motion.div
+            animate={{
+              scale: isHovered ? 1.1 : 1
+            }}
+            transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+            className="w-full h-full"
+          >
+            <ArtworkImage
+              src={artwork.image_url}
+              alt={artwork.title}
+              title={artwork.title}
+              category={artwork.category}
+             fill
+              className="w-auto h-auto object-cover"
+            />
+          </motion.div>
+
+          {/* Gradient Overlay */}
+          <motion.div
+            animate={{
+              opacity: isHovered ? 1 : 0
+            }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
           />
 
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-          {/* Action Buttons */}
-          <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-1 sm:gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Button 
-              size="icon" 
-              className={`glass w-8 h-8 sm:w-10 sm:h-10 hover:bg-white/20 transition-colors ${
-                isLiked ? 'bg-red-500/20 hover:bg-red-500/30' : ''
-              }`} 
-              aria-label="Add to wishlist"
-              onClick={handleLike}
-            >
-              <Heart className={`w-3 h-3 sm:w-4 sm:h-4 ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
-            </Button>
-            <Button 
-              size="icon" 
-              className="glass w-8 h-8 sm:w-10 sm:h-10 hover:bg-white/20 transition-colors" 
-              aria-label="Quick view"
-              onClick={handleView}
-            >
-              <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-            </Button>
-          </div>
-
           {/* Category Badge */}
-          <Badge className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-gradient-to-r from-blue-500 to-green-500 text-white border-0 text-xs sm:text-sm px-2 sm:px-3 py-1">
-            {artwork.category}
-          </Badge>
-
-          {/* Rating (Simulated if missing) */}
-          <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 flex items-center gap-1 glass px-2 sm:px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-green-400 text-green-400" />
-            <span className="text-xs sm:text-sm font-medium text-white">{(4.5 + (artwork.view_count % 5) / 10).toFixed(1)}</span>
-            <span className="text-xs text-white/70">({likeCount})</span>
+          <div className="absolute top-4 left-4 z-10">
+            <Badge className="bg-background/90 backdrop-blur-sm text-foreground border-0 shadow-lg">
+              {artwork.category}
+            </Badge>
           </div>
+
+          {/* Quick Actions */}
+          <motion.div
+            animate={{
+              opacity: isHovered ? 1 : 0,
+              y: isHovered ? 0 : 20
+            }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+            className="absolute top-4 right-4 flex flex-col gap-2 z-10"
+          >
+            <Button
+              size="icon"
+              className="bg-background/90 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground transition-all duration-300 shadow-lg h-10 w-10"
+              aria-label="Add to wishlist"
+            >
+              <Heart className="w-4 h-4" />
+            </Button>
+            <Button
+              size="icon"
+              className="bg-background/90 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground transition-all duration-300 shadow-lg h-10 w-10"
+              aria-label="Quick view"
+            >
+              <Eye className="w-4 h-4" />
+            </Button>
+          </motion.div>
+
+          {/* View Count */}
+          <motion.div
+            animate={{
+              opacity: isHovered ? 1 : 0,
+              y: isHovered ? 0 : 20
+            }}
+            transition={{ duration: 0.3, delay: 0.15 }}
+            className="absolute bottom-4 left-4 flex items-center gap-2 bg-background/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg z-10"
+          >
+            <Eye className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm font-medium">{artwork.view_count}</span>
+          </motion.div>
+
+          {/* Rating */}
+          <motion.div
+            animate={{
+              opacity: isHovered ? 1 : 0,
+              y: isHovered ? 0 : 20
+            }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+            className="absolute bottom-4 right-4 flex items-center gap-1 bg-background/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg z-10"
+          >
+            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            <span className="text-sm font-medium">{(4.5 + (artwork.view_count % 5) / 10).toFixed(1)}</span>
+          </motion.div>
         </div>
 
-        <div className="p-3 sm:p-4 md:p-6 flex-1 flex flex-col">
-          <div className="flex items-start justify-between mb-2 sm:mb-3">
-            <div className="flex-1 min-w-0">
-              <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 group-hover:text-blue-400 transition-colors truncate">
+        {/* Content */}
+        <div className="p-6 flex-1 flex flex-col">
+          <div className="flex-1">
+            <Link href={`/artworks/${artwork.id}`} className="group/link">
+              <h3 className="text-xl font-bold mb-2 group-hover/link:text-primary transition-colors line-clamp-2">
                 {artwork.title}
               </h3>
-              <p className="text-xs sm:text-sm md:text-base text-muted-foreground truncate">by {artwork.artist_name}</p>
-            </div>
-            <div className="flex items-center gap-1 text-muted-foreground flex-shrink-0 ml-2">
-              <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="text-xs sm:text-sm">{viewCount}</span>
-            </div>
+            </Link>
+            <p className="text-muted-foreground text-sm mb-4">by {artwork.artist_name}</p>
           </div>
 
-          <div className="flex items-center justify-between mt-auto pt-2 sm:pt-4">
-            <span className="text-lg sm:text-xl md:text-2xl font-bold text-gradient-primary">
-              Gallery Piece
-            </span>
-
-            {showContactButton && (
-              isOwner ? (
-                <Button
-                  onClick={handleEdit}
-                  className="btn-primary text-xs sm:text-sm md:text-base"
-                  size="sm"
-                >
-                  <Edit className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                  <span className="hidden xs:inline sm:hidden">Edit</span>
-                  <span className="hidden sm:inline">Edit Artwork</span>
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleContactOwner}
-                  className="btn-primary text-xs sm:text-sm md:text-base"
-                  size="sm"
-                >
-                  <Mail className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                  <span className="hidden xs:inline sm:hidden">Contact</span>
-                  <span className="hidden sm:inline">Contact Artist</span>
-                </Button>
-              )
-            )}
+          {/* Footer */}
+          <div className="flex items-center justify-between pt-4 border-t border-border/50">
+            <div>
+              <span className="text-2xl font-bold text-gradient-primary">
+                Gallery
+              </span>
+            </div>
+            <Button
+              onClick={handleContactOwner}
+              className="btn-primary group/btn"
+              size="sm"
+            >
+              <Mail className="w-4 h-4 mr-2" />
+              Contact
+              <ArrowUpRight className="w-4 h-4 ml-1 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+            </Button>
           </div>
         </div>
-      </div>
+
+        {/* 3D Effect Shine */}
+        <motion.div
+          animate={{
+            opacity: isHovered ? 0.1 : 0
+          }}
+          transition={{ duration: 0.3 }}
+          className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-transparent pointer-events-none"
+          style={{
+            transform: "translateZ(50px)"
+          }}
+        />
+      </motion.div>
 
       {/* Contact Artist Dialog */}
       <Dialog open={showContactDialog} onOpenChange={setShowContactDialog}>
@@ -376,9 +246,6 @@ export function ArtCard({
                 </Avatar>
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg">{artistInfo.display_name}</h3>
-                  <span className="text-xs text-muted-foreground">
-                    {new Date(artwork.createdAt || artwork.created_at || Date.now()).toLocaleDateString()}
-                  </span>
                   <p className="text-sm text-muted-foreground">
                     {artistInfo.artwork_count || 0} artworks • {artistInfo.total_views || 0} total views
                   </p>
@@ -448,3 +315,6 @@ export function ArtCard({
     </motion.div>
   )
 }
+
+// Export as ArtCard for backward compatibility
+export const ArtCard = PremiumArtCard
