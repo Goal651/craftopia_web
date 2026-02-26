@@ -20,7 +20,6 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useAuth } from "@/contexts/AuthContext"
@@ -559,7 +558,7 @@ export default function AdminPanel() {
                                       </AlertDialogTrigger>
                                       <AlertDialogContent className="glass-strong border-0 shadow-2xl scale-105">
                                         <AlertDialogHeader>
-                                          <AlertDialogTitle className="text-2xl text-white font-bold">Incinerate Masterpiece?</AlertDialogTitle>
+                                          <DialogTitle className="text-2xl text-white font-bold">Incinerate Masterpiece?</DialogTitle>
                                           <AlertDialogDescription className="text-muted-foreground text-lg py-4">
                                             This action is irreversible. <span className="text-white font-bold">"{artwork.title}"</span> will be permanently purged from the global archives.
                                           </AlertDialogDescription>
@@ -626,7 +625,7 @@ export default function AdminPanel() {
                               </AlertDialogTrigger>
                               <AlertDialogContent className="glass-strong border-0 shadow-2xl">
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Purge Artwork?</AlertDialogTitle>
+                                  <DialogTitle>Purge Artwork?</DialogTitle>
                                   <AlertDialogDescription>Permanently remove this item from the collection.</AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>

@@ -8,7 +8,6 @@ import { AuthProvider } from "@/contexts/AuthContext"
 import { ArtProvider } from "@/contexts/ArtContext"
 import { Navbar } from "@/components/layout/navbar"
 import { Toaster } from "@/components/ui/sonner"
-import { AppErrorBoundary } from "@/components/error-boundaries"
 import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({
@@ -83,38 +82,33 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <AppErrorBoundary
-          resetOnPropsChange={true}
-          resetKeys={[]} // Add keys that should trigger reset when changed
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange={false}
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange={false}
-          >
-            <AuthProvider>
-              <ArtProvider>
-                <CartProvider>
-                  <div className="relative min-h-screen bg-background text-foreground">
-                    <Navbar />
-                    <main className="relative">{children}</main>
-                    <Toaster
-                      position="top-right"
-                      toastOptions={{
-                        style: {
-                          background: "hsl(var(--card))",
-                          border: "1px solid hsl(var(--border))",
-                          color: "hsl(var(--foreground))",
-                        },
-                      }}
-                    />
-                  </div>
-                </CartProvider>
-              </ArtProvider>
-            </AuthProvider>
-          </ThemeProvider>
-        </AppErrorBoundary>
+          <AuthProvider>
+            <ArtProvider>
+              <CartProvider>
+                <div className="relative min-h-screen bg-background text-foreground">
+                  <Navbar />
+                  <main className="relative">{children}</main>
+                  <Toaster
+                    position="top-right"
+                    toastOptions={{
+                      style: {
+                        background: "hsl(var(--card))",
+                        border: "1px solid hsl(var(--border))",
+                        color: "hsl(var(--foreground))",
+                      },
+                    }}
+                  />
+                </div>
+              </CartProvider>
+            </ArtProvider>
+          </AuthProvider>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

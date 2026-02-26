@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { OptimizedArtworkImage } from "./optimized-image"
-import { ResponsiveArtworkImage } from "./responsive-image"
+import Image from "next/image"
 import { ArtworkGenerator } from "./artwork-generator"
 import { cn } from "@/lib/utils"
 
@@ -23,7 +22,7 @@ interface ArtworkImageProps {
   showLoadingTime?: boolean
   maxRetries?: number
   onLoad?: () => void
-  onError?: (error: string) => void
+  onError?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void
 }
 
 export function ArtworkImage({ 
@@ -62,10 +61,10 @@ export function ArtworkImage({
   // Generate a seed from the title for consistent artwork generation
   const seed = title + category
 
-  const handleImageError = useCallback((error: string) => {
+  const handleImageError = useCallback((event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setImageError(true)
     setShowFallback(true)
-    onError?.(error)
+    onError?.(event)
   }, [onError])
 
   const handleImageLoad = useCallback(() => {
@@ -98,40 +97,36 @@ export function ArtworkImage({
   // Use optimized responsive image if optimizations are enabled
   if (enableOptimizations) {
     return (
-      <ResponsiveArtworkImage
-        src={src}
-        artworkTitle={title}
-        category={category}
-        variant={variant}
+      <Image
+        src={src || ''}
+        alt={alt}
+        title={title}
+        width={width}
+        height={height}
+        fill={fill}
         className={className}
         priority={priority}
-        aspectRatio={aspectRatio}
+        sizes={sizes}
         onLoad={handleImageLoad}
         onError={handleImageError}
-        showLoadingTime={showLoadingTime}
       />
     )
   }
 
-  // Fallback to optimized image without responsive features
+  // Fallback to basic image
   return (
-    <OptimizedArtworkImage
-      src={src}
-      artworkTitle={title}
-      category={category}
+    <Image
+      src={src || ''}
+      alt={alt}
+      title={title}
       width={width}
       height={height}
       fill={fill}
       className={className}
       sizes={sizes}
       priority={priority}
-      aspectRatio={aspectRatio}
       onLoad={handleImageLoad}
       onError={handleImageError}
-      showLoadingTime={showLoadingTime}
-      maxRetries={maxRetries}
-      enableProgressiveLoading={true}
-      enableLazyLoading={!priority}
     />
   )
 }

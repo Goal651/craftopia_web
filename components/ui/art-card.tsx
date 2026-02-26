@@ -28,7 +28,7 @@ interface PremiumArtCardProps {
   aspectRatio?: string
 }
 
-export function PremiumArtCard({ artwork, index = 0, className }: PremiumArtCardProps) {
+export const PremiumArtCard({ artwork, index = 0, className }: PremiumArtCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [showContactDialog, setShowContactDialog] = useState(false)
   const [artistInfo, setArtistInfo] = useState<any>(null)
@@ -317,4 +317,4 @@ export function PremiumArtCard({ artwork, index = 0, className }: PremiumArtCard
 }
 
 // Export as ArtCard for backward compatibility
-export const ArtCard = PremiumArtCard
+export { PremiumArtCard, ArtCard }

@@ -3,14 +3,12 @@ import Link from 'next/link'
 import { ChevronRight, Home } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-export interface BreadcrumbItem {
-  label: string
-  href?: string
-  current?: boolean
-}
-
 interface BreadcrumbNavProps {
-  items: BreadcrumbItem[]
+  items: {
+    label: string
+    href?: string
+    current?: boolean
+  }[]
   className?: string
 }
 

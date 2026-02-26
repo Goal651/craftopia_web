@@ -3,12 +3,6 @@
  * Handles various date formats and provides fallbacks
  */
 
-export interface DateFormatOptions {
-  includeTime?: boolean
-  format?: 'short' | 'medium' | 'long' | 'full'
-  locale?: string
-}
-
 /**
  * Safely format a date string or timestamp
  * @param dateInput - Date string, timestamp, or Date object
@@ -17,7 +11,11 @@ export interface DateFormatOptions {
  */
 export function formatDateSafe(
   dateInput: string | number | Date | null | undefined,
-  options: DateFormatOptions = {}
+  options: {
+    includeTime?: boolean
+    format?: 'short' | 'medium' | 'long' | 'full'
+    locale?: string
+  } = {}
 ): string {
   const {
     includeTime = false,
@@ -140,37 +138,6 @@ export function getRelativeTime(dateInput: string | number | Date | null | undef
 }
 
 /**
- * Check if a date is recent (within last 7 days)
- * @param dateInput - Date string or timestamp
- * @returns Boolean indicating if date is recent
- */
-export function isRecent(dateInput: string | number | Date | null | undefined): boolean {
-  if (!dateInput) return false
-
-  try {
-    let date: Date
-
-    if (dateInput instanceof Date) {
-      date = dateInput
-    } else if (typeof dateInput === 'number') {
-      date = new Date(dateInput < 10000000000 ? dateInput * 1000 : dateInput)
-    } else {
-      date = new Date(dateInput)
-    }
-
-    if (isNaN(date.getTime())) return false
-
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-
-    return diffDays <= 7
-  } catch (error) {
-    return false
-  }
-}
-
-/**
  * Get a safe date timestamp for sorting
  * @param dateInput - Date string or timestamp
  * @returns Timestamp number or 0 for invalid dates
@@ -192,32 +159,5 @@ export function getSafeTimestamp(dateInput: string | number | Date | null | unde
     return isNaN(date.getTime()) ? 0 : date.getTime()
   } catch (error) {
     return 0
-  }
-}
-
-/**
- * Get a safe date for form inputs (YYYY-MM-DD format)
- * @param dateInput - Date string or timestamp
- * @returns Date string in YYYY-MM-DD format or empty string
- */
-export function getDateForInput(dateInput: string | number | Date | null | undefined): string {
-  if (!dateInput) return ''
-
-  try {
-    let date: Date
-
-    if (dateInput instanceof Date) {
-      date = dateInput
-    } else if (typeof dateInput === 'number') {
-      date = new Date(dateInput < 10000000000 ? dateInput * 1000 : dateInput)
-    } else {
-      date = new Date(dateInput)
-    }
-
-    if (isNaN(date.getTime())) return ''
-
-    return date.toISOString().split('T')[0]
-  } catch (error) {
-    return ''
   }
 }

@@ -6,7 +6,6 @@ import { ArtworkUploadForm } from '@/components/upload/artwork-upload-form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, CheckCircle, Edit } from 'lucide-react'
-import { UploadErrorBoundary } from '@/components/error-boundaries'
 import type { ArtworkRecord } from '@/types'
 
 function UploadPageContent() {
@@ -111,9 +110,8 @@ function UploadPageContent() {
   }
 
   return (
-    <UploadErrorBoundary>
-      <div className="min-h-screen bg-black p-4 pt-20 sm:pt-24">
-        <div className="container-modern max-w-2xl">
+    <div className="min-h-screen bg-black p-4 pt-20 sm:pt-24">
+      <div className="container-modern max-w-2xl">
           {/* Header */}
           <div className="mb-6 sm:mb-8">
             <Button
@@ -155,9 +153,8 @@ function UploadPageContent() {
           />
         </div>
       </div>
-    </UploadErrorBoundary>
-  )
-}
+    )
+  }
 
 export default function UploadPage() {
   return (

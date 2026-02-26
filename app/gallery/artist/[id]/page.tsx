@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ArtworkRecord, UserProfile } from "@/types/index"
+import { ArtworkRecord } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { ArtCard } from "@/components/ui/art-card"
 import { BackButton } from "@/components/ui/back-button"
@@ -37,7 +37,14 @@ interface PaginationInfo {
   hasPrevPage: boolean
 }
 
-interface ArtistStats extends UserProfile {
+interface ArtistStats {
+  id: string
+  name: string
+  email: string
+  avatar_url?: string
+  display_name?: string
+  bio?: string
+  created_at?: string
   artwork_count: number
   total_views: number
 }
@@ -268,7 +275,7 @@ export default function ArtistProfilePage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        <span>Joined {new Date(artist.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}</span>
+                        <span>Joined {new Date(artist.created_at || '').toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}</span>
                       </div>
                     </div>
                   </div>

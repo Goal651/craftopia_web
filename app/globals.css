@@ -10,118 +10,117 @@
   .perspective-1000 {
     perspective: 1000px;
   }
-
-  .animate-gradient-x {
-    background-size: 200% 200%;
-    animation: gradient-x 3s ease infinite;
-  }
-}
-
-@keyframes gradient-x {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
 }
 
 /* =========================
-   CLEAN ENTERPRISE PALETTE
-   Black / White + Blue
+   PURE BLACK & WHITE PALETTE
 ========================= */
 
 :root {
+  /* Pure Black & White Foundation */
   --background: 0 0% 100%;
-  --foreground: 0 0% 7%;
-
+  --foreground: 0 0% 0%;
+  
   --card: 0 0% 100%;
-  --card-foreground: 0 0% 7%;
-
+  --card-foreground: 0 0% 0%;
+  
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 7%;
-
+  --popover-foreground: 0 0% 0%;
+  
   /* Primary = Pure Black */
-  --primary: 0 0% 7%;
+  --primary: 0 0% 0%;
   --primary-foreground: 0 0% 100%;
-
-  /* Secondary = Enterprise Blue */
-  --secondary: 214 95% 52%;
+  
+  /* Secondary = Blue Accent */
+  --secondary: 214 95% 55%;
   --secondary-foreground: 0 0% 100%;
-
-  /* Accent = Soft Blue */
-  --accent: 214 85% 60%;
+  
+  /* Accent = Light Blue */
+  --accent: 214 85% 65%;
   --accent-foreground: 0 0% 100%;
-
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 40%;
-
-  --destructive: 0 72% 51%;
+  
+  /* Muted = Very Light Gray */
+  --muted: 0 0% 95%;
+  --muted-foreground: 0 0% 45%;
+  
+  /* Destructive = Red */
+  --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-
+  
+  /* Borders & Inputs */
   --border: 0 0% 90%;
   --input: 0 0% 90%;
-  --ring: 214 95% 52%;
-
-  --radius: 0.75rem;
-
-  /* Design System */
+  --ring: 214 95% 55%;
+  
+  --radius: 0.5rem;
+  
+  /* Surface Variants */
   --surface: 0 0% 100%;
   --surface-elevated: 0 0% 98%;
-  --surface-hover: 0 0% 94%;
-
-  --text-primary: 0 0% 7%;
-  --text-secondary: 0 0% 35%;
-  --text-tertiary: 0 0% 55%;
-
-  --border-light: 0 0% 94%;
-  --border-medium: 0 0% 88%;
-
+  --surface-hover: 0 0% 96%;
+  
+  /* Text Hierarchy */
+  --text-primary: 0 0% 0%;
+  --text-secondary: 0 0% 30%;
+  --text-tertiary: 0 0% 50%;
+  
+  /* Border Variants */
+  --border-light: 0 0% 95%;
+  --border-medium: 0 0% 85%;
+  
+  /* Glass Effect */
   --glass-bg: 255, 255, 255;
-  --glass-border: 0, 0%, 85%;
-
+  --glass-border: 0, 0%, 90%;
+  
   /* Blue Gradient */
-  --gradient-from: 214 95% 52%;
-  --gradient-via: 214 90% 58%;
+  --gradient-from: 214 95% 55%;
+  --gradient-via: 214 90% 60%;
   --gradient-to: 214 85% 65%;
 }
 
 /* =========================
-   DARK MODE (Modern Black)
+   DARK MODE
 ========================= */
 
 .dark {
-  --background: 0 0% 6%;
-  --foreground: 0 0% 95%;
-
-  --card: 0 0% 10%;
-  --card-foreground: 0 0% 95%;
-
-  --popover: 0 0% 10%;
-  --popover-foreground: 0 0% 95%;
-
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 100%;
+  
+  --popover: 0 0% 5%;
+  --popover-foreground: 0 0% 100%;
+  
   --primary: 0 0% 100%;
-  --primary-foreground: 0 0% 7%;
-
+  --primary-foreground: 0 0% 0%;
+  
+  /* Secondary = Bright Blue */
   --secondary: 214 95% 60%;
-  --secondary-foreground: 0 0% 7%;
-
-  --accent: 214 85% 65%;
-  --accent-foreground: 0 0% 7%;
-
-  --muted: 0 0% 14%;
-  --muted-foreground: 0 0% 65%;
-
+  --secondary-foreground: 0 0% 0%;
+  
+  /* Accent = Light Blue */
+  --accent: 214 85% 70%;
+  --accent-foreground: 0 0% 0%;
+  
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 60%;
+  
   --destructive: 0 62% 45%;
   --destructive-foreground: 0 0% 100%;
-
-  --border: 0 0% 18%;
-  --input: 0 0% 18%;
+  
+  --border: 0 0% 15%;
+  --input: 0 0% 15%;
   --ring: 214 95% 60%;
-
-  --surface: 0 0% 10%;
-  --surface-elevated: 0 0% 14%;
-  --surface-hover: 0 0% 18%;
-
-  --glass-bg: 20, 20, 20;
+  
+  --surface: 0 0% 5%;
+  --surface-elevated: 0 0% 10%;
+  --surface-hover: 0 0% 15%;
+  
+  --glass-bg: 0, 0, 0;
   --glass-border: 255, 255, 255;
-
+  
+  /* Blue Gradient */
   --gradient-from: 214 95% 60%;
   --gradient-via: 214 90% 65%;
   --gradient-to: 214 85% 70%;
@@ -142,28 +141,27 @@
   }
 
   *:focus-visible {
-    @apply outline-none ring-2 ring-secondary ring-offset-2 ring-offset-background;
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
   }
 
   ::selection {
-    @apply bg-secondary/20 text-secondary;
+    @apply bg-primary/20 text-primary;
   }
 }
 
 /* =========================
-   COMPONENT IMPROVEMENTS
+   COMPONENT STYLES
 ========================= */
 
 @layer components {
-
-  /* Clean Glass */
+  /* Glass Effect */
   .glass {
     background: rgba(var(--glass-bg), 0.85);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(var(--glass-border), 0.15);
   }
 
-  /* Enterprise Gradient */
+  /* Grayscale Gradient */
   .gradient-primary {
     background: linear-gradient(
       135deg,
@@ -186,38 +184,51 @@
   .btn-primary {
     background: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
   }
 
   .btn-primary:hover {
-    opacity: 0.85;
+    opacity: 0.8;
   }
 
   .btn-secondary {
     background: hsl(var(--secondary));
     color: hsl(var(--secondary-foreground));
+    transition: all 0.2s ease;
   }
 
   .btn-secondary:hover {
-    opacity: 0.9;
+    opacity: 0.85;
+    transform: translateY(-1px);
   }
 
-  /* Subtle Card Hover */
+  .btn-accent {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    transition: all 0.2s ease;
+  }
+
+  .btn-accent:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+  }
+
+  /* Card Hover */
   .card-hover {
     @apply transition-all duration-300;
   }
 
   .card-hover:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
   }
 }
 
 /* =========================
-   CLEAN SCROLLBAR
+   SCROLLBAR
 ========================= */
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -226,7 +237,11 @@
 
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--secondary));
-  border-radius: 8px;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--accent));
 }
 
 * {
