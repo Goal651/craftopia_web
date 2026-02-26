@@ -7,7 +7,7 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { GalleryNav } from "@/components/ui/gallery-nav"
-import { PremiumArtCard } from "@/components/ui/art-card"
+import { ArtCard } from "@/components/ui/art-card"
 import { AnimatedCounter } from "@/components/ui/animated-counter"
 import { LiveVisualSearch } from "@/components/ui/live-visual-search"
 import { categoryImages } from "@/lib/generate-images"
@@ -239,7 +239,7 @@ export default function HomePage() {
               ))
             ) : featuredArtworks.length > 0 ? (
               featuredArtworks.map((artwork, index) => (
-                <PremiumArtCard
+                <ArtCard
                   key={artwork.id}
                   artwork={artwork}
                   index={index}

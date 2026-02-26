@@ -18,7 +18,7 @@ import {
 } from "./dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar"
 
-interface PremiumArtCardProps {
+interface ArtCardProps {
   artwork: ArtworkRecord
   index?: number
   className?: string
@@ -28,7 +28,7 @@ interface PremiumArtCardProps {
   aspectRatio?: string
 }
 
-export const PremiumArtCard({ artwork, index = 0, className }: PremiumArtCardProps) {
+export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [showContactDialog, setShowContactDialog] = useState(false)
   const [artistInfo, setArtistInfo] = useState<any>(null)
@@ -315,6 +315,3 @@ export const PremiumArtCard({ artwork, index = 0, className }: PremiumArtCardPro
     </motion.div>
   )
 }
-
-// Export as ArtCard for backward compatibility
-export { PremiumArtCard, ArtCard }
