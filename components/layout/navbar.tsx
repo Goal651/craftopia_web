@@ -39,7 +39,6 @@ import {
 
 const navigation = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Curated", href: "/artworks", icon: ImageIcon },
   { name: "Gallery", href: "/gallery", icon: Palette },
   { name: "About", href: "/about", icon: Info },
   { name: "Contact", href: "/contact", icon: Mail },

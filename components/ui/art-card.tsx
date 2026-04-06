@@ -104,7 +104,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
               alt={artwork.title}
               title={artwork.title}
               category={artwork.category}
-             fill
+             
               className="w-auto h-auto object-cover"
             />
           </motion.div>

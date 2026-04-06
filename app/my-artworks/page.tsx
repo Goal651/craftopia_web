@@ -78,7 +78,7 @@ export default function MyArtworksPage() {
   }
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen p-20">
       <div className="container-modern section-padding">
         {/* Header */}
         <motion.div
@@ -227,7 +227,7 @@ export default function MyArtworksPage() {
               ))}
             </div>
           ) : filteredArtworks.length > 0 ? (
-            <div className={viewMode === "grid" ? "gallery-grid" : "space-y-4"}>
+            <div className={viewMode === "grid" ? "grid grid-cols-4" : "space-y-4"}>
               <AnimatePresence>
                 {filteredArtworks.map((artwork, index) => (
                   <motion.div

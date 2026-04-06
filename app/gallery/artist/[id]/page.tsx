@@ -24,7 +24,8 @@ import {
   RefreshCw,
   Mail,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  MailIcon
 } from "lucide-react"
 
 const ITEMS_PER_PAGE = 12
@@ -41,6 +42,7 @@ interface ArtistStats {
   id: string
   name: string
   email: string
+  phone_number: string
   avatar_url?: string
   display_name?: string
   bio?: string
@@ -168,7 +170,7 @@ export default function ArtistProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-20 bg-black">
+      <div className="min-h-screen p-20 bg-black">
         <div className="container mx-auto container-padding py-8">
           <div className="space-y-8">
             <Skeleton className="h-10 w-32 bg-gray-700/50" />
@@ -232,10 +234,9 @@ export default function ArtistProfilePage() {
   if (!artist) return null
 
   return (
-    <div className="min-h-screen pt-20 bg-black">
+    <div className="min-h-screen p-20 bg-black">
       <div className="container mx-auto container-padding-sm py-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-        
 
           <Card className="border-0 glass-card">
             <CardContent className="p-8">
@@ -277,6 +278,15 @@ export default function ArtistProfilePage() {
                         <Calendar className="w-4 h-4" />
                         <span>Joined {new Date(artist.created_at || '').toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}</span>
                       </div>
+                      <div className="flex items-center gap-2">
+                        <MailIcon className="w-4 h-4" />
+                        <span>{artist.email}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MailIcon className="w-4 h-4" />
+                        <span>{artist.phone_number}</span>
+                      </div>
+
                     </div>
                   </div>
 
@@ -326,7 +336,7 @@ export default function ArtistProfilePage() {
 
             {!artworksLoading && artworks.length > 0 ? (
               <>
-                <motion.div layout className="gallery-grid">
+                <motion.div layout className="grid grid-cols-3">
                   <AnimatePresence>
                     {artworks.map((artwork, index) => (
                       <ArtCard
