@@ -16,7 +16,7 @@ interface AuthUser {
 
 interface AuthContextType {
   user: AuthUser | null
-  signUp: (email: string, password: string, displayName: string) => Promise<any>
+  signUp: (email: string, password: string, displayName: string, phoneNumber: string) => Promise<any>
   signIn: (email: string, password: string) => Promise<any>
   signOut: () => Promise<void>
   updateProfile: (displayName: string, bio?: string) => Promise<{ success: boolean; error?: string }>
@@ -47,10 +47,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initAuth()
   }, [])
 
-  const signUp = async (email: string, password: string, displayName: string): Promise<any> => {
+  const signUp = async (email: string, password: string, displayName: string, phoneNumber: string): Promise<any> => {
     setLoading(true)
     try {
-      const result = await signUpAction(email, password, displayName)
+      const result = await signUpAction(email, password, displayName,phoneNumber)
       if (result.success) {
         setUser(result.user)
         toast.success("Account created successfully!")

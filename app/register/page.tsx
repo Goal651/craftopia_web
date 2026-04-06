@@ -12,9 +12,10 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/AuthContext"
-import { Eye, EyeOff, Mail, Lock, ArrowLeft, Palette, User } from "lucide-react"
+import { Eye, EyeOff, Mail, Lock, ArrowLeft, Palette, User, Phone } from "lucide-react"
 
 export default function RegisterPage() {
+  const [phoneNumber, setPhoneNumber] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -54,7 +55,7 @@ export default function RegisterPage() {
     setIsLoading(true)
 
     try {
-      const response = await signUp(email, password, displayName.trim())
+      const response = await signUp(email, password, displayName.trim(),phoneNumber)
       if (!response.error && response.data.user) {
         // Registration successful, redirect to login or show success message
         router.push("/login")
@@ -120,6 +121,24 @@ export default function RegisterPage() {
                     placeholder="Enter your display name"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
+                    className="pl-10 h-12 glass border-0 focus:ring-2 focus:ring-blue-500/50 text-white placeholder:text-gray-400"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium text-gray-300">
+                  Phone Number
+                </Label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="phone_number"
+                    type="tel"
+                    placeholder="Enter your phone number"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                     className="pl-10 h-12 glass border-0 focus:ring-2 focus:ring-blue-500/50 text-white placeholder:text-gray-400"
                     required
                   />

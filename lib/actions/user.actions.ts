@@ -48,7 +48,7 @@ export async function signInAction(email: string, password: string) {
     }
 }
 
-export async function signUpAction(email: string, password: string, displayName: string) {
+export async function signUpAction(email: string, password: string, displayName: string, phoneNumber: string) {
     try {
         await dbConnect()
         const existingUser = await User.findOne({ email })
@@ -60,6 +60,7 @@ export async function signUpAction(email: string, password: string, displayName:
         const hashedPassword = hashPassword(password)
         const user = await User.create({
             email,
+            phone_number: phoneNumber,
             password: hashedPassword,
             display_name: displayName,
         })
@@ -67,6 +68,7 @@ export async function signUpAction(email: string, password: string, displayName:
         const sessionUser = {
             id: user._id.toString(),
             email: user.email,
+            phone_number: phoneNumber,
             display_name: user.display_name,
             avatar_url: user.avatar_url,
         }

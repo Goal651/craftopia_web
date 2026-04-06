@@ -10,16 +10,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/contexts/AuthContext"
 import { useArt } from "@/contexts/ArtContext"
 import { ArtCard } from "@/components/ui/art-card"
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  SortAsc, 
-  Grid, 
-  List, 
-  Edit, 
-  Trash2, 
-  Eye, 
+import {
+  Plus,
+  Search,
+  Filter,
+  SortAsc,
+  Grid,
+  List,
+  Edit,
+  Trash2,
+  Eye,
   Heart,
   Calendar,
   BarChart3
@@ -39,7 +39,7 @@ export default function MyArtworksPage() {
 
   // Filter and sort artworks
   const filteredArtworks = userArtworks
-    .filter(artwork => 
+    .filter(artwork =>
       artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       artwork.description?.toLowerCase().includes(searchTerm.toLowerCase())
     )
@@ -258,7 +258,7 @@ export default function MyArtworksPage() {
                 {searchTerm ? "No artworks found" : "No artworks yet"}
               </h3>
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                {searchTerm 
+                {searchTerm
                   ? "Try adjusting your search terms to find your artworks."
                   : "Start building your portfolio by uploading your first masterpiece!"
                 }
