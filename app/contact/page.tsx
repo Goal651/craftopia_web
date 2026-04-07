@@ -157,21 +157,21 @@ function ContactForm() {
 export default function ContactPage() {
   const contactInfo = [
     {
-      icon: Mail,
-      title: "Email",
-      details: "support@craftopia.com",
-      description: "For inquiries about artworks and commissions",
+      icon: Phone,
+      title: "Phone 1",
+      details: "+250 788 821 939",
+      description: "Available Monday to  Sunday, 7 AM - 8 PM GMT+2",
     },
     {
       icon: Phone,
-      title: "Phone",
-      details: "+1 (555) 123-4567",
-      description: "Available Monday to Friday, 9 AM - 6 PM EST",
+      title: "Phone 2",
+      details: "+250 785 244 612",
+      description: "Available Monday to Sunday 7 AM - 8 PM GMT+2",
     },
     {
       icon: MapPin,
       title: "HQ Location",
-      details: "New York, NY",
+      details: "Kigali, Rwanda",
       description: "Visits by appointment only",
     },
     {
@@ -255,33 +255,6 @@ export default function ContactPage() {
                 ))}
               </div>
 
-              {/* FAQ Section */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
-                <Card className="border-0 shadow-lg bg-gradient-to-r from-pastel-lavender/20 to-pastel-peach/20 dark:from-pastel-lavender/10 dark:to-pastel-peach/10 backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3">
-                        <MessageCircle className="w-6 h-6 text-gold" />
-                        <h3 className="font-semibold text-charcoal dark:text-white">Frequently Asked</h3>
-                      </div>
-                      <div className="space-y-3 text-sm text-muted-foreground">
-                        <p>
-                          <strong>Commissioning:</strong> We accept select commissions. Please include details about
-                          your vision, preferred medium, and timeline.
-                        </p>
-                        <p>
-                          <strong>Shipping:</strong> All artworks are professionally packaged and insured. International
-                          shipping available.
-                        </p>
-                        <p>
-                          <strong>Authentication:</strong> Every piece comes with a certificate of authenticity signed
-                          by the artist.
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
             </motion.div>
           </div>
         </div>
