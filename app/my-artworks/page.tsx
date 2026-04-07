@@ -121,8 +121,8 @@ export default function MyArtworksPage() {
         >
           <Card className="glass-card border-0">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-0.5">
-                <div className="w-full h-full bg-background rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 mx-auto mb-4 rounded bg-gradient-to-br from-blue-500 to-cyan-500 p-0.5">
+                <div className="w-full h-full bg-background rounded flex items-center justify-center">
                   <Plus className="w-6 h-6 text-primary" />
                 </div>
               </div>
@@ -133,8 +133,8 @@ export default function MyArtworksPage() {
 
           <Card className="glass-card border-0">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-0.5">
-                <div className="w-full h-full bg-background rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 mx-auto mb-4 rounded bg-gradient-to-br from-purple-500 to-pink-500 p-0.5">
+                <div className="w-full h-full bg-background rounded flex items-center justify-center">
                   <Eye className="w-6 h-6 text-primary" />
                 </div>
               </div>
@@ -145,8 +145,8 @@ export default function MyArtworksPage() {
 
           <Card className="glass-card border-0">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-0.5">
-                <div className="w-full h-full bg-background rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 mx-auto mb-4 rounded bg-gradient-to-br from-green-500 to-emerald-500 p-0.5">
+                <div className="w-full h-full bg-background rounded flex items-center justify-center">
                   <Heart className="w-6 h-6 text-primary" />
                 </div>
               </div>
@@ -161,7 +161,7 @@ export default function MyArtworksPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="glass-card rounded-2xl p-6 mb-8"
+          className="glass-card rounded p-6 mb-8"
         >
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
@@ -223,7 +223,7 @@ export default function MyArtworksPage() {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-80 glass rounded-2xl animate-pulse" />
+                <div key={i} className="h-80 glass rounded animate-pulse" />
               ))}
             </div>
           ) : filteredArtworks.length > 0 ? (

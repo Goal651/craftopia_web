@@ -334,7 +334,7 @@ export default function ArtworkDetailPage() {
             <Skeleton className="h-4 w-32 bg-gray-700/50" />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               <div className="space-y-4">
-                <Skeleton className="aspect-[4/5] w-full bg-gray-700/50 rounded-2xl" />
+                <Skeleton className="aspect-[4/5] w-full bg-gray-700/50 rounded" />
               </div>
               <div className="space-y-6">
                 <div className="space-y-4">
@@ -446,7 +446,7 @@ export default function ArtworkDetailPage() {
                 transition={{ duration: 0.8 }}
                 className="relative group"
               >
-                <div className="relative  rounded-lg overflow-hidden shadow-2xl shadow-black/50">
+                <div className="relative  rounded overflow-hidden shadow-2xl shadow-black/50">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
                   <ArtworkImage
                     src={artwork.image_url}
@@ -491,7 +491,7 @@ export default function ArtworkDetailPage() {
                       initial={{ opacity: 0, scale: 0.9, y: -10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.9, y: -10 }}
-                      className="absolute top-24 right-6 glass-strong border border-white/20 rounded-lg p-4 z-30 min-w-[220px]"
+                      className="absolute top-24 right-6 glass-strong border border-white/20 rounded p-4 z-30 min-w-[220px]"
                     >
                       <div className="space-y-1">
                         <Button
@@ -688,7 +688,7 @@ export default function ArtworkDetailPage() {
                               value={comment}
                               onChange={(e) => setComment(e.target.value)}
                               placeholder="Share your thoughts about this artwork..."
-                              className="w-full p-3 glass-strong border border-white/20 rounded-lg text-white placeholder-gray-400 resize-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50"
+                              className="w-full p-3 glass-strong border border-white/20 rounded text-white placeholder-gray-400 resize-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50"
                               rows={3}
                             />
                             <div className="flex justify-between items-center mt-2">

@@ -116,7 +116,7 @@ export default function ArtworksPage() {
             </div>
 
             {/* Filter Controls */}
-            <div className="glass-card rounded-2xl p-4 md:p-6">
+            <div className="glass-card rounded p-4 md:p-6">
               <div className="flex flex-col gap-4">
                 {/* Filters Row */}
                 <div className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4">

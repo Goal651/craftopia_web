@@ -63,7 +63,7 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-3xl glass-strong shadow-2xl"
+          className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded glass-strong shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close Button */}
@@ -85,7 +85,7 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
                 transition={{ duration: 0.3 }}
               >
                 <motion.div
-                  className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl"
+                  className="relative w-full h-full rounded overflow-hidden shadow-2xl"
                   whileHover={{ rotateY: 2, rotateX: 2 }}
                   transition={{ duration: 0.3 }}
                 >
@@ -121,7 +121,7 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
                     {artwork.images.map((image: string, index: number) => (
                       <motion.button
                         key={index}
-                        className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${selectedImageIndex === index ? "border-blue-500" : "border-transparent"
+                        className={`w-12 h-12 rounded overflow-hidden border-2 transition-all ${selectedImageIndex === index ? "border-blue-500" : "border-transparent"
                           }`}
                         onClick={() => setSelectedImageIndex(index)}
                         whileHover={{ scale: 1.1 }}

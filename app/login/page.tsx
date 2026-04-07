@@ -73,7 +73,7 @@ export default function LoginPage() {
               className="flex justify-center"
             >
               <div className="relative">
-                <div className="h-14 w-14 md:h-16 md:w-16 gradient-blue rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="h-14 w-14 md:h-16 md:w-16 gradient-blue rounded flex items-center justify-center shadow-lg">
                   <Palette className="w-7 h-7 md:w-8 md:h-8 text-white" />
                 </div>
                 <div className="absolute -top-2 -right-2 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
@@ -140,7 +140,7 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full h-12 btn-primary font-semibold rounded-xl shadow-lg hover:shadow-xl"
+                className="w-full h-12 btn-primary font-semibold rounded shadow-lg hover:shadow-xl"
                 disabled={isLoading}
               >
                 {isLoading ? (

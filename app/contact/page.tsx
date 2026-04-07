@@ -83,7 +83,7 @@ function ContactForm() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded-xl h-11"
+                  className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded h-11"
                   placeholder="Your full name"
                 />
               </div>
@@ -96,7 +96,7 @@ function ContactForm() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded-xl h-11"
+                  className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded h-11"
                   placeholder="your@email.com"
                 />
               </div>
@@ -110,7 +110,7 @@ function ContactForm() {
                 value={formData.subject}
                 onChange={handleChange}
                 required
-                className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded-xl h-11"
+                className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded h-11"
                 placeholder="What would you like to discuss?"
               />
             </div>
@@ -124,7 +124,7 @@ function ContactForm() {
                 onChange={handleChange}
                 required
                 rows={6}
-                className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded-xl resize-none"
+                className="border-0 bg-white/50 dark:bg-card/50 focus:bg-white dark:focus:bg-card rounded resize-none"
                 placeholder="Tell us more about your inquiry..."
               />
             </div>

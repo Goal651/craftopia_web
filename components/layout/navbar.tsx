@@ -99,8 +99,8 @@ export function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center space-x-2 group"
-            onClick={()=>router.push('/')}>
-              <div className="w-9 h-9 gradient-blue-green rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-primary/20">
+              onClick={() => router.push('/')}>
+              <div className="w-9 h-9 gradient-blue-green rounded flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-primary/20">
                 <Palette className="w-5 h-5 text-white" />
               </div>
               <span className="font-bold text-xl tracking-tight text-gradient-primary">
@@ -113,8 +113,8 @@ export function Navbar() {
               {navigation.map((item) => (
                 <div
                   key={item.name}
-                  onClick={()=>router.push(item.href)}
-                  className={`px-4 cursor-pointer py-2 text-sm font-medium rounded-lg transition-all duration-200 ${pathname === item.href
+                  onClick={() => router.push(item.href)}
+                  className={`px-4 cursor-pointer py-2 text-sm font-medium rounded transition-all duration-200 ${pathname === item.href
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                     }`}
@@ -122,14 +122,14 @@ export function Navbar() {
                   {item.name}
                 </div>
               ))}
-              
+
               {/* Artist Navigation */}
               {user && (
                 <>
                   <div className="w-px h-6 bg-border mx-2" />
                   <div
-                    onClick={()=>router.push('/dashboard')}
-                    className={`px-4 cursor-pointer py-2 text-sm font-medium rounded-lg transition-all duration-200 flex items-center gap-2 ${pathname === '/dashboard'
+                    onClick={() => router.push('/dashboard')}
+                    className={`px-4 cursor-pointer py-2 text-sm font-medium rounded transition-all duration-200 flex items-center gap-2 ${pathname === '/dashboard'
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                       }`}
@@ -138,8 +138,8 @@ export function Navbar() {
                     Dashboard
                   </div>
                   <div
-                    onClick={()=>router.push('/my-artworks')}
-                    className={`px-4 cursor-pointer py-2 text-sm font-medium rounded-lg transition-all duration-200 flex items-center gap-2 ${pathname === '/my-artworks'
+                    onClick={() => router.push('/my-artworks')}
+                    className={`px-4 cursor-pointer py-2 text-sm font-medium rounded transition-all duration-200 flex items-center gap-2 ${pathname === '/my-artworks'
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                       }`}
@@ -180,7 +180,7 @@ export function Navbar() {
                   asChild
                   className="text-muted-foreground hover:text-foreground hover:bg-muted h-11 w-11"
                 >
-                  <div onClick={()=>router.push('/upload')} aria-label="Upload Artwork">
+                  <div onClick={() => router.push('/upload')} aria-label="Upload Artwork">
                     <Upload className="w-5 h-5" />
                   </div>
                 </Button>
@@ -323,7 +323,7 @@ export function Navbar() {
                     <Link
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${pathname === item.href
+                      className={`flex items-center space-x-3 px-3 py-2 rounded transition-colors ${pathname === item.href
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted"
                         }`}
@@ -349,7 +349,7 @@ export function Navbar() {
                       <Link
                         href="/dashboard"
                         onClick={() => setIsOpen(false)}
-                        className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${pathname === '/dashboard'
+                        className={`flex items-center space-x-3 px-3 py-2 rounded transition-colors ${pathname === '/dashboard'
                           ? "bg-primary/10 text-primary"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted"
                           }`}
@@ -366,7 +366,7 @@ export function Navbar() {
                       <Link
                         href="/my-artworks"
                         onClick={() => setIsOpen(false)}
-                        className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${pathname === '/my-artworks'
+                        className={`flex items-center space-x-3 px-3 py-2 rounded transition-colors ${pathname === '/my-artworks'
                           ? "bg-primary/10 text-primary"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted"
                           }`}
@@ -389,7 +389,7 @@ export function Navbar() {
                       <Link
                         href="/profile"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center space-x-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
+                        className="flex items-center space-x-3 px-3 py-2 rounded text-muted-foreground hover:text-foreground hover:bg-muted"
                       >
                         <User className="w-4 h-4" />
                         <span>Profile</span>
@@ -398,7 +398,7 @@ export function Navbar() {
                         <Link
                           href="/admin"
                           onClick={() => setIsOpen(false)}
-                          className="flex items-center space-x-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
+                          className="flex items-center space-x-3 px-3 py-2 rounded text-muted-foreground hover:text-foreground hover:bg-muted"
                         >
                           <Settings className="w-4 h-4" />
                           <span>Admin Panel</span>
@@ -409,7 +409,7 @@ export function Navbar() {
                           signOut()
                           setIsOpen(false)
                         }}
-                        className="flex items-center space-x-3 px-3 py-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-500/10 w-full text-left"
+                        className="flex items-center space-x-3 px-3 py-2 rounded text-red-500 hover:text-red-600 hover:bg-red-500/10 w-full text-left"
                       >
                         <LogOut className="w-4 h-4" />
                         <span>Logout</span>
@@ -455,7 +455,7 @@ export function Navbar() {
               className="w-full max-w-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="glass-strong border-border/50 rounded-2xl p-6 shadow-2xl">
+              <div className="glass-strong border-border/50 rounded p-6 shadow-2xl">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-foreground">Search Artworks</h3>
                   <Button

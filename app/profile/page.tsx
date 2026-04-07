@@ -166,7 +166,7 @@ export default function ProfilePage() {
                       {statsLoading ? <Loader2 className="w-6 h-6 animate-spin inline" /> : stats.artwork_count}
                     </p>
                   </div>
-                  <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-blue-500/20 rounded flex items-center justify-center">
                     <Palette className="w-6 h-6 text-blue-400" />
                   </div>
                 </div>
@@ -182,7 +182,7 @@ export default function ProfilePage() {
                       {statsLoading ? <Loader2 className="w-6 h-6 animate-spin inline" /> : stats.total_views.toLocaleString()}
                     </p>
                   </div>
-                  <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-purple-500/20 rounded flex items-center justify-center">
                     <Eye className="w-6 h-6 text-purple-400" />
                   </div>
                 </div>
@@ -302,7 +302,7 @@ export default function ProfilePage() {
               <CardTitle className="text-xl text-white">Account Settings</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 glass rounded-lg">
+              <div className="flex items-center justify-between p-4 glass rounded">
                 <div>
                   <h3 className="font-medium text-white">Account Status</h3>
                   <p className="text-sm text-gray-400">Your account is active and verified</p>
@@ -310,7 +310,7 @@ export default function ProfilePage() {
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
               </div>
 
-              <div className="flex items-center justify-between p-4 glass rounded-lg">
+              <div className="flex items-center justify-between p-4 glass rounded">
                 <div>
                   <h3 className="font-medium text-white">Member Since</h3>
                   <p className="text-sm text-gray-400">
@@ -320,7 +320,7 @@ export default function ProfilePage() {
               </div>
 
               {profile?.updated_at && profile.updated_at !== profile.created_at && (
-                <div className="flex items-center justify-between p-4 glass rounded-lg">
+                <div className="flex items-center justify-between p-4 glass rounded">
                   <div>
                     <h3 className="font-medium text-white">Last Updated</h3>
                     <p className="text-sm text-gray-400">

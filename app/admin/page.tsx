@@ -226,7 +226,7 @@ export default function AdminPanel() {
     return matchesSearch && matchesCategory
   })
 
-  const filteredUsers = users.filter((u) => 
+  const filteredUsers = users.filter((u) =>
     u.display_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     u.email.toLowerCase().includes(searchTerm.toLowerCase())
   )
@@ -272,7 +272,7 @@ export default function AdminPanel() {
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-6 border-b border-white/5">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-lg">
+                <div className="p-2 bg-primary/10 rounded">
                   <ShieldCheck className="w-6 h-6 text-primary" />
                 </div>
                 <h1 className="text-4xl font-bold tracking-tight text-white">Admin Command Center</h1>
@@ -302,7 +302,7 @@ export default function AdminPanel() {
                 <Card className="glass-card border-0 overflow-hidden relative group hover:bg-white/5 transition-all duration-500">
                   <div className={`absolute top-0 right-0 w-32 h-32 ${stat.bg} blur-3xl opacity-20 -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700`} />
                   <CardContent className="p-8 space-y-4">
-                    <div className={`w-14 h-14 ${stat.bg} rounded-2xl flex items-center justify-center shadow-inner`}>
+                    <div className={`w-14 h-14 ${stat.bg} rounded flex items-center justify-center shadow-inner`}>
                       <stat.icon className={`w-7 h-7 ${stat.color}`} />
                     </div>
                     <div>
@@ -317,14 +317,14 @@ export default function AdminPanel() {
 
           {/* Main Content with enhanced tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-            <TabsList className="glass-strong rounded-2xl p-1.5 grid w-full grid-cols-3 max-w-2xl">
-              <TabsTrigger value="overview" className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-white">
+            <TabsList className="glass-strong rounded p-1.5 grid w-full grid-cols-3 max-w-2xl">
+              <TabsTrigger value="overview" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-white">
                 Dashboard Overview
               </TabsTrigger>
-              <TabsTrigger value="artworks" className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-white">
+              <TabsTrigger value="artworks" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-white">
                 Art Inventory
               </TabsTrigger>
-              <TabsTrigger value="users" className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-white">
+              <TabsTrigger value="users" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-white">
                 User Network
               </TabsTrigger>
             </TabsList>
@@ -342,19 +342,19 @@ export default function AdminPanel() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {recentActivity.length > 0 ? recentActivity.map((activity, i) => (
-                      <motion.div 
-                        key={activity.id} 
-                        initial={{ opacity: 0, x: -20 }} 
+                      <motion.div
+                        key={activity.id}
+                        initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.05 }}
-                        className="flex items-center gap-4 p-4 glass rounded-2xl hover:bg-white/5 transition-colors group"
+                        className="flex items-center gap-4 p-4 glass rounded hover:bg-white/5 transition-colors group"
                       >
-                        <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                        <div className="w-12 h-12 rounded bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                           <Plus className="w-6 h-6" />
                         </div>
                         <div className="flex-1">
                           <p className="text-sm text-white">
-                            <span className="font-bold text-base block">{activity.title}</span> 
+                            <span className="font-bold text-base block">{activity.title}</span>
                             <span className="text-muted-foreground italic text-xs">by</span> <span className="text-primary font-medium">{activity.artist_name}</span>
                           </p>
                         </div>
@@ -394,11 +394,11 @@ export default function AdminPanel() {
                             <span className="text-muted-foreground">{count} pieces</span>
                           </div>
                           <div className="h-2.5 bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/5">
-                            <motion.div 
+                            <motion.div
                               initial={{ width: 0 }}
                               animate={{ width: `${percentage}%` }}
                               transition={{ duration: 1, delay: i * 0.1 }}
-                              className="h-full bg-gradient-to-r from-primary to-secondary rounded-full" 
+                              className="h-full bg-gradient-to-r from-primary to-secondary rounded-full"
                             />
                           </div>
                         </div>
@@ -419,12 +419,12 @@ export default function AdminPanel() {
                       <CardDescription className="text-muted-foreground">Total of {artworks.length} items curated</CardDescription>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4">
-                      <div className="flex items-center glass p-1 rounded-xl">
+                      <div className="flex items-center glass p-1 rounded">
                         <Button
                           variant={viewMode === "table" ? "secondary" : "ghost"}
                           size="sm"
                           onClick={() => setViewMode("table")}
-                          className="rounded-lg h-10 px-4"
+                          className="rounded h-10 px-4"
                         >
                           <TableIcon className="w-4 h-4 mr-2" />
                           List
@@ -433,7 +433,7 @@ export default function AdminPanel() {
                           variant={viewMode === "grid" ? "secondary" : "ghost"}
                           size="sm"
                           onClick={() => setViewMode("grid")}
-                          className="rounded-lg h-10 px-4"
+                          className="rounded h-10 px-4"
                         >
                           <LayoutGrid className="w-4 h-4 mr-2" />
                           Grid
@@ -478,17 +478,17 @@ export default function AdminPanel() {
                         <TableBody>
                           <AnimatePresence mode="popLayout">
                             {filteredArtworks.map((artwork) => (
-                              <motion.tr 
+                              <motion.tr
                                 layout
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                key={artwork.id} 
+                                key={artwork.id}
                                 className="border-white/5 hover:bg-white/5 transition-all duration-300 group"
                               >
                                 <TableCell className="p-6">
                                   <div className="flex items-center gap-4">
-                                    <div className="relative w-16 h-16 rounded-xl overflow-hidden shadow-xl group-hover:scale-105 transition-transform duration-500">
+                                    <div className="relative w-16 h-16 rounded overflow-hidden shadow-xl group-hover:scale-105 transition-transform duration-500">
                                       <Image
                                         src={artwork.image_url || "/placeholder.svg"}
                                         alt={artwork.title}
@@ -588,7 +588,7 @@ export default function AdminPanel() {
                                     <Search className="w-10 h-10 text-muted-foreground" />
                                   </div>
                                   <p className="text-xl text-muted-foreground">No matches found in inventory.</p>
-                                  <Button variant="outline" onClick={() => {setSearchTerm(""); setFilterCategory("all")}}>Clear All Filters</Button>
+                                  <Button variant="outline" onClick={() => { setSearchTerm(""); setFilterCategory("all") }}>Clear All Filters</Button>
                                 </div>
                               </TableCell>
                             </TableRow>
@@ -607,8 +607,8 @@ export default function AdminPanel() {
                             showActions={false}
                           />
                           <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 scale-90 group-hover:scale-100">
-                            <Button 
-                              size="icon" 
+                            <Button
+                              size="icon"
                               className="glass bg-black/60 hover:bg-primary/40 border-0 shadow-2xl backdrop-blur-xl"
                               onClick={() => {
                                 setSelectedArtwork(artwork)
@@ -679,17 +679,17 @@ export default function AdminPanel() {
                       <TableBody>
                         <AnimatePresence mode="popLayout">
                           {filteredUsers.map((u) => (
-                            <motion.tr 
+                            <motion.tr
                               layout
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               exit={{ opacity: 0 }}
-                              key={u.id} 
+                              key={u.id}
                               className="border-white/5 hover:bg-white/5 transition-all duration-300 group"
                             >
                               <TableCell className="p-6">
                                 <div className="flex items-center gap-4">
-                                  <div className="w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center text-white font-bold text-xl overflow-hidden shadow-2xl shadow-primary/10 border-2 border-white/5">
+                                  <div className="w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-white font-bold text-xl overflow-hidden shadow-2xl shadow-primary/10 border-2 border-white/5">
                                     {u.avatar_url ? (
                                       <img src={u.avatar_url} alt={u.display_name} className="w-full h-full object-cover" />
                                     ) : (
@@ -706,8 +706,8 @@ export default function AdminPanel() {
                                 </div>
                               </TableCell>
                               <TableCell>
-                                <Select 
-                                  defaultValue={u.role} 
+                                <Select
+                                  defaultValue={u.role}
                                   onValueChange={(val: any) => handleUpdateUser(u.id, { role: val })}
                                 >
                                   <SelectTrigger className="glass border-0 h-9 px-3 text-xs font-bold uppercase tracking-widest w-32">
@@ -733,13 +733,12 @@ export default function AdminPanel() {
                                 </div>
                               </TableCell>
                               <TableCell>
-                                <Badge 
-                                  variant="outline" 
-                                  className={`text-[10px] font-bold uppercase tracking-widest py-1 px-3 ${
-                                    u.status === 'active' 
-                                      ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5' 
-                                      : 'border-red-500/30 text-red-400 bg-red-500/5'
-                                  }`}
+                                <Badge
+                                  variant="outline"
+                                  className={`text-[10px] font-bold uppercase tracking-widest py-1 px-3 ${u.status === 'active'
+                                    ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5'
+                                    : 'border-red-500/30 text-red-400 bg-red-500/5'
+                                    }`}
                                 >
                                   {u.status}
                                 </Badge>
@@ -953,7 +952,7 @@ export default function AdminPanel() {
         <DialogContent className="glass-strong border-0 max-w-2xl shadow-2xl p-0 overflow-hidden">
           <div className="relative h-32 bg-gradient-to-r from-primary/20 to-secondary/20 border-b border-white/5">
             <div className="absolute -bottom-12 left-8">
-              <div className="w-24 h-24 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center text-white font-bold text-4xl overflow-hidden shadow-2xl border-4 border-background">
+              <div className="w-24 h-24 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-white font-bold text-4xl overflow-hidden shadow-2xl border-4 border-background">
                 {selectedUser?.avatar_url ? (
                   <img src={selectedUser.avatar_url} alt={selectedUser.display_name} className="w-full h-full object-cover" />
                 ) : (
@@ -962,12 +961,11 @@ export default function AdminPanel() {
               </div>
             </div>
             <div className="absolute bottom-4 right-8">
-              <Badge 
-                className={`text-[10px] font-bold uppercase tracking-widest py-1 px-4 ${
-                  selectedUser?.status === 'active' 
-                    ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10' 
-                    : 'border-red-500/30 text-red-400 bg-red-500/10'
-                }`}
+              <Badge
+                className={`text-[10px] font-bold uppercase tracking-widest py-1 px-4 ${selectedUser?.status === 'active'
+                  ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10'
+                  : 'border-red-500/30 text-red-400 bg-red-500/10'
+                  }`}
               >
                 {selectedUser?.status}
               </Badge>
@@ -982,26 +980,25 @@ export default function AdminPanel() {
                   {selectedUser?.email}
                 </p>
               </div>
-              <Badge className={`text-xs font-bold uppercase py-1.5 px-4 tracking-widest ${
-                selectedUser?.role === 'admin' ? 'bg-primary shadow-lg shadow-primary/20' : 
+              <Badge className={`text-xs font-bold uppercase py-1.5 px-4 tracking-widest ${selectedUser?.role === 'admin' ? 'bg-primary shadow-lg shadow-primary/20' :
                 selectedUser?.role === 'staff' ? 'bg-secondary' : 'bg-white/10'
-              }`}>
+                }`}>
                 {selectedUser?.role}
               </Badge>
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-              <div className="glass p-4 rounded-2xl text-center space-y-1 group hover:bg-white/5 transition-colors">
+              <div className="glass p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
                 <Package className="w-5 h-5 text-primary mx-auto opacity-50" />
                 <p className="text-2xl font-bold text-white">{selectedUser?.artwork_count}</p>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Artworks</p>
               </div>
-              <div className="glass p-4 rounded-2xl text-center space-y-1 group hover:bg-white/5 transition-colors">
+              <div className="glass p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
                 <Eye className="w-5 h-5 text-emerald-400 mx-auto opacity-50" />
                 <p className="text-2xl font-bold text-white">{selectedUser?.total_views.toLocaleString()}</p>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Views</p>
               </div>
-              <div className="glass p-4 rounded-2xl text-center space-y-1 group hover:bg-white/5 transition-colors">
+              <div className="glass p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
                 <Calendar className="w-5 h-5 text-purple-400 mx-auto opacity-50" />
                 <p className="text-lg font-bold text-white">
                   {selectedUser?.createdAt ? new Date(selectedUser.createdAt).getFullYear() : '2024'}
@@ -1017,9 +1014,9 @@ export default function AdminPanel() {
               </div>
               <div className="flex flex-wrap gap-3">
                 {selectedUser?.status === 'active' ? (
-                  <Button 
-                    variant="outline" 
-                    className="border-red-500/20 text-red-400 hover:bg-red-500/10 h-12 px-6 rounded-xl"
+                  <Button
+                    variant="outline"
+                    className="border-red-500/20 text-red-400 hover:bg-red-500/10 h-12 px-6 rounded"
                     onClick={() => {
                       if (selectedUser) handleUpdateUser(selectedUser.id, { status: 'suspended' })
                       setIsUserViewModalOpen(false)
@@ -1029,9 +1026,9 @@ export default function AdminPanel() {
                     Suspend Account
                   </Button>
                 ) : (
-                  <Button 
-                    variant="outline" 
-                    className="border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 h-12 px-6 rounded-xl"
+                  <Button
+                    variant="outline"
+                    className="border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 h-12 px-6 rounded"
                     onClick={() => {
                       if (selectedUser) handleUpdateUser(selectedUser.id, { status: 'active' })
                       setIsUserViewModalOpen(false)
@@ -1042,9 +1039,9 @@ export default function AdminPanel() {
                   </Button>
                 )}
                 {selectedUser?.role !== 'admin' && (
-                  <Button 
-                    variant="outline" 
-                    className="border-primary/20 text-primary hover:bg-primary/10 h-12 px-6 rounded-xl"
+                  <Button
+                    variant="outline"
+                    className="border-primary/20 text-primary hover:bg-primary/10 h-12 px-6 rounded"
                     onClick={() => {
                       if (selectedUser) handleUpdateUser(selectedUser.id, { role: selectedUser.role === 'staff' ? 'user' : 'staff' })
                       setIsUserViewModalOpen(false)

@@ -96,7 +96,7 @@ export default function GalleryArtworkDetailPage() {
             <Skeleton className="h-4 w-32 bg-gray-700/50" />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               <div className="space-y-4">
-                <Skeleton className="aspect-square w-full bg-gray-700/50 rounded-lg" />
+                <Skeleton className="aspect-square w-full bg-gray-700/50 rounded" />
               </div>
               <div className="space-y-6">
                 <div className="space-y-4">
@@ -163,7 +163,7 @@ export default function GalleryArtworkDetailPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="space-y-4">
-              <div className="aspect-square relative overflow-hidden rounded-lg glass">
+              <div className="aspect-square relative overflow-hidden rounded glass">
                 <ArtworkImage
                   src={artwork.image_url}
                   alt={artwork.title}
@@ -222,7 +222,7 @@ export default function GalleryArtworkDetailPage() {
               <div className="space-y-4">
                 <h3 className="font-semibold text-white text-lg">Artwork Details</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                  <div className="glass rounded-lg p-4">
+                  <div className="glass rounded p-4">
                     <div className="flex items-center gap-2 text-gray-400 mb-1">
                       <Calendar className="w-4 h-4" />
                       <span>Created</span>
@@ -236,7 +236,7 @@ export default function GalleryArtworkDetailPage() {
                     </div>
                   </div>
 
-                  <div className="glass rounded-lg p-4">
+                  <div className="glass rounded p-4">
                     <div className="flex items-center gap-2 text-gray-400 mb-1">
                       <Eye className="w-4 h-4" />
                       <span>Views</span>
@@ -246,7 +246,7 @@ export default function GalleryArtworkDetailPage() {
                     </div>
                   </div>
 
-                  <div className="glass rounded-lg p-4">
+                  <div className="glass rounded p-4">
                     <div className="flex items-center gap-2 text-gray-400 mb-1">
                       <User className="w-4 h-4" />
                       <span>Artist</span>
@@ -259,7 +259,7 @@ export default function GalleryArtworkDetailPage() {
                     </Link>
                   </div>
 
-                  <div className="glass rounded-lg p-4">
+                  <div className="glass rounded p-4">
                     <div className="flex items-center gap-2 text-gray-400 mb-1">
                       <Badge className="w-4 h-4 bg-transparent border-0 p-0" />
                       <span>Category</span>

@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import Link from "next/link"
 import { Eye, Heart, Star, Mail, ArrowUpRight, User2 } from "lucide-react"
-import { ArtworkRecord, User} from "@/types"
+import { ArtworkRecord, User } from "@/types"
 import { ArtworkImage } from "./artwork-image"
 import { Badge } from "./badge"
 import { Button } from "./button"
@@ -31,9 +31,9 @@ interface ArtCardProps {
 export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [showContactDialog, setShowContactDialog] = useState(false)
-  const [artistInfo, setArtistInfo] = useState<User|null>(null)
+  const [artistInfo, setArtistInfo] = useState<User | null>(null)
   const [loading, setLoading] = useState(false)
-  
+
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
@@ -88,7 +88,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
       className={cn("group perspective-1000 ", className)}
     >
       <motion.div
-        className="relative bg-card/50 backdrop-blur-xl rounded-lg overflow-hidden border border-border/50 shadow-2xl transition-shadow duration-500 hover:shadow-primary/20 h-96 flex flex-col"
+        className="relative bg-card/50 backdrop-blur-xl rounded overflow-hidden border border-border/50 shadow-2xl transition-shadow duration-500 hover:shadow-primary/20 h-96 flex flex-col"
       >
         {/* Image Container */}
         <div className="relative overflow-hidden aspect-[3/4]">
@@ -104,7 +104,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
               alt={artwork.title}
               title={artwork.title}
               category={artwork.category}
-             
+
               className="w-auto h-auto object-cover"
             />
           </motion.div>
@@ -237,19 +237,19 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
           ) : artistInfo ? (
             <div className="space-y-6">
               {/* Artist Info */}
-              <div className="flex items-center gap-4 p-4 glass rounded-xl">
+              <div className="flex items-center gap-4 p-4 glass rounded">
                 <Avatar className="h-16 w-16 border-2 border-primary/20">
                   <AvatarImage src={artistInfo.avatar_url} alt={artistInfo.display_name} />
                   <AvatarFallback className="bg-primary/10 text-primary text-lg">
                     {artistInfo.display_name?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-               
+
               </div>
 
               {/* Bio */}
               {artistInfo.bio && (
-                <div className="p-4 glass rounded-xl">
+                <div className="p-4 glass rounded">
                   <h4 className="font-semibold mb-2 flex items-center gap-2">
                     <User2 className="w-4 h-4" />
                     About the Artist
@@ -259,7 +259,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
               )}
 
               {/* Contact Info */}
-              <div className="p-4 glass rounded-xl space-y-3">
+              <div className="p-4 glass rounded space-y-3">
                 <h4 className="font-semibold mb-2 flex items-center gap-2">
                   <Mail className="w-4 h-4" />
                   Contact Information
@@ -267,7 +267,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-muted-foreground">Telephone:</span>
-                    <a 
+                    <a
                       href={`tel:${artistInfo.phone_number}`}
                       className="text-primary hover:underline"
                     >
@@ -276,7 +276,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-muted-foreground">Email:</span>
-                    <a 
+                    <a
                       href={`mailto:${artistInfo.email}?subject=Inquiry about "${artwork.title}"`}
                       className="text-primary hover:underline"
                     >
@@ -288,7 +288,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
 
               {/* Action Buttons */}
               <div className="flex gap-3">
-                <Button 
+                <Button
                   asChild
                   className="btn-primary flex-1"
                 >
@@ -297,7 +297,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
                     Send Email
                   </a>
                 </Button>
-                <Button 
+                <Button
                   asChild
                   variant="outline"
                   className="flex-1"

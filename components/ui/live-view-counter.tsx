@@ -16,7 +16,7 @@ export function LiveViewCounter({ viewCount, className = "" }: LiveViewCounterPr
   useEffect(() => {
     if (viewCount !== displayCount) {
       setIsAnimating(true)
-      
+
       // Animate the counter change
       const timer = setTimeout(() => {
         setDisplayCount(viewCount)
@@ -28,12 +28,12 @@ export function LiveViewCounter({ viewCount, className = "" }: LiveViewCounterPr
   }, [viewCount, displayCount])
 
   return (
-    <div className={`glass rounded-lg p-4 ${className}`}>
+    <div className={`glass rounded p-4 ${className}`}>
       <div className="flex items-center gap-2 text-gray-400 mb-1">
         <Eye className="w-4 h-4" />
         <span>Views</span>
       </div>
-      <motion.div 
+      <motion.div
         className="font-medium text-white"
         animate={isAnimating ? { scale: [1, 1.1, 1], color: ["#ffffff", "#60a5fa", "#ffffff"] } : {}}
         transition={{ duration: 0.3 }}

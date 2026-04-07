@@ -10,10 +10,10 @@ interface ArtworkGeneratorProps {
   className?: string
 }
 
-export function ArtworkGenerator({ 
-  seed, 
-  width = 400, 
-  height = 400, 
+export function ArtworkGenerator({
+  seed,
+  width = 400,
+  height = 400,
   style = "abstract",
   className = ""
 }: ArtworkGeneratorProps) {
@@ -27,7 +27,7 @@ export function ArtworkGenerator({
       hash = ((hash << 5) - hash) + char
       hash = hash & hash // Convert to 32bit integer
     }
-    
+
     return () => {
       hash = (hash * 9301 + 49297) % 233280
       return hash / 233280
@@ -47,7 +47,7 @@ export function ArtworkGenerator({
     ]
 
     const colorPair = colors[Math.floor(random() * colors.length)]
-    
+
     // Create gradient background
     const gradient = ctx.createLinearGradient(0, 0, canvasWidth, canvasHeight)
     gradient.addColorStop(0, colorPair[0])
@@ -59,11 +59,11 @@ export function ArtworkGenerator({
     for (let i = 0; i < 8; i++) {
       ctx.save()
       ctx.globalAlpha = 0.1 + random() * 0.3
-      
+
       const x = Math.max(0, Math.min(canvasWidth, random() * canvasWidth))
       const y = Math.max(0, Math.min(canvasHeight, random() * canvasHeight))
       const size = Math.max(10, 50 + random() * 150)
-      
+
       // Avoid brown hues (30-60 degrees)
       const hue = random() < 0.25 ? random() * 30 : (random() < 0.5 ? 60 + random() * 180 : 240 + random() * 120)
       ctx.fillStyle = `hsl(${Math.floor(hue)}, 70%, 60%)`
@@ -80,22 +80,22 @@ export function ArtworkGenerator({
       // Avoid brown hues for geometric elements too
       const geoHue = random() < 0.25 ? random() * 30 : (random() < 0.5 ? 60 + random() * 180 : 240 + random() * 120)
       ctx.fillStyle = `hsl(${Math.floor(geoHue)}, 80%, 50%)`
-      
+
       const x = Math.max(0, Math.min(canvasWidth, random() * canvasWidth))
       const y = Math.max(0, Math.min(canvasHeight, random() * canvasHeight))
       const w = Math.max(10, 20 + random() * 100)
       const h = Math.max(10, 20 + random() * 100)
-      
+
       ctx.translate(x, y)
       ctx.rotate(random() * Math.PI * 2)
-      ctx.fillRect(-w/2, -h/2, w, h)
+      ctx.fillRect(-w / 2, -h / 2, w, h)
       ctx.restore()
     }
   }
 
   const generateDigitalArt = (ctx: CanvasRenderingContext2D, random: () => number, canvasWidth: number, canvasHeight: number) => {
     // Dark tech background
-    const gradient = ctx.createRadialGradient(canvasWidth/2, canvasHeight/2, 0, canvasWidth/2, canvasHeight/2, canvasWidth/2)
+    const gradient = ctx.createRadialGradient(canvasWidth / 2, canvasHeight / 2, 0, canvasWidth / 2, canvasHeight / 2, canvasWidth / 2)
     gradient.addColorStop(0, '#1a1a2e')
     gradient.addColorStop(1, '#0f0f23')
     ctx.fillStyle = gradient
@@ -105,14 +105,14 @@ export function ArtworkGenerator({
     ctx.strokeStyle = '#00ffff'
     ctx.lineWidth = 1
     ctx.globalAlpha = 0.3
-    
+
     for (let i = 0; i < canvasWidth; i += 40) {
       ctx.beginPath()
       ctx.moveTo(i, 0)
       ctx.lineTo(i, canvasHeight)
       ctx.stroke()
     }
-    
+
     for (let i = 0; i < canvasHeight; i += 40) {
       ctx.beginPath()
       ctx.moveTo(0, i)
@@ -125,11 +125,11 @@ export function ArtworkGenerator({
       const x = Math.max(0, Math.min(canvasWidth, random() * canvasWidth))
       const y = Math.max(0, Math.min(canvasHeight, random() * canvasHeight))
       const radius = Math.max(20, 20 + random() * 60) // Ensure radius is always positive
-      
+
       const orbGradient = ctx.createRadialGradient(x, y, 0, x, y, radius)
       orbGradient.addColorStop(0, `hsla(${Math.floor(180 + random() * 60)}, 100%, 50%, 0.8)`)
       orbGradient.addColorStop(1, 'transparent')
-      
+
       ctx.fillStyle = orbGradient
       ctx.beginPath()
       ctx.arc(x, y, radius, 0, Math.PI * 2)
@@ -141,7 +141,7 @@ export function ArtworkGenerator({
     // Cool painting background - no browns
     const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#000000', '#ff9ff3', '#1a1a1a', '#2a2a2a']
     const bgColor = colors[Math.floor(random() * colors.length)]
-    
+
     ctx.fillStyle = bgColor
     ctx.fillRect(0, 0, canvasWidth, canvasHeight)
 
@@ -155,12 +155,12 @@ export function ArtworkGenerator({
       ctx.strokeStyle = `hsl(${hue}, 70%, ${lightness}%)`
       ctx.lineWidth = 8 + random() * 20
       ctx.lineCap = 'round'
-      
+
       const startX = random() * canvasWidth
       const startY = random() * canvasHeight
       const endX = startX + (random() - 0.5) * 200
       const endY = startY + (random() - 0.5) * 200
-      
+
       ctx.beginPath()
       ctx.moveTo(startX, startY)
       ctx.quadraticCurveTo(
@@ -179,7 +179,7 @@ export function ArtworkGenerator({
     const skyGradient = ctx.createLinearGradient(0, 0, 0, canvasHeight * 0.6)
     skyGradient.addColorStop(0, '#87CEEB')
     skyGradient.addColorStop(1, '#4169E1')
-    
+
     ctx.fillStyle = skyGradient
     ctx.fillRect(0, 0, canvasWidth, canvasHeight * 0.6)
 
@@ -197,7 +197,7 @@ export function ArtworkGenerator({
       const y = canvasHeight * 0.4 + random() * canvasHeight * 0.3
       const w = 30 + random() * 80
       const h = 40 + random() * 100
-      
+
       ctx.fillRect(x, y, w, h)
     }
   }
@@ -212,7 +212,7 @@ export function ArtworkGenerator({
     // Ensure valid dimensions
     const canvasWidth = Math.max(100, width)
     const canvasHeight = Math.max(100, height)
-    
+
     canvas.width = canvasWidth
     canvas.height = canvasHeight
 
@@ -261,9 +261,9 @@ export function ArtworkGenerator({
   }, [seed, width, height, style])
 
   return (
-    <canvas 
+    <canvas
       ref={canvasRef}
-      className={`rounded-lg ${className}`}
+      className={`rounded ${className}`}
       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
     />
   )

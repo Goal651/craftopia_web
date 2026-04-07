@@ -55,7 +55,7 @@ export default function RegisterPage() {
     setIsLoading(true)
 
     try {
-      const response = await signUp(email, password, displayName.trim(),phoneNumber)
+      const response = await signUp(email, password, displayName.trim(), phoneNumber)
       if (!response.error && response.data.user) {
         // Registration successful, redirect to login or show success message
         router.push("/login")
@@ -95,7 +95,7 @@ export default function RegisterPage() {
               className="flex justify-center"
             >
               <div className="relative">
-                <div className="h-16 w-16 gradient-blue rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="h-16 w-16 gradient-blue rounded flex items-center justify-center shadow-lg">
                   <Palette className="w-8 h-8 text-white" />
                 </div>
                 <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
@@ -225,7 +225,7 @@ export default function RegisterPage() {
 
               <Button
                 type="submit"
-                className="w-full h-12 btn-primary font-semibold rounded-xl shadow-lg hover:shadow-xl"
+                className="w-full h-12 btn-primary font-semibold rounded shadow-lg hover:shadow-xl"
                 disabled={isLoading}
               >
                 {isLoading ? (

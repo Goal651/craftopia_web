@@ -257,7 +257,7 @@ export function LiveVisualSearch({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 right-0 mt-2 glass-strong border-border/50 bg-background/95 backdrop-blur-xl rounded-2xl shadow-2xl z-50 max-h-96 overflow-hidden"
+            className="absolute top-full left-0 right-0 mt-2 glass-strong border-border/50 bg-background/95 backdrop-blur-xl rounded shadow-2xl z-50 max-h-96 overflow-hidden"
           >
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
@@ -282,9 +282,9 @@ export function LiveVisualSearch({
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
                     className={cn(
-                      "p-3 rounded-xl cursor-pointer transition-all duration-200 group",
-                      selectedIndex === index 
-                        ? "bg-primary/10 border border-primary/30" 
+                      "p-3 rounded cursor-pointer transition-all duration-200 group",
+                      selectedIndex === index
+                        ? "bg-primary/10 border border-primary/30"
                         : "hover:bg-white/5 border border-transparent"
                     )}
                     onClick={() => {
@@ -293,7 +293,7 @@ export function LiveVisualSearch({
                   >
                     <div className="flex gap-3">
                       {/* Artwork Thumbnail */}
-                      <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                      <div className="relative w-16 h-16 rounded overflow-hidden flex-shrink-0">
                         <img
                           src={result.artwork.image_url}
                           alt={result.artwork.title}

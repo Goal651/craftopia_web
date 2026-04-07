@@ -96,7 +96,7 @@ export default function AboutPage() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             {/* Artist Image */}
             <motion.div variants={itemVariants} className="space-y-6">
-              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
+              <div className="relative aspect-[4/5] rounded overflow-hidden shadow-2xl">
                 <Image
                   src={aboutContent.profileImage || "/placeholder.svg"}
                   alt="Elena Vasquez"
@@ -275,7 +275,7 @@ export default function AboutPage() {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.2 }}
                   whileHover={{ scale: 1.05 }}
-                  className="relative aspect-square rounded-2xl overflow-hidden shadow-lg cursor-pointer"
+                  className="relative aspect-square rounded overflow-hidden shadow-lg cursor-pointer"
                 >
                   <Image
                     src={image || "/placeholder.svg"}

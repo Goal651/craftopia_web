@@ -7,13 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useAuth } from "@/contexts/AuthContext"
 import { useArt } from "@/contexts/ArtContext"
-import { 
-  BarChart3, 
-  Eye, 
-  Heart, 
-  TrendingUp, 
-  Plus, 
-  Brush, 
+import {
+  BarChart3,
+  Eye,
+  Heart,
+  TrendingUp,
+  Plus,
+  Brush,
   Upload,
   Users,
   Calendar,
@@ -44,7 +44,7 @@ export default function ArtistDashboard() {
       const userArtworks = artworks.filter(artwork => artwork.artist_id === user.id)
       const totalViews = userArtworks.reduce((sum, artwork) => sum + artwork.view_count, 0)
       const totalLikes = Math.floor(totalViews * 0.1) // Simulated likes
-      
+
       setStats({
         totalArtworks: userArtworks.length,
         totalViews,
@@ -148,8 +148,8 @@ export default function ArtistDashboard() {
               <Card className="glass-card border-0 overflow-hidden group hover:bg-white/5 transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} p-0.5`}>
-                      <div className="w-full h-full bg-background rounded-xl flex items-center justify-center">
+                    <div className={`w-12 h-12 rounded bg-gradient-to-br ${stat.color} p-0.5`}>
+                      <div className="w-full h-full bg-background rounded flex items-center justify-center">
                         <stat.icon className="w-6 h-6 text-primary" />
                       </div>
                     </div>
@@ -192,7 +192,7 @@ export default function ArtistDashboard() {
                 {loading ? (
                   <div className="space-y-4">
                     {[...Array(3)].map((_, i) => (
-                      <div key={i} className="h-20 glass rounded-lg animate-pulse" />
+                      <div key={i} className="h-20 glass rounded animate-pulse" />
                     ))}
                   </div>
                 ) : userArtworks.length > 0 ? (
@@ -200,10 +200,10 @@ export default function ArtistDashboard() {
                     {userArtworks.map((artwork) => (
                       <div
                         key={artwork.id}
-                        className="flex items-center gap-4 p-4 rounded-lg glass border-0 hover:bg-white/5 transition-colors cursor-pointer"
+                        className="flex items-center gap-4 p-4 rounded glass border-0 hover:bg-white/5 transition-colors cursor-pointer"
                         onClick={() => window.location.href = `/artworks/${artwork.id}`}
                       >
-                        <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                        <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0">
                           <img
                             src={artwork.image_url}
                             alt={artwork.title}
@@ -293,17 +293,17 @@ export default function ArtistDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
+                  <div className="p-3 rounded bg-primary/5 border border-primary/20">
                     <p className="text-sm text-foreground">
                       <strong>High-quality images</strong> get 3x more engagement
                     </p>
                   </div>
-                  <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
+                  <div className="p-3 rounded bg-primary/5 border border-primary/20">
                     <p className="text-sm text-foreground">
                       <strong>Detailed descriptions</strong> help collectors connect with your art
                     </p>
                   </div>
-                  <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
+                  <div className="p-3 rounded bg-primary/5 border border-primary/20">
                     <p className="text-sm text-foreground">
                       <strong>Regular uploads</strong> keep your audience engaged
                     </p>

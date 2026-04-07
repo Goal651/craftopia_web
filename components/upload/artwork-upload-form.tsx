@@ -52,20 +52,20 @@ const createArtworkUploadSchema = (isEditMode: boolean) => z.object({
   ] as const, {
     message: 'Please select a category'
   }),
-  imageFile: isEditMode 
+  imageFile: isEditMode
     ? z.instanceof(File, { message: 'Please select an image file' })
-        .refine((file) => file.size <= 8 * 1024 * 1024, 'File size must be under 8MB')
-        .refine(
-          (file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type),
-          'File must be JPG, PNG, or WebP format'
-        )
-        .optional()
+      .refine((file) => file.size <= 8 * 1024 * 1024, 'File size must be under 8MB')
+      .refine(
+        (file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type),
+        'File must be JPG, PNG, or WebP format'
+      )
+      .optional()
     : z.instanceof(File, { message: 'Please select an image file' })
-        .refine((file) => file.size <= 8 * 1024 * 1024, 'File size must be under 8MB')
-        .refine(
-          (file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type),
-          'File must be JPG, PNG, or WebP format'
-        )
+      .refine((file) => file.size <= 8 * 1024 * 1024, 'File size must be under 8MB')
+      .refine(
+        (file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type),
+        'File must be JPG, PNG, or WebP format'
+      )
 })
 
 type ArtworkUploadFormValues = z.infer<ReturnType<typeof createArtworkUploadSchema>>
@@ -174,7 +174,7 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
       // 2. Save metadata to MongoDB (create or update)
       const endpoint = isEditMode ? `/api/artworks/${editingArtwork.id}` : '/api/artworks'
       const method = isEditMode ? 'PATCH' : 'POST'
-      
+
       const response = await fetch(endpoint, {
         method,
         headers: { 'Content-Type': 'application/json' },
@@ -248,7 +248,7 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
                   </FormLabel>
                   <FormControl>
                     <div
-                      className={`border-2 border-dashed rounded-xl p-4 sm:p-8 text-center transition-colors ${dragActive ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'
+                      className={`border-2 border-dashed rounded p-4 sm:p-8 text-center transition-colors ${dragActive ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'
                         }`}
                       onDragEnter={handleDrag}
                       onDragLeave={handleDrag}
@@ -258,7 +258,7 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
                       {previewUrl ? (
                         <div className="space-y-4">
                           <div className="relative inline-block">
-                            <img src={previewUrl} alt="Preview" className="max-w-full max-h-32 sm:max-h-48 rounded-lg object-cover" />
+                            <img src={previewUrl} alt="Preview" className="max-w-full max-h-32 sm:max-h-48 rounded object-cover" />
                             <Button
                               type="button"
                               variant="destructive"

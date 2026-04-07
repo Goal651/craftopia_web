@@ -43,13 +43,13 @@ export function GalleryNav({ className }: GalleryNavProps) {
       {navItems.map((item) => (
         <Link key={item.href} href={item.href} className="flex-1">
           <div className={cn(
-            "glass-card rounded-lg p-4 md:p-6 transition-all duration-300 hover:scale-105 border-0 h-full",
+            "glass-card rounded p-4 md:p-6 transition-all duration-300 hover:scale-105 border-0 h-full",
             item.active && "ring-2 ring-primary/50 bg-primary/10",
             item.highlight && "bg-gradient-to-r from-primary/10 to-secondary/10"
           )}>
             <div className="flex items-center gap-3 mb-3">
               <div className={cn(
-                "w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center flex-shrink-0",
+                "w-10 h-10 md:w-12 md:h-12 rounded flex items-center justify-center flex-shrink-0",
                 item.active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
               )}>
                 <item.icon className="w-5 h-5 md:w-6 md:h-6" />
