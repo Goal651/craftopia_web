@@ -1,6 +1,5 @@
 export interface ArtworkRecord {
   id: string
-  title: string
   description: string | null
   image_url: string
   image_path: string
