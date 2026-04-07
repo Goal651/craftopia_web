@@ -58,11 +58,7 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  },
-  verification: {
-    google: "your-google-verification-code",
-  },
-  generator: 'v0.dev'
+  }
 }
 
 export default function RootLayout({

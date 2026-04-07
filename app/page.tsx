@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArtCard } from "@/components/ui/art-card"
 import { categoryImages } from "@/lib/generate-images"
-import { ArrowRight, Sparkles, TrendingUp, Users, Award, RefreshCw, Zap, Shield, Globe } from "lucide-react"
+import { ArrowRight, RefreshCw } from "lucide-react"
 import { useArt } from "@/contexts/ArtContext"
 
 
