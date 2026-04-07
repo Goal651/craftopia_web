@@ -141,7 +141,6 @@ export function Navbar() {
                 </>
               )}
             </div>
-
             {/* Desktop Actions */}
             <div className="hidden lg:flex items-center space-x-2">
               <Button
