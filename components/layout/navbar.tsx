@@ -127,16 +127,7 @@ export function Navbar() {
               {user && (
                 <>
                   <div className="w-px h-6 bg-border mx-2" />
-                  <div
-                    onClick={() => router.push('/dashboard')}
-                    className={`px-4 cursor-pointer py-2 text-sm font-medium rounded transition-all duration-200 flex items-center gap-2 ${pathname === '/dashboard'
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                      }`}
-                  >
-                    <BarChart3 className="w-4 h-4" />
-                    Dashboard
-                  </div>
+
                   <div
                     onClick={() => router.push('/my-artworks')}
                     className={`px-4 cursor-pointer py-2 text-sm font-medium rounded transition-all duration-200 flex items-center gap-2 ${pathname === '/my-artworks'
