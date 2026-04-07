@@ -207,7 +207,7 @@ export default function ArtworksPage() {
           </div>
 
           {/* Artworks Grid */}
-          <motion.div layout className={viewMode === "grid" ? "gallery-grid" : "space-y-6"}>
+          <motion.div layout className={viewMode === "grid" ? "grid grid-cols-3 space-x-10" : "space-y-6"}>
             <AnimatePresence>
               {loading ? (
                 <div className="col-span-full py-20 flex justify-center items-center">

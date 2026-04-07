@@ -2,8 +2,8 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import Link from "next/link"
-import { Eye, Heart, Star, Mail, ArrowUpRight, User } from "lucide-react"
-import { ArtworkRecord } from "@/types"
+import { Eye, Heart, Star, Mail, ArrowUpRight, User2 } from "lucide-react"
+import { ArtworkRecord, User} from "@/types"
 import { ArtworkImage } from "./artwork-image"
 import { Badge } from "./badge"
 import { Button } from "./button"
@@ -31,7 +31,7 @@ interface ArtCardProps {
 export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [showContactDialog, setShowContactDialog] = useState(false)
-  const [artistInfo, setArtistInfo] = useState<any>(null)
+  const [artistInfo, setArtistInfo] = useState<User|null>(null)
   const [loading, setLoading] = useState(false)
   
   const x = useMotionValue(0)
@@ -244,19 +244,14 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
                     {artistInfo.display_name?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg">{artistInfo.display_name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {artistInfo.artwork_count || 0} artworks • {artistInfo.total_views || 0} total views
-                  </p>
-                </div>
+               
               </div>
 
               {/* Bio */}
               {artistInfo.bio && (
                 <div className="p-4 glass rounded-xl">
                   <h4 className="font-semibold mb-2 flex items-center gap-2">
-                    <User className="w-4 h-4" />
+                    <User2 className="w-4 h-4" />
                     About the Artist
                   </h4>
                   <p className="text-sm text-muted-foreground">{artistInfo.bio}</p>
@@ -270,6 +265,15 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
                   Contact Information
                 </h4>
                 <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-muted-foreground">Telephone:</span>
+                    <a 
+                      href={`tel:${artistInfo.phone_number}`}
+                      className="text-primary hover:underline"
+                    >
+                      {artistInfo.phone_number}
+                    </a>
+                  </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-muted-foreground">Email:</span>
                     <a 
@@ -299,7 +303,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
                   className="flex-1"
                 >
                   <Link href={`/gallery/artist/${artwork.artist_id}`}>
-                    <User className="w-4 h-4 mr-2" />
+                    <User2 className="w-4 h-4 mr-2" />
                     View Profile
                   </Link>
                 </Button>
