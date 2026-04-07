@@ -50,5 +50,5 @@
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3"
   },
-  "packageManager": "pnpm@10.29.3+sha256.a74f4dbd3f5a7ca874d004135271f0b697b683bf1fd2fc2133961161cd25b29c"
+  "packageManager": "pnpm@10.33.0+sha256.bfcc1bcbad279b13a516c446a75b3c58b6904b45d57a1951411015e50b751a80"
 }
