@@ -3,41 +3,14 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { GalleryNav } from "@/components/ui/gallery-nav"
 import { ArtCard } from "@/components/ui/art-card"
-import { AnimatedCounter } from "@/components/ui/animated-counter"
-import { LiveVisualSearch } from "@/components/ui/live-visual-search"
 import { categoryImages } from "@/lib/generate-images"
 import { ArrowRight, Sparkles, TrendingUp, Users, Award, RefreshCw, Zap, Shield, Globe } from "lucide-react"
 import { useArt } from "@/contexts/ArtContext"
 
-const stats = [
-  { label: "Artworks", value: "500+", icon: Sparkles, color: "from-blue-500 to-cyan-500" },
-  { label: "Artists", value: "50+", icon: Users, color: "from-purple-500 to-pink-500" },
-  { label: "Collectors", value: "1000+", icon: Award, color: "from-green-500 to-emerald-500" },
-  { label: "Growth", value: "25%", icon: TrendingUp, color: "from-orange-500 to-red-500" },
-]
 
-const features = [
-  {
-    icon: Zap,
-    title: "Instant Discovery",
-    description: "Find your perfect artwork with our intelligent search and filtering system"
-  },
-  {
-    icon: Shield,
-    title: "Verified Artists",
-    description: "Every artist is carefully vetted to ensure authenticity and quality"
-  },
-  {
-    icon: Globe,
-    title: "Global Collection",
-    description: "Access artworks from talented creators around the world"
-  }
-]
 
 export default function HomePage() {
   const { featuredArtworks, loading } = useArt()
