@@ -70,7 +70,13 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center container-padding">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12 lg:py-20 overflow-hidden relative">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute -top-[10%] -right-[15%] w-[45%] h-[45%] rounded-full bg-primary/5 blur-[120px]" />
+        <div className="absolute -bottom-[10%] -left-[15%] w-[45%] h-[45%] rounded-full bg-secondary/5 blur-[120px]" />
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -80,109 +86,108 @@ export default function RegisterPage() {
         {/* Back to home */}
         <Link
           href="/"
-          className="inline-flex items-center text-sm text-gray-400 hover:text-blue-400 transition-colors group"
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors group mb-4"
         >
-          <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-          Back to Gallery
+          <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mr-3 group-hover:bg-primary/10 group-hover:text-primary transition-all">
+            <ArrowLeft className="h-4 w-4" />
+          </div>
+          <span className="font-medium tracking-wide uppercase">Back to Gallery</span>
         </Link>
 
-        <Card className="glass-strong border-0 shadow-2xl">
-          <CardHeader className="space-y-4 text-center">
+        <Card className="glass-strong border-border/50 shadow-2xl relative z-10 w-full">
+          <CardHeader className="space-y-4 text-center px-6 pt-10">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring" }}
               className="flex justify-center"
             >
-              <div className="relative">
-                <div className="h-16 w-16 gradient-blue rounded flex items-center justify-center shadow-lg">
-                  <Palette className="w-8 h-8 text-white" />
-                </div>
-                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                </div>
+              <div className="h-20 w-20 bg-primary/10 rounded-2xl flex items-center justify-center shadow-inner">
+                <Palette className="w-10 h-10 text-primary" />
               </div>
             </motion.div>
-            <CardTitle className="text-3xl font-light text-white">Create Account</CardTitle>
-            <CardDescription className="text-lg text-gray-400">Join the Art Gallery community</CardDescription>
+            <div className="space-y-2">
+              <CardTitle className="text-3xl font-bold tracking-tight text-foreground">Create <span className="text-gradient-primary">Account</span></CardTitle>
+              <CardDescription className="text-base text-muted-foreground">Join the elite CRAFTOPIA community</CardDescription>
+            </div>
           </CardHeader>
 
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <CardContent className="space-y-6 px-6 pb-10">
+            <form onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-x-6 gap-y-4">
               <div className="space-y-2">
-                <Label htmlFor="displayName" className="text-sm font-medium text-gray-300">
+                <Label htmlFor="displayName" className="text-sm font-medium text-foreground/80">
                   Display Name
                 </Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="displayName"
                     type="text"
-                    placeholder="Enter your display name"
+                    placeholder="Enter your name"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="pl-10 h-12 glass border-0 focus:ring-2 focus:ring-blue-500/50 text-white placeholder:text-gray-400"
+                    className="pl-10 h-11 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-gray-300">
+                <Label htmlFor="phone_number" className="text-sm font-medium text-foreground/80">
                   Phone Number
                 </Label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="phone_number"
                     type="tel"
-                    placeholder="Enter your phone number"
+                    placeholder="e.g. +250..."
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="pl-10 h-12 glass border-0 focus:ring-2 focus:ring-blue-500/50 text-white placeholder:text-gray-400"
+                    className="pl-10 h-11 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
                     required
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-gray-300">
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="email" className="text-sm font-medium text-foreground/80">
                   Email Address
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-12 glass border-0 focus:ring-2 focus:ring-blue-500/50 text-white placeholder:text-gray-400"
+                    className="pl-10 h-11 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-gray-300">
+                <Label htmlFor="password" className="text-sm font-medium text-foreground/80">
                   Password
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
+                    placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10 h-12 glass border-0 focus:ring-2 focus:ring-blue-500/50 text-white placeholder:text-gray-400"
+                    className="pl-10 pr-12 h-11 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-white/10 text-gray-400 hover:text-white"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -191,25 +196,25 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-300">
+                <Label htmlFor="confirmPassword" className="text-sm font-medium text-foreground/80">
                   Confirm Password
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm your password"
+                    placeholder="••••••••"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pl-10 pr-10 h-12 glass border-0 focus:ring-2 focus:ring-blue-500/50 text-white placeholder:text-gray-400"
+                    className="pl-10 pr-12 h-11 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-white/10 text-gray-400 hover:text-white"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -218,35 +223,39 @@ export default function RegisterPage() {
               </div>
 
               {error && (
-                <Alert className="glass border-red-500/50 text-red-400">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
+                <div className="sm:col-span-2">
+                  <Alert className="bg-destructive/10 border-destructive/50 text-destructive py-2">
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                </div>
               )}
 
-              <Button
-                type="submit"
-                className="w-full h-12 btn-primary font-semibold rounded shadow-lg hover:shadow-xl"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Creating account...
-                  </div>
-                ) : (
-                  "Create Account"
-                )}
-              </Button>
-            </form>
+              <div className="sm:col-span-2 mt-4 space-y-6">
+                <Button
+                  type="submit"
+                  className="w-full h-14 btn-primary glow-primary text-base font-bold uppercase tracking-widest shadow-xl transition-all"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <div className="flex items-center">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                      Creating account...
+                    </div>
+                  ) : (
+                    "Create Account"
+                  )}
+                </Button>
 
-            <div className="text-center">
-              <p className="text-sm text-gray-400">
-                Already have an account?{" "}
-                <Link href="/login" className="text-blue-400 hover:underline font-medium">
-                  Sign in here
-                </Link>
-              </p>
-            </div>
+                <div className="text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Already have an account?{" "}
+                    <Link href="/login" className="text-primary hover:underline font-bold transition-all">
+                      Sign in here
+                    </Link>
+                  </p>
+                </div>
+              </div>
+            </form>
           </CardContent>
         </Card>
       </motion.div>

@@ -30,13 +30,13 @@ export default function HomePage() {
     try {
       // Define all categories
       const allCategories = [
-        { name: 'painting', displayName: 'Paintings', color: 'from-blue-500 to-blue-600', imageKey: 'Paintings' },
-        { name: 'digital-art', displayName: 'Digital Art', color: 'from-green-500 to-green-600', imageKey: 'Digital Art' },
-        { name: 'photography', displayName: 'Photography', color: 'from-green-400 to-blue-500', imageKey: 'Photography' },
-        { name: 'sculpture', displayName: 'Sculptures', color: 'from-blue-400 to-green-500', imageKey: 'Sculptures' },
-        { name: 'mixed-media', displayName: 'Mixed Media', color: 'from-purple-500 to-pink-500', imageKey: 'Mixed Media' },
-        { name: 'drawing', displayName: 'Drawing', color: 'from-orange-500 to-red-500', imageKey: 'Abstract Art' },
-        { name: 'other', displayName: 'Other', color: 'from-indigo-500 to-purple-600', imageKey: 'Abstract Art' }
+        { name: 'painting', displayName: 'Paintings', color: 'from-primary/40 to-primary/60', imageKey: 'Paintings' },
+        { name: 'digital-art', displayName: 'Digital Art', color: 'from-secondary/40 to-secondary/60', imageKey: 'Digital Art' },
+        { name: 'photography', displayName: 'Photography', color: 'from-accent/40 to-accent/60', imageKey: 'Photography' },
+        { name: 'sculpture', displayName: 'Sculptures', color: 'from-primary/30 to-secondary/50', imageKey: 'Sculptures' },
+        { name: 'mixed-media', displayName: 'Mixed Media', color: 'from-secondary/30 to-accent/50', imageKey: 'Mixed Media' },
+        { name: 'drawing', displayName: 'Drawing', color: 'from-accent/30 to-primary/50', imageKey: 'Abstract Art' },
+        { name: 'other', displayName: 'Other', color: 'from-primary/20 to-accent/40', imageKey: 'Abstract Art' }
       ]
 
       const res = await fetch('/api/categories')
@@ -61,13 +61,13 @@ export default function HomePage() {
       console.error("Failed to fetch categories", err)
       // Set default categories with 0 count on error
       const defaultCategories = [
-        { name: 'Paintings', count: 0, image: categoryImages['Paintings'], href: '/artworks?category=painting', color: 'from-blue-500 to-blue-600' },
-        { name: 'Digital Art', count: 0, image: categoryImages['Digital Art'], href: '/artworks?category=digital-art', color: 'from-green-500 to-green-600' },
-        { name: 'Photography', count: 0, image: categoryImages['Photography'], href: '/artworks?category=photography', color: 'from-green-400 to-blue-500' },
-        { name: 'Sculptures', count: 0, image: categoryImages['Sculptures'], href: '/artworks?category=sculpture', color: 'from-blue-400 to-green-500' },
-        { name: 'Mixed Media', count: 0, image: categoryImages['Mixed Media'], href: '/artworks?category=mixed-media', color: 'from-purple-500 to-pink-500' },
-        { name: 'Drawing', count: 0, image: categoryImages['Abstract Art'], href: '/artworks?category=drawing', color: 'from-orange-500 to-red-500' },
-        { name: 'Other', count: 0, image: categoryImages['Abstract Art'], href: '/artworks?category=other', color: 'from-indigo-500 to-purple-600' }
+        { name: 'Paintings', count: 0, image: categoryImages['Paintings'], href: '/artworks?category=painting', color: 'from-primary/40 to-primary/60' },
+        { name: 'Digital Art', count: 0, image: categoryImages['Digital Art'], href: '/artworks?category=digital-art', color: 'from-secondary/40 to-secondary/60' },
+        { name: 'Photography', count: 0, image: categoryImages['Photography'], href: '/artworks?category=photography', color: 'from-accent/40 to-accent/60' },
+        { name: 'Sculptures', count: 0, image: categoryImages['Sculptures'], href: '/artworks?category=sculpture', color: 'from-primary/30 to-secondary/50' },
+        { name: 'Mixed Media', count: 0, image: categoryImages['Mixed Media'], href: '/artworks?category=mixed-media', color: 'from-secondary/30 to-accent/50' },
+        { name: 'Drawing', count: 0, image: categoryImages['Abstract Art'], href: '/artworks?category=drawing', color: 'from-accent/30 to-primary/50' },
+        { name: 'Other', count: 0, image: categoryImages['Abstract Art'], href: '/artworks?category=other', color: 'from-primary/20 to-accent/40' }
       ]
       setCategories(defaultCategories)
     }

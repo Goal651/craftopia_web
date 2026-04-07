@@ -70,7 +70,7 @@ export default function AboutPage() {
   }
 
   return (
-    <div className="min-h-screen pt-24">
+    <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
       <div className="container mx-auto px-4 py-12">
         <motion.div
           variants={containerVariants}
@@ -81,13 +81,12 @@ export default function AboutPage() {
           {/* Hero Section */}
           <motion.section variants={itemVariants} className="text-center space-y-6">
             <div className="space-y-4">
-              <Badge className="bg-primary/20 text-primary border-primary/30">About CRAFTOPIA</Badge>
-              <h1 className="text-4xl lg:text-6xl font-light text-foreground">
-                The Future of <span className="text-gradient-primary">Digital Art</span>
+              <Badge className="glass px-6 py-2 border-primary/20 text-primary">About CRAFTOPIA</Badge>
+              <h1 className="text-4xl lg:text-7xl font-bold tracking-tight text-foreground">
+                Revolutionizing <span className="text-gradient-primary">Digital Art</span>
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                A contemporary artist whose work explores the intersection of emotion and form, creating pieces that
-                resonate with audiences worldwide.
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+                CRAFTOPIA is a premier digital sanctuary dedicated to the fusion of artistic soul and technical precision.
               </p>
             </div>
           </motion.section>
@@ -143,14 +142,14 @@ export default function AboutPage() {
                 </div>
 
                 {/* Social Media */}
-                <div className="flex items-center gap-4 pt-4">
-                  <Button variant="outline" size="icon" className="hover:bg-primary/10 hover:text-primary border-primary/20 bg-transparent">
+                <div className="flex items-center gap-4 pt-6">
+                  <Button variant="secondary" size="icon" className="w-11 h-11 transition-all hover:scale-110">
                     <Instagram className="w-5 h-5" />
                   </Button>
-                  <Button variant="outline" size="icon" className="hover:bg-primary/10 hover:text-primary border-primary/20 bg-transparent">
+                  <Button variant="secondary" size="icon" className="w-11 h-11 transition-all hover:scale-110">
                     <Facebook className="w-5 h-5" />
                   </Button>
-                  <Button variant="outline" size="icon" className="hover:bg-primary/10 hover:text-primary border-primary/20 bg-transparent">
+                  <Button variant="secondary" size="icon" className="w-11 h-11 transition-all hover:scale-110">
                     <Twitter className="w-5 h-5" />
                   </Button>
                 </div>

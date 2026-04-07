@@ -199,14 +199,23 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
   }
 
   return (
-    <Card className="glass border-border/50 bg-card/50 backdrop-blur-xl">
-      <CardHeader className="text-center px-4 sm:px-6 py-6 sm:py-8">
-        <CardTitle className="flex items-center justify-center gap-2 text-foreground text-lg sm:text-xl">
-          {isEditMode ? <Edit className="w-5 h-5 sm:w-6 sm:h-6" /> : <Upload className="w-5 h-5 sm:w-6 sm:h-6" />}
-          {isEditMode ? 'Edit Your Artwork' : 'Upload Your Artwork'}
-        </CardTitle>
+    <Card className="glass-strong border-border/50">
+      <CardHeader className="px-6 sm:px-8 pt-8 pb-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+            {isEditMode ? <Edit className="w-6 h-6" /> : <Upload className="w-6 h-6" />}
+          </div>
+          <div>
+            <CardTitle className="text-2xl font-bold text-foreground">
+              {isEditMode ? 'Edit Artwork' : 'Upload Artwork'}
+            </CardTitle>
+            <p className="text-sm text-muted-foreground mt-1">
+              Fill in the details below to showcase your art.
+            </p>
+          </div>
+        </div> 
       </CardHeader>
-      <CardContent className="px-4 sm:px-6 py-4 sm:py-6">
+      <CardContent className="px-6 sm:px-8 py-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
             <FormField
@@ -219,36 +228,55 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
                   </FormLabel>
                   <FormControl>
                     <div
-                      className={`border-2 border-dashed rounded p-4 sm:p-8 text-center transition-colors ${dragActive ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'
-                        }`}
+                      className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center transition-all duration-300 relative overflow-hidden ${
+                        dragActive 
+                          ? 'border-primary bg-primary/5 scale-[0.99]' 
+                          : 'border-border hover:border-primary/40 hover:bg-muted/30'
+                      }`}
                       onDragEnter={handleDrag}
                       onDragLeave={handleDrag}
                       onDragOver={handleDrag}
                       onDrop={handleDrop}
                     >
                       {previewUrl ? (
-                        <div className="space-y-4">
-                          <div className="relative inline-block">
-                            <img src={previewUrl} alt="Preview" className="max-w-full max-h-32 sm:max-h-48 rounded object-cover" />
+                        <div className="space-y-6">
+                          <div className="relative inline-block group">
+                            <div className="relative rounded-lg overflow-hidden shadow-2xl border border-border/50">
+                              <img 
+                                src={previewUrl} 
+                                alt="Preview" 
+                                className="max-w-full max-h-64 sm:max-h-80 object-contain mx-auto" 
+                              />
+                            </div>
                             <Button
                               type="button"
                               variant="destructive"
                               size="icon"
-                              className="absolute -top-2 -right-2 h-6 w-6 sm:h-8 sm:w-8"
+                              className="absolute -top-3 -right-3 h-8 w-8 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
                               onClick={() => {
                                 form.setValue('imageFile', null as any)
                                 setPreviewUrl(null)
                               }}
                             >
-                              <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                              <X className="w-4 h-4" />
                             </Button>
                           </div>
-                          <p className="text-xs sm:text-sm text-muted-foreground">{form.getValues('imageFile')?.name}</p>
+                          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                            <CheckCircle className="w-4 h-4 text-green-500" />
+                            <span>{form.getValues('imageFile')?.name || 'Ready to upload'}</span>
+                          </div>
                         </div>
                       ) : (
                         <>
-                          <Upload className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-4 text-muted-foreground" />
-                          <p className="text-xs sm:text-sm text-muted-foreground mb-2">Drag and drop your image here, or click to browse</p>
+                          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6 text-muted-foreground group-hover:text-primary transition-colors">
+                            <Upload className="w-8 h-8" />
+                          </div>
+                          <p className="text-base font-medium text-foreground mb-1">
+                            Drag and drop your image
+                          </p>
+                          <p className="text-sm text-muted-foreground mb-6">
+                            or click to browse your files
+                          </p>
                           <input
                             type="file"
                             accept="image/jpeg,image/png,image/webp"
@@ -261,12 +289,11 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
                           />
                           <Button
                             type="button"
-                            variant="outline"
-                            className="glass border-0 bg-transparent text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-3"
+                            variant="secondary"
+                            className="px-6 py-2 h-10"
                             onClick={() => document.getElementById('file-upload')?.click()}
                           >
-                            <Upload className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-                            Choose File
+                            Browse Files
                           </Button>
                         </>
                       )}
@@ -284,9 +311,13 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm sm:text-base">Description (Optional)</FormLabel>
+                  <FormLabel className="text-sm font-medium">Description (Optional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Tell us about your artwork..." className="glass border-border/50 bg-background/50 min-h-[80px] sm:min-h-[100px] text-sm sm:text-base p-3 sm:p-4" {...field} />
+                    <Textarea 
+                      placeholder="Share the story behind this piece..." 
+                      className="bg-muted/30 border-border/50 focus:bg-background transition-all min-h-[120px] resize-none p-4" 
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -306,9 +337,9 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
             <Button
               type="submit"
               disabled={isUploading}
-              className="w-full btn-primary glow-primary py-3 sm:py-4 text-sm sm:text-base font-medium"
+              className="w-full btn-primary glow-primary py-7 text-lg font-bold uppercase tracking-widest transition-all"
             >
-              {isUploading ? (isEditMode ? "Updating..." : "Uploading...") : (isEditMode ? "Update Artwork" : "Upload Artwork")}
+              {isUploading ? (isEditMode ? "Updating..." : "Processing...") : (isEditMode ? "Save Changes" : "Publish Artwork")}
             </Button>
           </form>
         </Form>

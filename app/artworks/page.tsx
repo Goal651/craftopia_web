@@ -81,17 +81,17 @@ export default function ArtworksPage() {
   ]
 
   return (
-    <div className="min-h-screen pt-4">
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 md:space-y-8">
+    <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
+      <div className="container mx-auto px-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
           {/* Header */}
-          <div className="text-center space-y-3 md:space-y-4">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-light text-foreground">
-              Art <span className="text-gradient-primary font-medium">Collection</span>
+          <div className="text-center space-y-6">
+            <Badge className="glass px-6 py-2 border-primary/20 text-primary">Artistic Collection</Badge>
+            <h1 className="text-4xl lg:text-7xl font-bold tracking-tight text-foreground">
+              Art <span className="text-gradient-primary">Exploration</span>
             </h1>
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
-              Discover extraordinary contemporary artworks. Each piece tells a unique story through color, form, and
-              emotion.
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Discover extraordinary contemporary artworks. Each piece tells a unique story through color, form, and emotion.
             </p>
           </div>
 
@@ -110,7 +110,7 @@ export default function ArtworksPage() {
             </div>
 
             {/* Filter Controls */}
-            <div className="glass-card rounded p-4 md:p-6">
+            <div className="glass-strong rounded-2xl p-6 md:p-8 border border-border/50 shadow-2xl">
               <div className="flex flex-col gap-4">
                 {/* Filters Row */}
                 <div className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4">
@@ -201,7 +201,7 @@ export default function ArtworksPage() {
           </div>
 
           {/* Artworks Grid */}
-          <motion.div layout className={viewMode === "grid" ? "grid grid-cols-3 space-x-10" : "space-y-6"}>
+          <motion.div layout className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" : "space-y-8"}>
             <AnimatePresence>
               {loading ? (
                 <div className="col-span-full py-20 flex justify-center items-center">
@@ -234,16 +234,18 @@ export default function ArtworksPage() {
 
           {/* No Results */}
           {filteredAndSortedArtworks.length === 0 && !loading && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
-              <div className="space-y-4">
-                <div className="w-20 h-20 md:w-24 md:h-24 mx-auto glass rounded-full flex items-center justify-center">
-                  <Search className="w-6 h-6 md:w-8 md:h-8 text-gray-400" />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-24">
+              <div className="max-w-md mx-auto space-y-8">
+                <div className="w-24 h-24 mx-auto glass-strong rounded-full flex items-center justify-center text-muted-foreground">
+                  <Search className="w-10 h-10" />
                 </div>
-                <h3 className="text-lg md:text-xl font-semibold text-white">No artworks found</h3>
-                <p className="text-sm md:text-base text-gray-400 px-4">Try adjusting your search criteria or filters</p>
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-bold text-foreground">No masterpieces found</h3>
+                  <p className="text-muted-foreground leading-relaxed">Try adjusting your search criteria or filters to discover new artistic visions.</p>
+                </div>
                 <Button
                   variant="outline"
-                  className="glass border-0 bg-transparent text-gray-300 hover:text-white hover:bg-white/10"
+                  className="glass-strong border-primary/20 text-primary hover:bg-primary/10 h-12 px-8 rounded-full font-bold"
                   onClick={() => {
                     setSearchTerm("")
                     setCategoryFilter("all")
@@ -252,7 +254,7 @@ export default function ArtworksPage() {
                   }}
                 >
                   <RefreshCw className="w-4 h-4 mr-2" />
-                  Clear Filters
+                  Clear All Filters
                 </Button>
               </div>
             </motion.div>

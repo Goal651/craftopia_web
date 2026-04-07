@@ -62,8 +62,8 @@ function PublicGalleryPageContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-4">
-        <div className="container mx-auto px-4 py-12">
+      <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
+        <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.from({ length: ITEMS_PER_PAGE }).map((_, i) => (
               <Card key={i} className="overflow-hidden">
@@ -84,9 +84,9 @@ function PublicGalleryPageContent() {
 
   if (error) {
     return (
-      <div className="min-h-screen pt-4">
-        <div className="container mx-auto px-4 py-12">
-          <Alert variant="destructive">
+      <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
+        <div className="container mx-auto px-6">
+          <Alert variant="destructive" className="glass border-destructive/50 text-destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
               Failed to load artworks. Please try again later.
@@ -98,14 +98,15 @@ function PublicGalleryPageContent() {
   }
 
   return (
-    <div className="min-h-screen pt-4">
-      <div className="container mx-auto px-4 py-12">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl lg:text-5xl font-light text-foreground">
-              Public <span className="text-gradient-primary font-medium">Gallery</span>
+    <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
+      <div className="container mx-auto px-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
+          <div className="text-center space-y-6">
+            <Badge className="glass px-6 py-2 border-primary/20 text-primary">Artistic Exploration</Badge>
+            <h1 className="text-4xl lg:text-7xl font-bold tracking-tight text-foreground">
+              Public <span className="text-gradient-primary">Gallery</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Discover amazing artworks from our community of talented artists. Each piece tells a unique story.
             </p>
           </div>

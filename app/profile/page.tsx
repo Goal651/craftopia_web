@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useAuth } from "@/contexts/AuthContext"
 import { useUserProfile } from "@/hooks/use-user-profile"
-import { User, Mail, Edit, Save, Loader2, Palette, Eye } from "lucide-react"
+import { User, Mail, Edit, Save, Loader2, Palette, Eye, RefreshCw } from "lucide-react"
 import { useState, useEffect } from "react"
 import { formatDateSafe } from "@/lib/utils/date-utils"
 import { toast } from "sonner"
@@ -103,11 +103,15 @@ export default function ProfilePage() {
 
   if (profileLoading || authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-96">
-          <CardContent className="flex flex-col items-center justify-center p-8">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-4" />
-            <p className="text-muted-foreground">Loading profile...</p>
+      <div className="min-h-screen bg-background flex items-center justify-center container-padding">
+        <Card className="w-full max-w-md glass-strong border-border/50">
+          <CardContent className="flex flex-col items-center justify-center p-12">
+            <div className="relative mb-6">
+              <div className="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+              <Palette className="absolute inset-0 m-auto w-5 h-5 text-primary animate-pulse" />
+            </div>
+            <p className="text-lg font-medium text-foreground">Curating your profile...</p>
+            <p className="text-sm text-muted-foreground mt-2">Personalizing your creative space</p>
           </CardContent>
         </Card>
       </div>
@@ -116,11 +120,16 @@ export default function ProfilePage() {
 
   if (profileError) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-96">
-          <CardContent className="flex flex-col items-center justify-center p-8">
-            <p className="text-red-400 mb-4">Error loading profile: {profileError}</p>
-            <Button onClick={refreshProfile} variant="outline">
+      <div className="min-h-screen bg-background flex items-center justify-center container-padding">
+        <Card className="w-full max-w-md glass-strong border-destructive/20 border">
+          <CardContent className="flex flex-col items-center justify-center p-12 text-center">
+            <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mb-6">
+              <User className="w-8 h-8 text-destructive" />
+            </div>
+            <h3 className="text-xl font-bold text-foreground mb-2">Profile Error</h3>
+            <p className="text-muted-foreground mb-8 leading-relaxed">{profileError}</p>
+            <Button onClick={refreshProfile} className="btn-primary w-full h-11">
+              <RefreshCw className="w-4 h-4 mr-2" />
               Try Again
             </Button>
           </CardContent>
@@ -130,60 +139,72 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-12">
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
+    <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
+      <div className="container mx-auto px-6 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="space-y-8"
+          className="space-y-12"
         >
           {/* Profile Header */}
-          <Card className="glass-strong border-0">
-            <CardHeader className="text-center">
-              <div className="flex justify-center mb-4">
-                <div className="w-24 h-24 gradient-blue rounded-full flex items-center justify-center">
-                  <User className="w-12 h-12 text-white" />
+          <Card className="glass-strong border-border/50 overflow-hidden relative group">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-primary opacity-50" />
+            <CardHeader className="text-center pt-12 pb-10">
+              <div className="flex justify-center mb-6">
+                <div className="w-28 h-28 rounded-full p-1 bg-gradient-to-br from-primary via-secondary to-primary shadow-2xl relative">
+                  <div className="w-full h-full rounded-full bg-background flex items-center justify-center overflow-hidden">
+                    <User className="w-14 h-14 text-primary" />
+                  </div>
+                  <div className="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-green-500 border-4 border-background flex items-center justify-center shadow-lg" title="Active Account" />
                 </div>
               </div>
-              <CardTitle className="text-2xl text-white">
-                {displayName || user.email}
-              </CardTitle>
-              <p className="text-gray-400">{user.email}</p>
-              <p className="text-gray-400">{user.phone_number}</p>
-
+              <div className="space-y-2">
+                <CardTitle className="text-4xl font-bold tracking-tight text-foreground">
+                  {displayName || user.email.split('@')[0]}
+                </CardTitle>
+                <div className="flex items-center justify-center gap-3 text-muted-foreground">
+                  <span className="flex items-center gap-1.5 font-medium"><Mail className="w-4 h-4" /> {user.email}</span>
+                  {user.phone_number && (
+                    <>
+                      <span className="text-border">|</span>
+                      <span className="font-medium">{user.phone_number}</span>
+                    </>
+                  )}
+                </div>
+              </div>
             </CardHeader>
           </Card>
 
           {/* User Statistics */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="glass-strong border-0">
-              <CardContent className="p-6">
+            <Card className="glass-strong border-border/50 group hover:border-primary/30 transition-all duration-300">
+              <CardContent className="p-8">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-400 mb-1">Your Artworks</p>
-                    <p className="text-3xl font-bold text-white">
-                      {statsLoading ? <Loader2 className="w-6 h-6 animate-spin inline" /> : stats.artwork_count}
+                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Your Artworks</p>
+                    <p className="text-4xl font-black text-foreground tabular-nums">
+                      {statsLoading ? <Loader2 className="w-6 h-6 animate-spin inline text-primary" /> : stats.artwork_count}
                     </p>
                   </div>
-                  <div className="w-12 h-12 bg-blue-500/20 rounded flex items-center justify-center">
-                    <Palette className="w-6 h-6 text-blue-400" />
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+                    <Palette className="w-8 h-8 text-primary" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="glass-strong border-0">
-              <CardContent className="p-6">
+            <Card className="glass-strong border-border/50 group hover:border-secondary/30 transition-all duration-300">
+              <CardContent className="p-8">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-400 mb-1">Total Views</p>
-                    <p className="text-3xl font-bold text-white">
-                      {statsLoading ? <Loader2 className="w-6 h-6 animate-spin inline" /> : stats.total_views.toLocaleString()}
+                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Total Views</p>
+                    <p className="text-4xl font-black text-foreground tabular-nums">
+                      {statsLoading ? <Loader2 className="w-6 h-6 animate-spin inline text-secondary" /> : stats.total_views.toLocaleString()}
                     </p>
                   </div>
-                  <div className="w-12 h-12 bg-purple-500/20 rounded flex items-center justify-center">
-                    <Eye className="w-6 h-6 text-purple-400" />
+                  <div className="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+                    <Eye className="w-8 h-8 text-secondary" />
                   </div>
                 </div>
               </CardContent>
@@ -191,27 +212,27 @@ export default function ProfilePage() {
           </div>
 
           {/* Profile Information */}
-          <Card className="glass-strong border-0">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-xl text-white">Profile Information</CardTitle>
+          <Card className="glass-strong border-border/50 overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between px-8 pt-8">
+              <CardTitle className="text-2xl font-bold tracking-tight text-foreground">Profile Information</CardTitle>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => setIsEditing(!isEditing)}
                 disabled={isSaving}
-                className="text-blue-400 hover:text-blue-300"
+                className="glass-strong border-primary/20 text-primary hover:bg-primary/10 transition-all font-bold h-10 px-6 rounded-full group"
               >
                 {isSaving ? (
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 ) : isEditing ? (
                   <Save className="w-4 h-4 mr-2" />
                 ) : (
-                  <Edit className="w-4 h-4 mr-2" />
+                  <Edit className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
                 )}
-                {isSaving ? "Saving..." : isEditing ? "Save" : "Edit"}
+                {isSaving ? "Saving..." : isEditing ? "Save Profile" : "Edit Details"}
               </Button>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-8 p-8">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-gray-300">
                   Email Address

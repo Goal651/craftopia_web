@@ -291,10 +291,10 @@ export default function AdminPanel() {
           {/* Stats Overview with better visuals */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { label: 'Total Artworks', value: stats?.totalArtworks, icon: Package, color: 'text-blue-400', bg: 'bg-blue-400/10' },
-              { label: 'Registered Users', value: stats?.totalUsers, icon: Users, color: 'text-purple-400', bg: 'bg-purple-400/10' },
-              { label: 'Global Views', value: stats?.totalViews?.toLocaleString(), icon: Eye, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
-              { label: 'Active Artists', value: stats?.activeArtists, icon: TrendingUp, color: 'text-orange-400', bg: 'bg-orange-400/10' }
+              { label: 'Total Artworks', value: stats?.totalArtworks, icon: Package, color: 'text-primary', bg: 'bg-primary/10' },
+              { label: 'Registered Users', value: stats?.totalUsers, icon: Users, color: 'text-secondary', bg: 'bg-secondary/10' },
+              { label: 'Global Views', value: stats?.totalViews?.toLocaleString(), icon: Eye, color: 'text-accent', bg: 'bg-accent/10' },
+              { label: 'Active Artists', value: stats?.activeArtists, icon: TrendingUp, color: 'text-primary', bg: 'bg-primary/10' }
             ].map((stat, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
                 <Card className="glass-card border-0 overflow-hidden relative group hover:bg-white/5 transition-all duration-500">
@@ -510,9 +510,9 @@ export default function AdminPanel() {
                                   </div>
                                 </TableCell>
                                 <TableCell>
-                                  <div className="flex items-center gap-2 bg-blue-500/10 w-fit py-1.5 px-4 rounded-full border border-blue-500/20">
-                                    <Eye className="w-4 h-4 text-blue-400" />
-                                    <span className="font-bold text-blue-400">{artwork.view_count || 0}</span>
+                                  <div className="flex items-center gap-2 bg-primary/10 w-fit py-1.5 px-4 rounded-full border border-primary/20">
+                                    <Eye className="w-4 h-4 text-primary" />
+                                    <span className="font-bold text-primary">{artwork.view_count || 0}</span>
                                   </div>
                                 </TableCell>
                                 <TableCell className="text-right pr-10">
@@ -720,7 +720,7 @@ export default function AdminPanel() {
                                     {u.artwork_count} Artworks
                                   </div>
                                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    <Eye className="w-3 h-3 text-emerald-400" />
+                                    <Eye className="w-3 h-3 text-secondary" />
                                     {u.total_views.toLocaleString()} Global Views
                                   </div>
                                 </div>
@@ -729,8 +729,8 @@ export default function AdminPanel() {
                                 <Badge
                                   variant="outline"
                                   className={`text-[10px] font-bold uppercase tracking-widest py-1 px-3 ${u.status === 'active'
-                                    ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5'
-                                    : 'border-red-500/30 text-red-400 bg-red-500/5'
+                                    ? 'border-primary/30 text-primary bg-primary/5'
+                                    : 'border-destructive/30 text-destructive bg-destructive/5'
                                     }`}
                                 >
                                   {u.status}

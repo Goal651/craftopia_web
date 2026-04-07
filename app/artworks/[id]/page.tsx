@@ -326,23 +326,22 @@ export default function ArtworkDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-20 bg-black">
-        <div className="container-modern section-padding">
-          <div className="space-y-8">
-            <Skeleton className="h-4 w-32 bg-gray-700/50" />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              <div className="space-y-4">
-                <Skeleton className="aspect-[4/5] w-full bg-gray-700/50 rounded" />
-              </div>
+      <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32 flex items-center justify-center">
+        <div className="w-full max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="lg:col-span-2 space-y-8">
+              <Skeleton className="aspect-[4/5] w-full bg-muted/50 rounded-2xl" />
+            </div>
+            <div className="space-y-8">
               <div className="space-y-6">
                 <div className="space-y-4">
-                  <Skeleton className="h-8 w-3/4 bg-gray-700/50" />
-                  <Skeleton className="h-4 w-1/2 bg-gray-700/50" />
+                  <Skeleton className="h-10 w-3/4 bg-muted/50 rounded" />
+                  <Skeleton className="h-6 w-1/2 bg-muted/50 rounded" />
                 </div>
-                <Skeleton className="h-24 w-full bg-gray-700/50" />
+                <Skeleton className="h-32 w-full bg-muted/50 rounded-xl" />
                 <div className="grid grid-cols-2 gap-4">
-                  <Skeleton className="h-16 w-full bg-gray-700/50" />
-                  <Skeleton className="h-16 w-full bg-gray-700/50" />
+                  <Skeleton className="h-24 w-full bg-muted/50 rounded" />
+                  <Skeleton className="h-24 w-full bg-muted/50 rounded" />
                 </div>
               </div>
             </div>
@@ -354,32 +353,30 @@ export default function ArtworkDetailPage() {
 
   if (error || !artwork) {
     return (
-      <div className="min-h-screen pt-20 bg-black">
-        <div className="container mx-auto container-padding py-16">
-          <div className="text-center space-y-6">
-            <div className="w-24 h-24 mx-auto glass rounded-full flex items-center justify-center">
-              <AlertCircle className="w-8 h-8 text-red-400" />
-            </div>
-            <div className="space-y-2">
-              <h1 className="text-2xl font-bold text-white">
-                {error === 'Artwork not found' ? 'Artwork Not Found' : 'Failed to Load Artwork'}
-              </h1>
-              <p className="text-gray-400 max-w-md mx-auto">
-                {error === 'Artwork not found'
-                  ? "The artwork you're looking for doesn't exist or may have been removed."
-                  : error
-                }
-              </p>
-            </div>
-            <div className="flex gap-4 justify-center">
-              <Button onClick={fetchArtwork} className="btn-primary" disabled={loading}>
-                <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                Try Again
-              </Button>
-              <Button asChild variant="outline" className="glass border-0 bg-transparent text-gray-300 hover:text-white hover:bg-white/10">
-                <Link href="/gallery">Browse Gallery</Link>
-              </Button>
-            </div>
+      <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32 flex items-center justify-center">
+        <div className="w-full max-w-xl mx-auto px-6 text-center">
+          <div className="w-24 h-24 mx-auto glass-strong rounded-full flex items-center justify-center mb-10 text-destructive">
+            <AlertCircle className="w-10 h-10" />
+          </div>
+          <div className="space-y-4 mb-12">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
+              {error === 'Artwork not found' ? 'Masterpiece Not Found' : 'Something went wrong'}
+            </h1>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              {error === 'Artwork not found'
+                ? "The artistic vision you're seeking remains elusive. It may have been moved or archived."
+                : error
+              }
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button onClick={fetchArtwork} className="btn-primary glow-primary px-8" disabled={loading}>
+              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              Try Again
+            </Button>
+            <Button asChild variant="outline" className="glass border-border hover:bg-muted px-8">
+              <Link href="/gallery">Discover More</Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -429,9 +426,9 @@ export default function ArtworkDetailPage() {
         )}
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-950">
-        <div className="container-modern section-padding-sm ">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+      <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
+        <div className="container-modern px-6 lg:px-10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
             {/* Main Artwork Section - 2 columns */}
             <div className="lg:col-span-2 space-y-8">
               {/* Artwork Image */}
@@ -441,7 +438,7 @@ export default function ArtworkDetailPage() {
                 transition={{ duration: 0.8 }}
                 className="relative group"
               >
-                <div className="relative  rounded overflow-hidden shadow-2xl shadow-black/50">
+                <div className="relative rounded-2xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] border border-border/50">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
                   <ArtworkImage
                     src={artwork.image_url}
@@ -560,16 +557,18 @@ export default function ArtworkDetailPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="space-y-2">
                    
-                    <div className="flex items-center gap-4 text-gray-300">
+                    <div className="flex items-center gap-4 text-muted-foreground">
                       <Link
                         href={`/gallery/artist/${artwork.artist_id}`}
-                        className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium"
+                        className="flex items-center gap-2 text-primary hover:text-primary/80 transition-all font-bold group"
                       >
-                        <User className="w-4 h-4" />
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all">
+                          <User className="w-4 h-4" />
+                        </div>
                         {artwork.artist_name}
                       </Link>
-                      <span className="text-gray-600">•</span>
-                      <span className="text-sm">{getRelativeTime(artwork.createdAt)}</span>
+                      <span className="text-border">|</span>
+                      <span className="text-sm font-medium">{getRelativeTime(artwork.createdAt)}</span>
                     </div>
                   </div>
                 </div>
@@ -577,7 +576,7 @@ export default function ArtworkDetailPage() {
                 {/* Description */}
                 {artwork.description && (
                   <div className="prose prose-invert max-w-none">
-                    <p className="text-xl text-gray-300 leading-relaxed">
+                    <p className="text-2xl text-foreground font-light leading-relaxed">
                       {artwork.description}
                     </p>
                   </div>
@@ -591,51 +590,51 @@ export default function ArtworkDetailPage() {
                 transition={{ delay: 0.3 }}
                 className="grid grid-cols-2 sm:grid-cols-4 gap-4"
               >
-                <Card className="glass-card border border-white/10">
+                <Card className="glass-strong border border-primary/10 bg-primary/5">
                   <CardContent className="p-6 text-center">
                     <div className="flex items-center justify-center mb-3">
-                      <Eye className="w-6 h-6 text-blue-400" />
+                      <Eye className="w-6 h-6 text-primary" />
                     </div>
-                    <div className="text-2xl font-bold text-white">
+                    <div className="text-3xl font-bold text-foreground">
                       {artwork.view_count.toLocaleString()}
                     </div>
-                    <div className="text-sm text-gray-400">Views</div>
+                    <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Views</div>
                   </CardContent>
                 </Card>
 
-                <Card className="glass-card border border-white/10">
+                <Card className="glass-strong border border-border/50">
                   <CardContent className="p-6 text-center">
                     <div className="flex items-center justify-center mb-3">
-                      <Heart className="w-6 h-6 text-red-400" />
+                      <Heart className="w-6 h-6 text-red-500" />
                     </div>
-                    <div className="text-2xl font-bold text-white">
+                    <div className="text-3xl font-bold text-foreground">
                       {Math.floor(artwork.view_count * 0.12)}
                     </div>
-                    <div className="text-sm text-gray-400">Likes</div>
+                    <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Likes</div>
                   </CardContent>
                 </Card>
 
-                <Card className="glass-card border border-white/10">
+                <Card className="glass-strong border border-border/50">
                   <CardContent className="p-6 text-center">
                     <div className="flex items-center justify-center mb-3">
-                      <MessageCircle className="w-6 h-6 text-green-400" />
+                      <MessageCircle className="w-6 h-6 text-blue-500" />
                     </div>
-                    <div className="text-2xl font-bold text-white">
+                    <div className="text-3xl font-bold text-foreground">
                       {Math.floor(artwork.view_count * 0.05)}
                     </div>
-                    <div className="text-sm text-gray-400">Comments</div>
+                    <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Comments</div>
                   </CardContent>
                 </Card>
 
-                <Card className="glass-card border border-white/10">
+                <Card className="glass-strong border border-border/50">
                   <CardContent className="p-6 text-center">
                     <div className="flex items-center justify-center mb-3">
-                      <TrendingUp className="w-6 h-6 text-purple-400" />
+                      <TrendingUp className="w-6 h-6 text-green-500" />
                     </div>
-                    <div className="text-2xl font-bold text-white">
+                    <div className="text-3xl font-bold text-foreground">
                       +{Math.floor(artwork.view_count * 0.08)}
                     </div>
-                    <div className="text-sm text-gray-400">This Week</div>
+                    <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Growth</div>
                   </CardContent>
                 </Card>
               </motion.div>

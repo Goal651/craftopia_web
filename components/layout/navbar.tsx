@@ -190,36 +190,36 @@ export function Navbar() {
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 glass-strong border-border">
-                    <div className="px-2 py-1.5">
-                      <p className="text-sm font-medium text-white">{user.display_name || user.email}</p>
-                      <p className="text-xs text-gray-400">{user.email}</p>
+                  <DropdownMenuContent align="end" className="w-56 glass-strong border-border/50">
+                    <div className="px-3 py-2.5">
+                      <p className="text-sm font-bold text-foreground truncate">{user.display_name || user.email}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                     </div>
-                    <DropdownMenuSeparator className="bg-gray-800" />
-                    <DropdownMenuItem asChild className="text-gray-300 hover:text-white hover:bg-gray-800">
-                      <Link href="/profile" className="cursor-pointer">
+                    <DropdownMenuSeparator className="bg-border/50" />
+                    <DropdownMenuItem asChild className="hover:bg-primary/10 hover:text-primary cursor-pointer transition-colors">
+                      <Link href="/profile" className="flex items-center w-full">
                         <User className="w-4 h-4 mr-2" />
                         Dashboard
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild className="text-gray-300 hover:text-white hover:bg-gray-800">
-                      <Link href="/upload" className="cursor-pointer">
+                    <DropdownMenuItem asChild className="hover:bg-primary/10 hover:text-primary cursor-pointer transition-colors">
+                      <Link href="/upload" className="flex items-center w-full">
                         <Upload className="w-4 h-4 mr-2" />
                         Upload Art
                       </Link>
                     </DropdownMenuItem>
                     {isAdmin() && (
-                      <DropdownMenuItem asChild className="text-gray-300 hover:text-white hover:bg-gray-800">
-                        <Link href="/admin" className="cursor-pointer">
+                      <DropdownMenuItem asChild className="hover:bg-primary/10 hover:text-primary cursor-pointer transition-colors">
+                        <Link href="/admin" className="flex items-center w-full">
                           <Settings className="w-4 h-4 mr-2" />
                           Admin Panel
                         </Link>
                       </DropdownMenuItem>
                     )}
-                    <DropdownMenuSeparator className="bg-gray-800" />
+                    <DropdownMenuSeparator className="bg-border/50" />
                     <DropdownMenuItem
                       onClick={signOut}
-                      className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-gray-800"
+                      className="cursor-pointer text-destructive hover:bg-destructive/10 transition-colors"
                     >
                       <LogOut className="w-4 h-4 mr-2" />
                       Logout
@@ -244,7 +244,7 @@ export function Navbar() {
                   variant="ghost"
                   size="icon"
                   asChild
-                  className="text-gray-400 hover:text-white h-11 w-11"
+                  className="text-muted-foreground hover:text-foreground h-11 w-11"
                 >
                   <Link href="/upload">
                     <Upload className="w-5 h-5" />
@@ -256,7 +256,7 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="text-gray-400 hover:text-white h-11 w-11"
+                className="text-muted-foreground hover:text-foreground h-11 w-11"
                 aria-label="Toggle theme"
               >
                 {mounted && (theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />)}
@@ -266,7 +266,7 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsOpen(!isOpen)}
-                className="text-gray-400 hover:text-white h-11 w-11"
+                className="text-muted-foreground hover:text-foreground h-11 w-11"
                 aria-label="Toggle menu"
               >
                 {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

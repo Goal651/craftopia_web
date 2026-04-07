@@ -63,11 +63,11 @@ function ContactForm() {
   }
 
   return (
-    <Card className="border-0 shadow-2xl bg-white/80 dark:bg-card/80 backdrop-blur-sm">
+    <Card className="glass-strong border-border/50">
       <CardContent className="p-6 md:p-8">
         <div className="space-y-6">
           <div className="space-y-2">
-            <h2 className="text-xl md:text-2xl font-light text-charcoal dark:text-white">Send a Message</h2>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Send a Message</h2>
             <p className="text-sm md:text-base text-muted-foreground">
               Fill out the form below to connect.
             </p>
@@ -132,7 +132,7 @@ function ContactForm() {
             <Button
               type="submit"
               size="lg"
-              className="w-full gradient-gold text-white hover:opacity-90 transition-opacity h-12"
+              className="w-full btn-primary glow-primary py-7 text-lg font-bold uppercase tracking-widest"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -183,7 +183,7 @@ export default function ContactPage() {
   ]
 
   return (
-    <div className="min-h-screen pt-20 md:pt-24">
+    <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
       <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="space-y-12 md:space-y-16">
           {/* Header */}
@@ -191,11 +191,11 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center space-y-4 md:space-y-6"
+            className="text-center space-y-4 md:space-y-6 mb-16"
           >
-            <Badge className="bg-gold/20 text-gold border-gold/30">Get in Touch</Badge>
-            <h1 className="text-3xl md:text-4xl lg:text-6xl font-light text-charcoal dark:text-white px-4">
-              Contact <span className="text-gold font-medium">Us</span>
+            <Badge className="glass px-6 py-2 border-primary/20 text-primary">Get in Touch</Badge>
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-foreground px-4">
+              Contact <span className="text-gradient-primary">CRAFTOPIA</span>
             </h1>
             <p className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
               Have questions about a particular artwork, interested in commissioning a piece, or want to learn more? We'd love to hear from you.
@@ -219,13 +219,12 @@ export default function ContactPage() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="space-y-6 md:space-y-8"
+              className="space-y-10"
             >
-              <div className="space-y-3 md:space-y-4">
-                <h2 className="text-xl md:text-2xl font-light text-charcoal dark:text-white">Get in Touch</h2>
-                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                  Whether you're a collector, art enthusiast, or simply curious, we're here to help.
-                  Reach out through any of the channels below.
+              <div className="space-y-4">
+                <h2 className="text-3xl font-bold tracking-tight text-foreground">Reach Out Direct</h2>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  Have questions? Our team is here to help you navigate the world of premium art.
                 </p>
               </div>
 
@@ -237,15 +236,15 @@ export default function ContactPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 + index * 0.1 }}
                   >
-                    <Card className="border-0 shadow-lg bg-white/80 dark:bg-card/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+                    <Card className="glass border-border/50 hover:bg-muted/30 transition-all duration-300">
                       <CardContent className="p-4 md:p-6">
                         <div className="flex items-start gap-3 md:gap-4">
-                          <div className="w-10 h-10 md:w-12 md:h-12 gradient-gold rounded-full flex items-center justify-center flex-shrink-0">
-                            <info.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 text-primary">
+                            <info.icon className="w-6 h-6" />
                           </div>
                           <div className="space-y-1 flex-1 min-w-0">
-                            <h3 className="font-semibold text-sm md:text-base text-charcoal dark:text-white">{info.title}</h3>
-                            <p className="text-sm md:text-base text-gold font-medium break-words">{info.details}</p>
+                             <h3 className="font-bold text-lg text-foreground">{info.title}</h3>
+                             <p className="text-base text-primary font-medium tracking-tight break-words">{info.details}</p>
                             <p className="text-xs md:text-sm text-muted-foreground">{info.description}</p>
                           </div>
                         </div>

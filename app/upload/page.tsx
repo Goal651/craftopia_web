@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ArtworkUploadForm } from '@/components/upload/artwork-upload-form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, CheckCircle, Edit } from 'lucide-react'
 import type { ArtworkRecord } from '@/types'
@@ -47,12 +48,12 @@ function UploadPageContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black p-4 pt-24">
-        <div className="container mx-auto max-w-2xl">
-          <Card className="glass bg-white/5 backdrop-blur-xl border border-gray-800">
-            <CardContent className="p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-              <h1 className="text-xl font-bold text-white">Loading artwork...</h1>
+      <div className="min-h-screen bg-background p-6 pt-24 sm:pt-32 flex items-center justify-center">
+        <div className="w-full max-w-2xl">
+          <Card className="glass-strong border-border/50">
+            <CardContent className="p-12 text-center">
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-6"></div>
+              <h1 className="text-xl font-medium text-foreground">Loading artwork...</h1>
             </CardContent>
           </Card>
         </div>
@@ -62,30 +63,32 @@ function UploadPageContent() {
 
   if (uploadedArtwork) {
     return (
-      <div className="min-h-screen bg-black p-4 pt-24">
-        <div className="container mx-auto max-w-2xl">
-          <Card className="glass bg-white/5 backdrop-blur-xl border border-gray-800">
-            <CardContent className="p-8 text-center">
-              <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-400" />
-              <h1 className="text-2xl font-bold mb-4 text-white">
-                {editingArtwork ? 'Artwork Updated Successfully!' : 'Upload Successful!'}
+      <div className="min-h-screen bg-background p-6 pt-24 sm:pt-32 flex items-center justify-center">
+        <div className="w-full max-w-2xl">
+          <Card className="glass-strong border-border/50">
+            <CardContent className="p-12 text-center">
+              <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
+                <CheckCircle className="w-12 h-12 text-green-500" />
+              </div>
+              <h1 className="text-3xl font-bold mb-4 text-foreground">
+                {editingArtwork ? 'Artwork Updated' : 'Upload Successful!'}
               </h1>
-              <p className="text-gray-400 mb-6">
-                Your artwork "{uploadedArtwork.description}" has been {editingArtwork ? 'updated' : 'uploaded'} to the public gallery.
+              <p className="text-muted-foreground text-lg mb-10 max-w-md mx-auto">
+                Your masterpiece has been {editingArtwork ? 'successfully updated' : 'added to our collection'}.
               </p>
 
-              <div className="space-y-4">
+              <div className="space-y-4 max-w-xs mx-auto">
                 <Button
                   onClick={() => router.push(`/artworks/${uploadedArtwork.id}`)}
-                  className="w-full glass border-0 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white"
+                  className="w-full btn-primary glow-primary py-6 text-base"
                 >
-                  View Your Artwork
+                  View Artwork
                 </Button>
 
                 <Button
                   variant="outline"
                   onClick={() => router.push('/gallery')}
-                  className="w-full glass border-0 bg-transparent"
+                  className="w-full glass border-border hover:bg-muted py-6 text-base"
                 >
                   Browse Gallery
                 </Button>
@@ -97,9 +100,9 @@ function UploadPageContent() {
                     setEditingArtwork(null)
                     router.push('/upload')
                   }}
-                  className="w-full"
+                  className="w-full text-muted-foreground hover:text-foreground"
                 >
-                  {editingArtwork ? 'Edit Another Artwork' : 'Upload Another Artwork'}
+                  {editingArtwork ? 'Edit Another' : 'Upload More'}
                 </Button>
               </div>
             </CardContent>
@@ -110,39 +113,33 @@ function UploadPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-black p-4 pt-20 sm:pt-24">
-      <div className="container-modern max-w-2xl">
+    <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
+      <div className="w-full max-w-2xl mx-auto px-6">
           {/* Header */}
-          <div className="mb-6 sm:mb-8">
+          <div className="mb-12">
             <Button
               variant="ghost"
               onClick={() => router.back()}
-              className="mb-3 sm:mb-4 text-white/70 hover:text-white text-sm sm:text-base"
+              className="mb-8 p-0 text-muted-foreground hover:text-foreground group flex items-center"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
+              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mr-3 group-hover:bg-primary/10 group-hover:text-primary transition-all">
+                <ArrowLeft className="w-4 h-4" />
+              </div>
+              <span className="text-sm font-medium tracking-wide uppercase">Back to previous</span>
             </Button>
 
-            <Card className="glass border-0 bg-white/5 backdrop-blur-xl">
-              <CardHeader className="text-center px-4 sm:px-6 py-6 sm:py-8">
-                <CardTitle className="text-center text-xl sm:text-2xl flex items-center justify-center gap-2">
-                  {editingArtwork ? (
-                    <>
-                      <Edit className="w-5 h-5 sm:w-6 sm:h-6" />
-                      Edit Your Artwork
-                    </>
-                  ) : (
-                    'Share Your Art with the World'
-                  )}
-                </CardTitle>
-                <p className="text-center text-muted-foreground text-sm sm:text-base mt-2">
-                  {editingArtwork 
-                    ? 'Update your artwork details and share your creativity with the community.'
-                    : 'Upload your artwork to the public gallery and connect with art lovers everywhere.'
-                  }
-                </p>
-              </CardHeader>
-            </Card>
+            <div className="space-y-4">
+              <Badge className="glass px-4 py-1.5 border-primary/20 text-primary">Creator Space</Badge>
+              <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+                {editingArtwork ? 'Refine Your' : 'Share Your'} <span className="text-gradient-primary">Masterpiece</span>
+              </h1>
+              <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
+                {editingArtwork 
+                  ? 'Fine-tune the details of your artwork to ensure it perfectly represents your artistic vision.'
+                  : 'Join our community of elite artists. Your creative journey starts with a single upload.'
+                }
+              </p>
+            </div>
           </div>
 
           {/* Upload Form */}
