@@ -29,29 +29,14 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { useAuth } from '@/contexts/AuthContext'
-import type { ArtworkCategory, ArtworkRecord } from '@/types'
+import type { ArtworkRecord } from '@/types'
 import { useUploadThing } from "@/lib/uploadthing";
 
 // Validation schema
 const createArtworkUploadSchema = (isEditMode: boolean) => z.object({
-  title: z.string()
-    .min(1, 'Title is required')
-    .max(100, 'Title must be less than 100 characters')
-    .trim(),
   description: z.string()
     .max(1000, 'Description must be less than 1000 characters')
     .optional(),
-  category: z.enum([
-    'painting',
-    'digital-art',
-    'photography',
-    'sculpture',
-    'mixed-media',
-    'drawing',
-    'other'
-  ] as const, {
-    message: 'Please select a category'
-  }),
   imageFile: isEditMode
     ? z.instanceof(File, { message: 'Please select an image file' })
       .refine((file) => file.size <= 8 * 1024 * 1024, 'File size must be under 8MB')
@@ -74,16 +59,6 @@ interface ArtworkUploadFormProps {
   onSuccess?: (artwork: ArtworkRecord) => void
   onError?: (error: string) => void
   editingArtwork?: ArtworkRecord | null
-}
-
-const categoryLabels: Record<ArtworkCategory, string> = {
-  'painting': 'Painting',
-  'digital-art': 'Digital Art',
-  'photography': 'Photography',
-  'sculpture': 'Sculpture',
-  'mixed-media': 'Mixed Media',
-  'drawing': 'Drawing',
-  'other': 'Other'
 }
 
 export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: ArtworkUploadFormProps) {
@@ -110,9 +85,7 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
   const form = useForm<ArtworkUploadFormValues>({
     resolver: zodResolver(createArtworkUploadSchema(isEditMode)),
     defaultValues: {
-      title: editingArtwork?.title || '',
       description: editingArtwork?.description || '',
-      category: editingArtwork?.category || undefined,
       imageFile: undefined
     }
   })
@@ -179,9 +152,7 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          title: data.title,
           description: data.description,
-          category: data.category,
           image_url: imageUrl,
           artist_id: user.id,
           artist_name: user.display_name || user.email
@@ -307,43 +278,7 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm sm:text-base">Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter artwork title" className="glass border-border/50 bg-background/50 h-10 sm:h-12 text-sm sm:text-base" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm sm:text-base">Category</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="glass border-border/50 bg-background/50 h-10 sm:h-12 text-sm sm:text-base">
-                        <SelectValue placeholder="Select a category" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {Object.entries(categoryLabels).map(([value, label]) => (
-                        <SelectItem key={value} value={value} className="text-sm sm:text-base">{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+      
             <FormField
               control={form.control}
               name="description"

@@ -103,8 +103,6 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
               src={artwork.image_url}
               alt={artwork.title}
               title={artwork.title}
-              category={artwork.category}
-
               className="w-auto h-auto object-cover"
             />
           </motion.div>
@@ -118,12 +116,6 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
             className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
           />
 
-          {/* Category Badge */}
-          <div className="absolute top-4 left-4 z-10">
-            <Badge className="bg-background/90 backdrop-blur-sm text-foreground border-0 shadow-lg">
-              {artwork.category}
-            </Badge>
-          </div>
 
           {/* Quick Actions */}
           <motion.div

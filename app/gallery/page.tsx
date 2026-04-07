@@ -15,7 +15,6 @@ import { LiveVisualSearch } from "@/components/ui/live-visual-search"
 import { SearchHighlight } from "@/components/ui/search-highlight"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useArtworkSearch } from "@/hooks/use-artwork-search"
-import { ArtworkRecord, ArtworkCategory } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { ArtworkImage } from '@/components/ui/artwork-image'
 import { ArtCard } from "@/components/ui/art-card"
@@ -23,17 +22,6 @@ import { Eye, Heart, ChevronLeft, ChevronRight, AlertCircle, Palette, RefreshCw,
 import { useArt } from "@/contexts/ArtContext"
 
 const ITEMS_PER_PAGE = 12
-
-const CATEGORY_OPTIONS: { value: ArtworkCategory | 'all'; label: string }[] = [
-  { value: 'all', label: 'All Categories' },
-  { value: 'painting', label: 'Painting' },
-  { value: 'digital-art', label: 'Digital Art' },
-  { value: 'photography', label: 'Photography' },
-  { value: 'sculpture', label: 'Sculptures' },
-  { value: 'mixed-media', label: 'Mixed Media' },
-  { value: 'drawing', label: 'Drawing' },
-  { value: 'other', label: 'Other' },
-]
 
 function PublicGalleryPageContent() {
   const router = useRouter()
@@ -46,16 +34,9 @@ function PublicGalleryPageContent() {
     hasNextPage: false,
     hasPrevPage: false
   })
-  const [selectedCategory, setSelectedCategory] = useState<ArtworkCategory | 'all'>('all')
 
-  const category = searchParams.get('category') as ArtworkCategory | null
   const page = parseInt(searchParams.get('page') || '1', 10)
 
-  useEffect(() => {
-    if (category && CATEGORY_OPTIONS.some(opt => opt.value === category)) {
-      setSelectedCategory(category)
-    }
-  }, [category])
 
   useEffect(() => {
     const loadArtworks = async () => {
@@ -67,18 +48,16 @@ function PublicGalleryPageContent() {
     }
 
     loadArtworks()
-  }, [selectedCategory, page, fetchArtworks])
+  }, [page, fetchArtworks])
 
   const handleCategoryChange = (newCategory: string) => {
-    setSelectedCategory(newCategory as ArtworkCategory | 'all')
     setPagination(prev => ({ ...prev, currentPage: 1 }))
     router.push(`/gallery?category=${newCategory}&page=1`)
   }
 
   const handlePageChange = (newPage: number) => {
     setPagination(prev => ({ ...prev, currentPage: newPage }))
-    const currentCategory = selectedCategory === 'all' ? '' : `&category=${selectedCategory}`
-    router.push(`/gallery?page=${newPage}${currentCategory}`)
+    router.push(`/gallery?page=${newPage}`)
   }
 
   if (loading) {
@@ -131,20 +110,6 @@ function PublicGalleryPageContent() {
             </p>
           </div>
 
-          <div className="max-w-2xl mx-auto">
-            <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-              <SelectTrigger className="w-full glass border-border/50 bg-background/50">
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent className="glass border-border/50 bg-background/95">
-                {CATEGORY_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
 
           <div className="flex justify-between items-center">
             <p className="text-sm text-muted-foreground">

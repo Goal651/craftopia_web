@@ -52,7 +52,6 @@ export function LiveVisualSearch({
     const title = artwork.title.toLowerCase()
     const artist = artwork.artist_name.toLowerCase()
     const description = (artwork.description || "").toLowerCase()
-    const category = artwork.category.toLowerCase()
 
     let score = 0
     const matchedFields: string[] = []
@@ -84,11 +83,6 @@ export function LiveVisualSearch({
       matchedFields.push("artist")
     }
 
-    // Category match
-    if (category === query || category.includes(query)) {
-      score += 40
-      matchedFields.push("category")
-    }
 
     // Description contains query
     if (description.includes(query)) {
@@ -322,9 +316,7 @@ export function LiveVisualSearch({
                             <Heart className="w-3 h-3" />
                             {Math.floor(result.artwork.view_count * 0.1)}
                           </div>
-                          <Badge variant="outline" className="text-xs border-border/50">
-                            {result.artwork.category}
-                          </Badge>
+                       
                         </div>
                       </div>
 

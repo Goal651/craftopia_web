@@ -217,9 +217,6 @@ export default function ArtistDashboard() {
                               <Eye className="w-3 h-3" />
                               {artwork.view_count}
                             </div>
-                            <Badge variant="outline" className="text-xs border-border/50">
-                              {artwork.category}
-                            </Badge>
                           </div>
                         </div>
                       </div>

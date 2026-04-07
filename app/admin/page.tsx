@@ -222,8 +222,7 @@ export default function AdminPanel() {
     const matchesSearch =
       artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       artwork.artist_name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = filterCategory === "all" || artwork.category === filterCategory
-    return matchesSearch && matchesCategory
+    return matchesSearch
   })
 
   const filteredUsers = users.filter((u) =>
@@ -505,11 +504,6 @@ export default function AdminPanel() {
                                       </div>
                                     </div>
                                   </div>
-                                </TableCell>
-                                <TableCell>
-                                  <Badge variant="outline" className="text-[10px] font-bold uppercase border-primary/30 text-primary py-1 px-3 tracking-widest bg-primary/5">
-                                    {artwork.category.replace('-', ' ')}
-                                  </Badge>
                                 </TableCell>
                                 <TableCell>
                                   <div className="font-mono text-lg font-bold text-white">
@@ -817,19 +811,6 @@ export default function AdminPanel() {
                   <Input name="price" type="number" defaultValue={selectedArtwork?.price} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-white font-mono text-lg" required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="category" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Art Genre</Label>
-                  <Select name="category" defaultValue={selectedArtwork?.category}>
-                    <SelectTrigger className="h-12 glass border-0 text-white font-medium">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="glass-strong border-0">
-                      {allCategories.map(cat => (
-                        <SelectItem key={cat.id} value={cat.id}>{cat.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
                   <Label htmlFor="medium" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Artistic Medium</Label>
                   <Input name="medium" defaultValue={selectedArtwork?.medium} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-white" placeholder="e.g., Oil on Canvas" />
                 </div>
@@ -889,9 +870,6 @@ export default function AdminPanel() {
                   {selectedArtwork?.artist_name}
                 </CardDescription>
               </div>
-              <Badge variant="outline" className="text-xs font-bold uppercase border-primary/30 text-primary py-1 px-4 tracking-widest bg-primary/5">
-                {selectedArtwork?.category.replace('-', ' ')}
-              </Badge>
             </div>
           </DialogHeader>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0">

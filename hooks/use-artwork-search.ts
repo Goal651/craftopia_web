@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback, useEffect } from "react"
-import type { ArtworkRecord, ArtworkCategory } from "@/types"
+import type { ArtworkRecord } from "@/types"
 
 interface SearchPagination {
   currentPage: number
@@ -20,26 +20,22 @@ interface SearchResult {
 
 interface UseArtworkSearchOptions {
   initialQuery?: string
-  initialCategory?: ArtworkCategory | 'all'
   limit?: number
 }
 
 export function useArtworkSearch({
   initialQuery = "",
-  initialCategory = 'all',
   limit = 12
 }: UseArtworkSearchOptions = {}) {
   const [searchResults, setSearchResults] = useState<SearchResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [currentQuery, setCurrentQuery] = useState(initialQuery)
-  const [currentCategory, setCurrentCategory] = useState(initialCategory)
   const [currentPage, setCurrentPage] = useState(1)
 
   const performSearch = useCallback(async (
     query: string,
     page: number = 1,
-    category: ArtworkCategory | 'all' = 'all'
   ) => {
     if (!query.trim()) {
       setSearchResults(null)
@@ -57,9 +53,6 @@ export function useArtworkSearch({
         limit: limit.toString()
       })
 
-      if (category && category !== 'all') {
-        params.append('category', category)
-      }
 
       const response = await fetch(`/api/artworks/search?${params}`)
       
@@ -71,7 +64,6 @@ export function useArtworkSearch({
       const result: SearchResult = await response.json()
       setSearchResults(result)
       setCurrentQuery(query)
-      setCurrentCategory(category)
       setCurrentPage(page)
     } catch (err) {
       console.error('Search error:', err)
@@ -84,24 +76,23 @@ export function useArtworkSearch({
 
   const search = useCallback((query: string) => {
     setCurrentPage(1)
-    performSearch(query, 1, currentCategory)
-  }, [performSearch, currentCategory])
+    performSearch(query, 1)
+  }, [performSearch])
 
-  const searchWithCategory = useCallback((query: string, category: ArtworkCategory | 'all') => {
+  const searchWithCategory = useCallback((query: string) => {
     setCurrentPage(1)
-    performSearch(query, 1, category)
+    performSearch(query, 1)
   }, [performSearch])
 
   const goToPage = useCallback((page: number) => {
     if (currentQuery && page >= 1 && searchResults && page <= searchResults.pagination.totalPages) {
-      performSearch(currentQuery, page, currentCategory)
+      performSearch(currentQuery, page)
     }
-  }, [performSearch, currentQuery, currentCategory, searchResults])
+  }, [performSearch, currentQuery,  searchResults])
 
   const clearSearch = useCallback(() => {
     setSearchResults(null)
     setCurrentQuery("")
-    setCurrentCategory('all')
     setCurrentPage(1)
     setError(null)
   }, [])
@@ -109,7 +100,7 @@ export function useArtworkSearch({
   // Initialize search if there's an initial query
   useEffect(() => {
     if (initialQuery.trim()) {
-      performSearch(initialQuery, 1, initialCategory)
+      performSearch(initialQuery, 1)
     }
   }, []) // Only run on mount
 
@@ -118,7 +109,6 @@ export function useArtworkSearch({
     loading,
     error,
     currentQuery,
-    currentCategory,
     currentPage,
     search,
     searchWithCategory,

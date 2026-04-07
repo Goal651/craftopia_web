@@ -1,17 +1,7 @@
-export type ArtworkCategory =
-  | 'painting'
-  | 'digital-art'
-  | 'photography'
-  | 'sculpture'
-  | 'mixed-media'
-  | 'drawing'
-  | 'other'
-
 export interface ArtworkRecord {
   id: string
   title: string
   description: string | null
-  category: ArtworkCategory
   image_url: string
   image_path: string
   artist_id: string

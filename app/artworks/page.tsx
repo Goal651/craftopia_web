@@ -35,15 +35,13 @@ export default function ArtworksPage() {
         artwork.artist_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (artwork.description || "").toLowerCase().includes(searchTerm.toLowerCase())
 
-      const matchesCategory = categoryFilter === "all" || artwork.category === categoryFilter
-
       const matchesPrice =
         priceFilter === "all" ||
         (priceFilter === "under-1000" && artwork.price < 1000) ||
         (priceFilter === "1000-3000" && artwork.price >= 1000 && artwork.price <= 3000) ||
         (priceFilter === "over-3000" && artwork.price > 3000)
 
-      return matchesSearch && matchesCategory && matchesPrice
+      return matchesSearch && matchesPrice
     })
 
     // Sort artworks

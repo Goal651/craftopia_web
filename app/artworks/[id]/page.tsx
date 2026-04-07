@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { ArtworkRecord, ArtworkCategory } from "@/types/index"
+import { ArtworkRecord } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
 import { LiveViewCounter } from "@/components/ui/live-view-counter"
@@ -152,7 +152,7 @@ export default function ArtworkDetailPage() {
     const url = window.location.href
     const title = artwork?.title || 'Amazing Artwork'
     const artist = artwork?.artist_name || 'Talented Artist'
-    const description = artwork?.description || `Check out this stunning ${artwork?.category?.replace('-', ' ')} by ${artist} on Craftopia!`
+    const description = artwork?.description || `Check out this stunning artwork by ${artist} on Craftopia!`
 
     switch (platform) {
       case 'twitter':
@@ -296,14 +296,13 @@ export default function ArtworkDetailPage() {
       "@context": "https://schema.org",
       "@type": "CreativeWork",
       "name": artwork.title,
-      "description": artwork.description || `Stunning ${artwork.category.replace('-', ' ')} by ${artwork.artist_name}`,
+      "description": artwork.description || `Stunning artwork by ${artwork.artist_name}`,
       "image": artwork.image_url,
       "author": {
         "@type": "Person",
         "name": artwork.artist_name
       },
       "dateCreated": artwork.createdAt,
-      "category": artwork.category.replace('-', ' '),
       "url": window.location.href,
       "interactionStatistic": {
         "@type": "InteractionCounter",
@@ -390,7 +389,7 @@ export default function ArtworkDetailPage() {
 
   const structuredData = generateStructuredData()
   const seoTitle = `${artwork.title} by ${artwork.artist_name} | Craftopia`
-  const seoDescription = artwork.description || `Discover this stunning ${artwork.category.replace('-', ' ')} by ${artwork.artist_name}. Explore more amazing digital artworks on Craftopia.`
+  const seoDescription = artwork.description || `Discover this stunning artwork by ${artwork.artist_name}. Explore more amazing digital artworks on Craftopia.`
   const seoImage = artwork.image_url
 
   return (
@@ -399,7 +398,7 @@ export default function ArtworkDetailPage() {
       <Head>
         <title>{seoTitle}</title>
         <meta name="description" content={seoDescription} />
-        <meta name="keywords" content={`${artwork.title}, ${artwork.artist_name}, ${artwork.category.replace('-', ' ')}, digital art, artwork, craftopia, online gallery, ${artwork.category.replace('-', ' ')} art`} />
+        <meta name="keywords" content={`${artwork.title}, ${artwork.artist_name}, digital art, artwork, craftopia, online gallery, art`} />
         <meta name="author" content={artwork.artist_name} />
         <meta name="robots" content="index, follow" />
 
@@ -452,8 +451,6 @@ export default function ArtworkDetailPage() {
                     src={artwork.image_url}
                     alt={artwork.title}
                     title={artwork.title}
-                    category={artwork.category}
-
                     className="w-full h-full object-cover  transition-transform duration-1000 group-hover:scale-105"
                     priority
                     width={500}
@@ -581,10 +578,6 @@ export default function ArtworkDetailPage() {
                       <span className="text-sm">{getRelativeTime(artwork.createdAt)}</span>
                     </div>
                   </div>
-
-                  <Badge className="glass-strong border border-white/20 text-white px-4 py-2 text-sm">
-                    {artwork.category.replace('-', ' ')}
-                  </Badge>
                 </div>
 
                 {/* Description */}
@@ -824,15 +817,6 @@ export default function ArtworkDetailPage() {
                         </span>
                       </div>
 
-                      <div className="flex items-center justify-between py-3 border-b border-white/10">
-                        <span className="text-gray-400 flex items-center gap-2">
-                          <Palette className="w-4 h-4" />
-                          Category
-                        </span>
-                        <span className="text-white font-medium capitalize">
-                          {artwork.category.replace('-', ' ')}
-                        </span>
-                      </div>
 
                       <div className="flex items-center justify-between py-3 border-b border-white/10">
                         <span className="text-gray-400 flex items-center gap-2">
@@ -965,7 +949,6 @@ export default function ArtworkDetailPage() {
                             src={relatedArtwork.image_url}
                             alt={relatedArtwork.title}
                             title={relatedArtwork.title}
-                            category={relatedArtwork.category}
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             width={400}
                             height={500}
@@ -980,9 +963,6 @@ export default function ArtworkDetailPage() {
                             by {relatedArtwork.artist_name}
                           </p>
                           <div className="flex items-center justify-between">
-                            <Badge variant="outline" className="text-xs border-white/20 text-gray-300">
-                              {relatedArtwork.category.replace('-', ' ')}
-                            </Badge>
                             <span className="text-xs text-gray-500">
                               {formatDateSafe(relatedArtwork.createdAt, { format: 'short' })}
                             </span>

@@ -8,14 +8,6 @@ const ArtworkSchema = new mongoose.Schema({
     description: {
         type: String,
     },
-    category: {
-        type: String,
-        required: true,
-        enum: [
-            'painting', 'digital-art', 'photography',
-            'sculpture', 'mixed-media', 'drawing', 'other'
-        ],
-    },
     image_url: {
         type: String,
         required: true,

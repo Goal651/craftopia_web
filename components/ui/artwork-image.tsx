@@ -29,7 +29,6 @@ export function ArtworkImage({
   src, 
   alt, 
   title, 
-  category = "abstract",
   width = 400, 
   height = 400,
   fill = false,
@@ -59,7 +58,7 @@ export function ArtworkImage({
   }
 
   // Generate a seed from the title for consistent artwork generation
-  const seed = title + category
+  const seed = title
 
   const handleImageError = useCallback((event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setImageError(true)
@@ -81,7 +80,7 @@ export function ArtworkImage({
           seed={seed}
           width={width}
           height={height}
-          style={getArtworkStyle(category)}
+          style={'sculpture'}
           className="w-full h-full"
         />
         {/* Overlay to indicate this is a fallback */}

@@ -9,8 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { ArtworkRecord, ArtworkCategory } from "@/types/index"
+import { ArtworkRecord} from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
 import { ArtworkImage } from "@/components/ui/artwork-image"
@@ -168,7 +167,6 @@ export default function GalleryArtworkDetailPage() {
                   src={artwork.image_url}
                   alt={artwork.title}
                   title={artwork.title}
-                  category={artwork.category}
                   fill
                   className="object-cover"
                   priority
@@ -184,9 +182,7 @@ export default function GalleryArtworkDetailPage() {
               <div className="space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="space-y-3">
-                    <Badge variant="secondary" className="bg-gray-700/50 text-gray-300 capitalize">
-                      {artwork.category.replace('-', ' ')}
-                    </Badge>
+                  
                     <h1 className="text-3xl lg:text-4xl font-light text-white">{artwork.title}</h1>
                     <Link
                       href={`/gallery/artist/${artwork.artist_id}`}
@@ -259,15 +255,7 @@ export default function GalleryArtworkDetailPage() {
                     </Link>
                   </div>
 
-                  <div className="glass rounded p-4">
-                    <div className="flex items-center gap-2 text-gray-400 mb-1">
-                      <Badge className="w-4 h-4 bg-transparent border-0 p-0" />
-                      <span>Category</span>
-                    </div>
-                    <div className="font-medium text-white capitalize">
-                      {artwork.category.replace('-', ' ')}
-                    </div>
-                  </div>
+                 
                 </div>
               </div>
 
