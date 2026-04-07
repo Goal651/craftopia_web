@@ -150,7 +150,7 @@ export default function ArtworkDetailPage() {
 
   const handleShare = async (platform: string) => {
     const url = window.location.href
-    const title = artwork?.title || 'Amazing Artwork'
+    const title = 'Amazing Artwork'
     const artist = artwork?.artist_name || 'Talented Artist'
     const description = artwork?.description || `Check out this stunning artwork by ${artist} on Craftopia!`
 
@@ -295,7 +295,6 @@ export default function ArtworkDetailPage() {
     return {
       "@context": "https://schema.org",
       "@type": "CreativeWork",
-      "name": artwork.title,
       "description": artwork.description || `Stunning artwork by ${artwork.artist_name}`,
       "image": artwork.image_url,
       "author": {
@@ -388,7 +387,6 @@ export default function ArtworkDetailPage() {
   }
 
   const structuredData = generateStructuredData()
-  const seoTitle = `${artwork.title} by ${artwork.artist_name} | Craftopia`
   const seoDescription = artwork.description || `Discover this stunning artwork by ${artwork.artist_name}. Explore more amazing digital artworks on Craftopia.`
   const seoImage = artwork.image_url
 
@@ -396,16 +394,15 @@ export default function ArtworkDetailPage() {
     <>
       {/* SEO Meta Tags */}
       <Head>
-        <title>{seoTitle}</title>
+        <title>{artwork.description}</title>
         <meta name="description" content={seoDescription} />
-        <meta name="keywords" content={`${artwork.title}, ${artwork.artist_name}, digital art, artwork, craftopia, online gallery, art`} />
+        <meta name="keywords" content={`${artwork.description}, ${artwork.artist_name}, digital art, artwork, craftopia, online gallery, art`} />
         <meta name="author" content={artwork.artist_name} />
         <meta name="robots" content="index, follow" />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content={typeof window !== 'undefined' ? window.location.href : ''} />
-        <meta property="og:title" content={seoTitle} />
         <meta property="og:description" content={seoDescription} />
         <meta property="og:image" content={seoImage} />
         <meta property="og:image:width" content="1200" />
@@ -415,9 +412,8 @@ export default function ArtworkDetailPage() {
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={typeof window !== 'undefined' ? window.location.href : ''} />
-        <meta property="twitter:title" content={seoTitle} />
         <meta property="twitter:description" content={seoDescription} />
-        <meta property="twitter:image" content={seoImage} />
+        <meta property="twitter:image" content={seoImage} /> 
 
         {/* Additional SEO */}
         <meta name="theme-color" content="#000000" />
@@ -449,8 +445,8 @@ export default function ArtworkDetailPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
                   <ArtworkImage
                     src={artwork.image_url}
-                    alt={artwork.title}
-                    title={artwork.title}
+                    alt={artwork.description}
+                    title={artwork.description}
                     className="w-full h-full object-cover  transition-transform duration-1000 group-hover:scale-105"
                     priority
                     width={500}
@@ -563,9 +559,7 @@ export default function ArtworkDetailPage() {
               >
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="space-y-2">
-                    <h1 className="text-xl md:text-2xl lg:text-6xl font-bold text-white leading-tight">
-                      {artwork.title}
-                    </h1>
+                   
                     <div className="flex items-center gap-4 text-gray-300">
                       <Link
                         href={`/gallery/artist/${artwork.artist_id}`}
@@ -947,8 +941,8 @@ export default function ArtworkDetailPage() {
                         <div className="aspect-[4/5] overflow-hidden relative">
                           <ArtworkImage
                             src={relatedArtwork.image_url}
-                            alt={relatedArtwork.title}
-                            title={relatedArtwork.title}
+                            alt={relatedArtwork.description}
+                            title={relatedArtwork.description}
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             width={400}
                             height={500}
@@ -957,7 +951,7 @@ export default function ArtworkDetailPage() {
                         </div>
                         <CardContent className="p-4">
                           <h3 className="font-semibold text-white mb-2 group-hover:text-primary transition-colors line-clamp-1">
-                            {relatedArtwork.title}
+                            {relatedArtwork.description}
                           </h3>
                           <p className="text-sm text-gray-400 mb-3">
                             by {relatedArtwork.artist_name}

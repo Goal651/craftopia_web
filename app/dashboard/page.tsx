@@ -206,12 +206,12 @@ export default function ArtistDashboard() {
                         <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0">
                           <img
                             src={artwork.image_url}
-                            alt={artwork.title}
+                            alt={artwork.description}
                             className="w-full h-full object-cover"
                           />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-foreground truncate">{artwork.title}</h4>
+                          <h4 className="font-medium text-foreground truncate">{artwork.description}</h4>
                           <div className="flex items-center gap-4 mt-1">
                             <div className="flex items-center gap-1 text-xs text-muted-foreground">
                               <Eye className="w-3 h-3" />

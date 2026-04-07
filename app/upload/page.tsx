@@ -71,7 +71,7 @@ function UploadPageContent() {
                 {editingArtwork ? 'Artwork Updated Successfully!' : 'Upload Successful!'}
               </h1>
               <p className="text-gray-400 mb-6">
-                Your artwork "{uploadedArtwork.title}" has been {editingArtwork ? 'updated' : 'uploaded'} to the public gallery.
+                Your artwork "{uploadedArtwork.description}" has been {editingArtwork ? 'updated' : 'uploaded'} to the public gallery.
               </p>
 
               <div className="space-y-4">

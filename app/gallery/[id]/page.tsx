@@ -154,7 +154,7 @@ export default function GalleryArtworkDetailPage() {
             <BreadcrumbNav
               items={[
                 { label: "Community Gallery", href: "/gallery" },
-                { label: artwork.title, current: true }
+                { label: artwork.description, current: true }
               ]}
             />
             <BackButton href="/gallery" label="Back to Gallery" />
@@ -165,8 +165,8 @@ export default function GalleryArtworkDetailPage() {
               <div className="aspect-square relative overflow-hidden rounded glass">
                 <ArtworkImage
                   src={artwork.image_url}
-                  alt={artwork.title}
-                  title={artwork.title}
+                  alt={artwork.description}
+                  title={artwork.description}
                   fill
                   className="object-cover"
                   priority
@@ -183,7 +183,7 @@ export default function GalleryArtworkDetailPage() {
                 <div className="flex items-start justify-between">
                   <div className="space-y-3">
                   
-                    <h1 className="text-3xl lg:text-4xl font-light text-white">{artwork.title}</h1>
+                    <h1 className="text-3xl lg:text-4xl font-light text-white">{artwork.description}</h1>
                     <Link
                       href={`/gallery/artist/${artwork.artist_id}`}
                       className="text-xl text-blue-400 hover:text-blue-300 transition-colors"

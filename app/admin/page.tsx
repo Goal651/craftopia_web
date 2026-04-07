@@ -220,8 +220,7 @@ export default function AdminPanel() {
 
   const filteredArtworks = artworks.filter((artwork) => {
     const matchesSearch =
-      artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      artwork.artist_name.toLowerCase().includes(searchTerm.toLowerCase())
+      artwork.description.toLowerCase().includes(searchTerm.toLowerCase())
     return matchesSearch
   })
 
@@ -490,14 +489,14 @@ export default function AdminPanel() {
                                     <div className="relative w-16 h-16 rounded overflow-hidden shadow-xl group-hover:scale-105 transition-transform duration-500">
                                       <Image
                                         src={artwork.image_url || "/placeholder.svg"}
-                                        alt={artwork.title}
+                                        alt={artwork.description}
                                         fill
                                         className="object-cover"
                                         sizes="64px"
                                       />
                                     </div>
                                     <div>
-                                      <div className="font-bold text-white text-lg line-clamp-1">{artwork.title}</div>
+                                      <div className="font-bold text-white text-lg line-clamp-1">{artwork.description}</div>
                                       <div className="text-sm text-primary font-medium flex items-center gap-1.5">
                                         <ShieldCheck className="w-3 h-3" />
                                         {artwork.artist_name}
@@ -554,7 +553,7 @@ export default function AdminPanel() {
                                         <AlertDialogHeader>
                                           <DialogTitle className="text-2xl text-white font-bold">Incinerate Masterpiece?</DialogTitle>
                                           <AlertDialogDescription className="text-muted-foreground text-lg py-4">
-                                            This action is irreversible. <span className="text-white font-bold">"{artwork.title}"</span> will be permanently purged from the global archives.
+                                            This action is irreversible. <span className="text-white font-bold">"{artwork.description}"</span> will be permanently purged from the global archives.
                                           </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter className="gap-4">
@@ -797,14 +796,14 @@ export default function AdminPanel() {
         <DialogContent className="glass-strong border-0 max-w-2xl shadow-2xl p-0 overflow-hidden">
           <DialogHeader className="bg-white/5 p-8 border-b border-white/5">
             <DialogTitle className="text-3xl font-bold text-white">Refine Masterpiece</DialogTitle>
-            <CardDescription className="text-muted-foreground text-lg">Modify details for <span className="text-primary italic font-medium">{selectedArtwork?.title}</span></CardDescription>
+            <CardDescription className="text-muted-foreground text-lg">Modify details for <span className="text-primary italic font-medium">{selectedArtwork?.description}</span></CardDescription>
           </DialogHeader>
           <form onSubmit={handleUpdateArtwork}>
             <div className="p-8 space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <Label htmlFor="title" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Masterpiece Title</Label>
-                  <Input name="title" defaultValue={selectedArtwork?.title} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-white" required />
+                  <Input name="title" defaultValue={selectedArtwork?.description} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-white" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="price" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Market Valuation ($)</Label>
@@ -864,7 +863,7 @@ export default function AdminPanel() {
           <DialogHeader className="bg-white/5 p-8 border-b border-white/5">
             <div className="flex justify-between items-start">
               <div className="space-y-1">
-                <DialogTitle className="text-3xl font-bold text-white">{selectedArtwork?.title}</DialogTitle>
+                <DialogTitle className="text-3xl font-bold text-white">{selectedArtwork?.description}</DialogTitle>
                 <CardDescription className="text-primary text-lg font-medium flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4" />
                   {selectedArtwork?.artist_name}
@@ -876,7 +875,7 @@ export default function AdminPanel() {
             <div className="relative aspect-square md:aspect-auto h-full min-h-[400px]">
               <Image
                 src={selectedArtwork?.image_url || "/placeholder.svg"}
-                alt={selectedArtwork?.title || "Artwork"}
+                alt={selectedArtwork?.description || "Artwork"}
                 fill
                 className="object-cover"
               />

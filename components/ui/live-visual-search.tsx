@@ -49,28 +49,13 @@ export function LiveVisualSearch({
   // Enhanced search algorithm with relevance scoring
   const calculateRelevance = useCallback((artwork: ArtworkRecord, searchQuery: string): SearchResult => {
     const query = searchQuery.toLowerCase()
-    const title = artwork.title.toLowerCase()
     const artist = artwork.artist_name.toLowerCase()
     const description = (artwork.description || "").toLowerCase()
 
     let score = 0
     const matchedFields: string[] = []
 
-    // Exact title match (highest score)
-    if (title === query) {
-      score += 100
-      matchedFields.push("title")
-    }
-    // Title starts with query
-    else if (title.startsWith(query)) {
-      score += 80
-      matchedFields.push("title")
-    }
-    // Title contains query
-    else if (title.includes(query)) {
-      score += 60
-      matchedFields.push("title")
-    }
+
 
     // Exact artist match
     if (artist === query) {
@@ -93,7 +78,6 @@ export function LiveVisualSearch({
     // Word-by-word matching
     const queryWords = query.split(" ").filter(word => word.length > 2)
     queryWords.forEach(word => {
-      if (title.includes(word)) score += 10
       if (artist.includes(word)) score += 8
       if (description.includes(word)) score += 5
     })
@@ -290,7 +274,7 @@ export function LiveVisualSearch({
                       <div className="relative w-16 h-16 rounded overflow-hidden flex-shrink-0">
                         <img
                           src={result.artwork.image_url}
-                          alt={result.artwork.title}
+                          alt={result.artwork.description}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
@@ -302,7 +286,7 @@ export function LiveVisualSearch({
                       {/* Artwork Info */}
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-foreground truncate group-hover:text-primary transition-colors">
-                          {result.artwork.title}
+                          {result.artwork.description}
                         </h4>
                         <p className="text-sm text-muted-foreground truncate">
                           by {result.artwork.artist_name}

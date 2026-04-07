@@ -31,9 +31,7 @@ export default function ArtworksPage() {
   const filteredAndSortedArtworks = useMemo(() => {
     const filtered = artworks.filter((artwork) => {
       const matchesSearch =
-        artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        artwork.artist_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (artwork.description || "").toLowerCase().includes(searchTerm.toLowerCase())
+        artwork.description.toLowerCase().includes(searchTerm.toLowerCase())
 
       const matchesPrice =
         priceFilter === "all" ||
@@ -51,8 +49,6 @@ export default function ArtworksPage() {
           return a.price - b.price
         case "price-high":
           return b.price - a.price
-        case "title":
-          return a.title.localeCompare(b.title)
         case "newest":
           return (b.year || 0) - (a.year || 0)
         case "featured":
