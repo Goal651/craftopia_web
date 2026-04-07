@@ -49,7 +49,7 @@ export default function ProfilePage() {
       setDisplayName(user.display_name || user.email.split('@')[0])
       setBio("")
     }
-    
+
     if (user?.id) {
       fetchStats()
     }
@@ -75,6 +75,7 @@ export default function ProfilePage() {
 
     setIsSaving(false)
   }
+
 
   const handleCancel = () => {
     setIsEditing(false)
@@ -149,6 +150,8 @@ export default function ProfilePage() {
                 {displayName || user.email}
               </CardTitle>
               <p className="text-gray-400">{user.email}</p>
+              <p className="text-gray-400">{user.phone_number}</p>
+
             </CardHeader>
           </Card>
 

@@ -25,13 +25,13 @@ export async function signInAction(email: string, password: string) {
         if (user.password !== hashedPassword) {
             return { error: "Invalid credentials" }
         }
-
         const sessionUser = {
-            id: user._id.toString(),
-            email: user.email,
-            display_name: user.display_name,
-            avatar_url: user.avatar_url,
+            ...user._doc,
+            id: user._id.toString()
         }
+
+
+
         const cookies_data = await cookies()
 
         cookies_data.set("session", JSON.stringify(sessionUser), {
@@ -66,13 +66,9 @@ export async function signUpAction(email: string, password: string, displayName:
         })
 
         const sessionUser = {
-            id: user._id.toString(),
-            email: user.email,
-            phone_number: phoneNumber,
-            display_name: user.display_name,
-            avatar_url: user.avatar_url,
+            ...user._doc,
+            id: user._id.toString()
         }
-
         const cookies_data = await cookies()
 
         cookies_data.set("session", JSON.stringify(sessionUser), {
@@ -119,23 +115,20 @@ export async function updateProfileAction(displayName: string, bio?: string) {
         )
 
         if (!updatedUser) return { error: "User not found" }
-
-        const newSessionUser = {
-            id: updatedUser._id.toString(),
-            email: updatedUser.email,
-            display_name: updatedUser.display_name,
-            avatar_url: updatedUser.avatar_url,
+        const sessionUser = {
+            ...updatedUser.toObject(),
+            id: updatedUser.toObject().id.toString()
         }
-
+  
         const cookies_data = await cookies()
-        cookies_data.set("session", JSON.stringify(newSessionUser), {
+        cookies_data.set("session", JSON.stringify(sessionUser), {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             maxAge: 60 * 60 * 24 * 7,
             path: "/",
         })
 
-        return { success: true, user: newSessionUser }
+        return { success: true, user: sessionUser }
     } catch (error) {
         console.error("Update profile error:", error)
         return { error: "Failed to update profile" }

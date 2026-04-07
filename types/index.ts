@@ -30,3 +30,14 @@ export interface ArtworkRecord {
   dimensions?: string
   inStock?: boolean
 }
+
+export interface User {
+  id:string
+  email: string,
+  phone_number: string,
+  display_name: string,
+  avatar_url: string,
+  bio: string,
+  role: string,
+  status: string,
+}

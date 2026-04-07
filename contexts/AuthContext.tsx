@@ -6,16 +6,12 @@ import { toast } from "sonner"
 
 
 import { signInAction, signUpAction, signOutAction, getSessionAction, updateProfileAction } from "@/lib/actions/user.actions"
+import { User } from "@/types"
 
-interface AuthUser {
-  id: string
-  email: string
-  display_name?: string
-  avatar_url?: string
-}
+
 
 interface AuthContextType {
-  user: AuthUser | null
+  user: User | null
   signUp: (email: string, password: string, displayName: string, phoneNumber: string) => Promise<any>
   signIn: (email: string, password: string) => Promise<any>
   signOut: () => Promise<void>
@@ -27,7 +23,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -50,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (email: string, password: string, displayName: string, phoneNumber: string): Promise<any> => {
     setLoading(true)
     try {
-      const result = await signUpAction(email, password, displayName,phoneNumber)
+      const result = await signUpAction(email, password, displayName, phoneNumber)
       if (result.success) {
         setUser(result.user)
         toast.success("Account created successfully!")
