@@ -572,7 +572,7 @@ export default function ArtworkDetailPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="rounded border border-border bg-muted/5 p-4 flex flex-col items-center justify-center text-center">
                     <span className="text-[9px] uppercase tracking-[0.2em] font-black text-muted-foreground mb-2">Amount</span>
-                    <span className="text-xl font-black text-primary">${artwork.price.toLocaleString()}</span>
+                    <span className="text-xl font-black text-primary">RWF {artwork.price.toLocaleString()}</span>
                   </div>
                   <div className="rounded border border-border bg-muted/5 p-4 flex flex-col items-center justify-center text-center">
                     <span className="text-[9px] uppercase tracking-[0.2em] font-black text-muted-foreground mb-2">Stock</span>
