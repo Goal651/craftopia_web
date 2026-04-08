@@ -44,7 +44,8 @@ import {
   Sparkles,
   Maximize2,
   ArrowUpRight,
-  ArrowRight
+  ArrowRight,
+  Phone
 } from "lucide-react"
 import Head from 'next/head'
 import { cn } from "@/lib/utils"
@@ -55,6 +56,7 @@ export default function ArtworkDetailPage() {
   const router = useRouter()
   const { user } = useAuth()
   const [artwork, setArtwork] = useState<ArtworkRecord | null>(null)
+  const [artist, setArtist] = useState<any | null>(null)
   const [relatedArtworks, setRelatedArtworks] = useState<ArtworkRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -117,6 +119,11 @@ export default function ArtworkDetailPage() {
       const data = await response.json()
       setArtwork(data)
 
+      // Fetch artist info for phone number
+      if (data.artist_id) {
+        fetchArtist(data.artist_id)
+      }
+
       // Fetch related artworks
       const relatedRes = await fetch(`/api/artworks?category=${data.category}&limit=5`)
       if (relatedRes.ok) {
@@ -129,6 +136,18 @@ export default function ArtworkDetailPage() {
       setError(err instanceof Error ? err.message : 'Failed to load artwork')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchArtist = async (id: string) => {
+    try {
+      const response = await fetch(`/api/artists/${id}`)
+      if (response.ok) {
+        const data = await response.json()
+        setArtist(data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch artist profile:', error)
     }
   }
 
@@ -431,296 +450,135 @@ export default function ArtworkDetailPage() {
         )}
       </Head>
 
-      <div className="min-h-screen bg-background">
-        {/* Cinema Hero Section */}
-        <section className="relative pt-12 pb-16 md:pt-20 md:pb-24 overflow-hidden">
-          <div className="container-modern px-6 lg:px-10">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="relative group cursor-zoom-in max-w-7xl mx-auto"
-              onClick={() => setIsFullscreen(true)}
-            >
-              <div className="relative rounded-[2rem] overflow-hidden glass-strong border border-border/50 shadow-[0_48px_100px_-20px_rgba(0,0,0,0.6)] transition-all duration-700 hover:shadow-primary/20">
+      <div className="min-h-screen bg-background py-16 sm:py-24">
+        <div className="container-modern px-6 lg:px-10">
+          {/* Main Content Grid: 2/3 Left, 1/3 Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            
+            {/* Artwork Display - 2 Columns */}
+            <div className="lg:col-span-2 space-y-8">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}
+                className="relative rounded overflow-hidden glass border border-border shadow-xl hover:shadow-2xl transition-all duration-500"
+              >
                 <ArtworkImage
                   src={artwork.image_url}
                   alt={artwork.description}
                   title={artwork.description}
-                  className="w-full h-auto max-h-[80vh] object-contain mx-auto"
+                  className="w-full h-auto object-contain mx-auto"
                   priority
                 />
-                
-                {/* Immersive Inspect Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-end justify-center pb-12 pointer-events-none">
-                  <motion.div 
-                    initial={{ y: 20 }}
-                    whileHover={{ y: 0 }}
-                    className="flex items-center gap-3 bg-white/10 backdrop-blur-2xl border border-white/20 px-8 py-4 rounded-full shadow-2xl"
-                  >
-                    <Maximize2 className="w-5 h-5 text-primary" />
-                    <span className="text-sm font-black uppercase tracking-[0.25em] text-white">Full View</span>
-                  </motion.div>
-                </div>
-
-                {/* Floating Action Float */}
-                <div className="absolute top-8 right-8 flex items-center gap-4 z-20">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className={cn(
-                      "w-14 h-14 rounded-full glass-strong border border-white/10 backdrop-blur-3xl shadow-2xl transition-all duration-500",
-                      isLiked ? "text-red-500 bg-red-500/20 border-red-500/30" : "text-white hover:text-red-400 hover:bg-white/10"
-                    )}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleLike()
-                    }}
-                  >
-                    <Heart className={cn("w-6 h-6", isLiked && "fill-current")} />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="w-14 h-14 rounded-full glass-strong border border-white/10 backdrop-blur-3xl shadow-2xl text-white transition-all duration-500 hover:bg-white/10"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setShowShareMenu(!showShareMenu)
-                    }}
-                  >
-                    <Share2 className="w-6 h-6" />
-                  </Button>
-                </div>
-
-                {/* Share Dropdown */}
-                <AnimatePresence>
-                  {showShareMenu && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                      className="absolute top-24 right-8 glass-strong border border-white/20 rounded-2xl p-4 z-30 min-w-[240px] shadow-[0_32px_64px_rgba(0,0,0,0.5)]"
-                    >
-                      <div className="space-y-2">
-                        {[
-                          { id: 'twitter', label: 'X / Twitter', icon: <Globe className="w-4 h-4" /> },
-                          { id: 'facebook', label: 'Facebook', icon: <Users className="w-4 h-4" /> },
-                          { id: 'copy', label: copiedToClipboard ? 'Link Copied!' : 'Copy Link', icon: <ExternalLink className="w-4 h-4" /> }
-                        ].map(p => (
-                          <Button
-                            key={p.id}
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleShare(p.id)
-                            }}
-                            className="w-full justify-start text-white/80 hover:text-white hover:bg-white/10 gap-3 font-medium"
-                          >
-                            {p.icon}
-                            {p.label}
-                          </Button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Info & Engagement Section */}
-        <section className="pb-24">
-          <div className="container-modern px-6 lg:px-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-              
-              {/* Primary Content (8 columns) */}
-              <div className="lg:col-span-8 space-y-12">
-                <div className="space-y-8">
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <Badge className="bg-primary/10 text-primary border-primary/20 px-5 py-2 uppercase tracking-widest text-[11px] font-black shadow-lg shadow-primary/5">
-                        {artwork.category || "Fine Art"}
-                      </Badge>
-                      <div className="h-1 w-1 rounded-full bg-border" />
-                      <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
-                        {artwork.view_count.toLocaleString()} Global Views
-                      </span>
-                    </div>
-                    
-                    <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-foreground leading-[1] max-w-4xl">
-                      {artwork.description || "Experimental Vision"}
-                    </h1>
-                  </div>
-
-                  <div className="flex items-center gap-6 p-1 pr-6 bg-muted/10 border border-border/50 rounded-full w-fit group hover:border-primary/50 transition-all duration-500">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary-foreground flex items-center justify-center text-sm font-black text-white shadow-xl">
-                      {artwork.artist_name.charAt(0)}
-                    </div>
-                    <div className="flex flex-col">
-                      <p className="text-[10px] uppercase tracking-widest font-black text-muted-foreground">Mastermind</p>
-                      <Link
-                        href={`/gallery/artist/${artwork.artist_id}`}
-                        className="text-base font-bold text-foreground hover:text-primary transition-colors flex items-center gap-1"
-                      >
-                        {artwork.artist_name}
-                        <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                      </Link>
-                    </div>
-                  </div>
-
-                  <div className="prose prose-invert max-w-none">
-                    <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed">
-                      {artwork.description}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Technical Specifications */}
-                <div className="pt-12 border-t border-border/30 grid grid-cols-1 sm:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                       <Palette className="w-4 h-4" /> Technical Profile
-                    </h4>
-                    <div className="space-y-3">
-                      {[
-                        { label: 'Medium', value: artwork.medium || 'Digital' },
-                        { label: 'Dimensions', value: artwork.dimensions || 'Variable' },
-                        { label: 'Edition', value: artwork.stock_quantity > 0 ? 'Limited' : 'Collection' }
-                      ].map(item => (
-                        <div key={item.label} className="flex justify-between items-center py-2 border-b border-border/10">
-                          <span className="text-sm text-muted-foreground">{item.label}</span>
-                          <span className="text-sm font-bold text-foreground">{item.value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                       <Clock className="w-4 h-4" /> Acquisition Details
-                    </h4>
-                    <div className="space-y-3">
-                       <div className="flex justify-between items-center py-2 border-b border-border/10">
-                          <span className="text-sm text-muted-foreground">Released</span>
-                          <span className="text-sm font-bold text-foreground">{formatDateSafe(artwork.createdAt)}</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 border-b border-border/10">
-                          <span className="text-sm text-muted-foreground">Availability</span>
-                          <span className={cn("text-sm font-black", artwork.stock_quantity > 0 ? "text-emerald-500" : "text-red-500")}>
-                            {artwork.stock_quantity > 0 ? "Instant Download" : "Vaulted"}
-                          </span>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Section */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-12">
-                   <Button asChild size="lg" className="h-16 px-12 text-lg font-black bg-primary text-primary-foreground shadow-2xl shadow-primary/20 hover:scale-[1.02] transition-transform rounded-2xl flex-1">
-                      <Link href={`mailto:${artwork.artist_id}?subject=Inquiry about ${artwork.description}`}>
-                        Secure Acquisition at ${artwork.price.toLocaleString()}
-                        <ArrowUpRight className="ml-2 w-5 h-5" />
-                      </Link>
-                   </Button>
-                   <Button variant="outline" size="lg" className="h-16 px-8 glass-strong border-border/50 text-foreground hover:bg-muted/20 rounded-2xl transition-all" onClick={handleLike}>
-                      <Heart className={cn("w-5 h-5 mr-2", isLiked && "fill-red-500 text-red-500")} />
-                      {isLiked ? 'In Collection' : 'Add to Wishlist'}
-                   </Button>
-                </div>
-              </div>
-
-              {/* Sidebar / Comments (4 columns) */}
-              <div className="lg:col-span-4 space-y-12">
-                 <div className="glass-strong border border-border/50 rounded-3xl p-8 space-y-8 h-full flex flex-col">
-                    <div className="flex items-center justify-between">
-                       <h3 className="text-xl font-black tracking-tight">Community</h3>
-                       <MessageCircle className="w-5 h-5 text-muted-foreground" />
-                    </div>
-
-                    <div className="flex-1 space-y-6">
-                       <div className="space-y-4">
-                          <textarea 
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
-                            placeholder="Drop a thought..."
-                            className="w-full bg-muted/5 p-4 rounded-2xl border border-border/50 text-foreground placeholder:text-muted-foreground/50 focus:ring-2 focus:ring-primary/30 outline-none transition-all resize-none h-32"
-                          />
-                          <Button onClick={handleCommentSubmit} disabled={!comment.trim()} className="w-full btn-primary h-12 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/10">
-                             Send Pulse
-                             <Send className="ml-2 w-3.5 h-3.5" />
-                          </Button>
-                       </div>
-
-                       <div className="h-px bg-border/30" />
-
-                       <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                           {comments.length > 0 ? comments.map(c => (
-                             <div key={c._id} className="space-y-2 group">
-                                <div className="flex items-center gap-3">
-                                   <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-[8px] font-black uppercase">
-                                      {c.user_id?.display_name?.charAt(0) || 'A'}
-                                   </div>
-                                   <span className="text-xs font-bold text-foreground/80">{c.user_id?.display_name || 'Anonymous'}</span>
-                                   <span className="text-[10px] text-muted-foreground ml-auto">{getRelativeTime(c.created_at)}</span>
-                                </div>
-                                <p className="text-sm text-muted-foreground leading-relaxed pl-9">{c.content}</p>
-                             </div>
-                           )) : (
-                             <div className="text-center py-12 space-y-3 opacity-30">
-                                <Sparkles className="w-8 h-8 mx-auto text-primary" />
-                                <p className="text-xs uppercase tracking-[0.2em] font-black">Be the first to pulse</p>
-                             </div>
-                           )}
-                       </div>
-                    </div>
-                 </div>
-              </div>
+              </motion.div>
             </div>
-          </div>
-        </section>
 
-        {/* Related Creations Section */}
-        {relatedArtworks.length > 0 && (
-          <section className="py-24 border-t border-border/20 bg-muted/5">
-            <div className="container-modern px-6 lg:px-10">
-              <div className="mb-16 flex items-end justify-between">
-                <div className="space-y-2">
-                   <p className="text-xs font-black uppercase tracking-[0.3em] text-primary">Discover More</p>
-                   <h2 className="text-3xl md:text-5xl font-black tracking-tighter">Related <span className="text-gradient-primary">Creations</span></h2>
+            {/* Artwork Details & Commerce - 1 Column */}
+            <div className="space-y-10">
+              <div className="space-y-6">
+                <div className="space-y-4">
+                  <Badge className="bg-primary/5 text-primary border-primary/20 px-3 py-1 uppercase tracking-widest text-[10px] font-black rounded">
+                    {artwork.category || "Fine Art"}
+                  </Badge>
+                  <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground leading-[1.1]">
+                    {artwork.description || "Untitled Creation"}
+                  </h1>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Created by <span className="text-foreground font-black">{artwork.artist_name}</span>
+                  </p>
                 </div>
-                <Button asChild variant="ghost" className="hidden md:flex text-muted-foreground hover:text-primary">
-                   <Link href="/gallery" className="flex items-center gap-2">View All Collection <ArrowRight className="w-4 h-4" /></Link>
-                </Button>
-              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {relatedArtworks.map((art, i) => (
-                  <motion.div
-                    key={art.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                  >
-                    <Link href={`/artworks/${art.id}`}>
-                      <div className="group space-y-4">
-                        <div className="aspect-[4/5] rounded-[2rem] overflow-hidden glass border border-border/50 shadow-xl transition-all duration-500 group-hover:shadow-primary/10 group-hover:border-primary/20">
-                           <ArtworkImage src={art.image_url} alt={art.description} title={art.description} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                        </div>
-                        <div className="px-2">
-                           <h4 className="font-bold text-lg group-hover:text-primary transition-colors line-clamp-1">{art.description}</h4>
-                           <p className="text-sm text-muted-foreground">by {art.artist_name}</p>
-                        </div>
-                      </div>
+                <div className="prose prose-invert border-t border-border pt-8">
+                  <p className="text-base text-muted-foreground leading-relaxed">
+                    {artwork.description}
+                  </p>
+                </div>
+
+                {/* Economic Profile Grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="rounded border border-border bg-muted/5 p-6 flex flex-col items-center justify-center text-center">
+                    <span className="text-[10px] uppercase tracking-[0.2em] font-black text-muted-foreground mb-3">Amount</span>
+                    <span className="text-2xl font-black text-primary">${artwork.price.toLocaleString()}</span>
+                  </div>
+                  <div className="rounded border border-border bg-muted/5 p-6 flex flex-col items-center justify-center text-center">
+                    <span className="text-[10px] uppercase tracking-[0.2em] font-black text-muted-foreground mb-3">Stock</span>
+                    <span className={cn(
+                      "text-2xl font-black",
+                      artwork.stock_quantity > 0 ? "text-foreground" : "text-destructive"
+                    )}>
+                      {artwork.stock_quantity > 0 ? artwork.stock_quantity : "Out"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Primary Interaction Area */}
+                <div className="space-y-4 pt-6">
+                  {/* Phone Contact - User Requested Primary Action */}
+                  <Button asChild size="lg" className="w-full btn-primary h-16 rounded font-black text-base shadow-lg shadow-primary/10">
+                    <Link href={artist?.phone_number ? `tel:${artist.phone_number}` : "#"}>
+                      <Phone className="w-5 h-5 mr-3" />
+                      Contact via Phone
                     </Link>
-                  </motion.div>
-                ))}
+                  </Button>
+
+                  <div className="flex gap-4">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="flex-1 rounded border-border hover:bg-muted font-bold text-xs uppercase tracking-widest"
+                      onClick={handleLike}
+                    >
+                      <Heart className={cn("w-4 h-4 mr-2", isLiked && "fill-destructive text-destructive")} />
+                      {isLiked ? "Saved" : "Save Piece"}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="rounded px-6 border-border hover:bg-muted"
+                      onClick={() => setShowShareMenu(!showShareMenu)}
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  {/* Contextual Share Menu */}
+                  <AnimatePresence>
+                    {showShareMenu && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="p-5 rounded border border-border bg-card shadow-2xl mt-4"
+                      >
+                        <p className="text-[9px] uppercase tracking-[0.3em] font-black text-muted-foreground mb-4">Sharing Options</p>
+                        <div className="grid grid-cols-2 gap-3">
+                          {[
+                            { id: 'twitter', label: 'X/Twitter', icon: <Globe className="w-4 h-4" /> },
+                            { id: 'copy', label: copiedToClipboard ? 'Link Copied' : 'Copy URL', icon: <ExternalLink className="w-4 h-4" /> }
+                          ].map(p => (
+                            <Button
+                              key={p.id}
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleShare(p.id)}
+                              className="justify-start gap-3 h-12 px-4 hover:bg-muted rounded"
+                            >
+                              {p.icon}
+                              <span className="text-[10px] font-black uppercase tracking-wider">{p.label}</span>
+                            </Button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             </div>
-          </section>
-        )}
+          </div>
+        </div>
       </div>
 
+      {/* Simplified Full Screen View */}
       <ArtworkFullView
         src={artwork.image_url}
         alt={artwork.description}
