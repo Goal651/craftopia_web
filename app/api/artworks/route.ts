@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
         await dbConnect()
         const body = await request.json()
 
-        const { title, description, category, image_url, artist_id, artist_name, price, stock_quantity } = body
+        const { title, description, category, image_url, images, medium, dimensions, year, artist_id, artist_name, price, stock_quantity, featured } = body
 
         if (!image_url || !artist_id || !artist_name) {
             return NextResponse.json(
@@ -78,10 +78,15 @@ export async function POST(request: NextRequest) {
             description,
             category: category || 'Artworks',
             image_url,
+            images: images || [],
+            medium,
+            dimensions,
+            year,
             artist_id,
             artist_name,
             price: price || 0,
             stock_quantity: stock_quantity || 1,
+            featured: featured || false,
             view_count: 0
         })
 

@@ -12,6 +12,9 @@ const ArtworkSchema = new mongoose.Schema({
     image_path: {
         type: String,
     },
+    images: [{
+        type: String,
+    }],
     artist_id: {
         type: String,
         required: true,
@@ -31,6 +34,23 @@ const ArtworkSchema = new mongoose.Schema({
     stock_quantity: {
         type: Number,
         default: 0,
+    },
+    category: {
+        type: String,
+        default: 'Artwork',
+    },
+    medium: {
+        type: String,
+    },
+    dimensions: {
+        type: String,
+    },
+    year: {
+        type: Number,
+    },
+    featured: {
+        type: Boolean,
+        default: false,
     },
 }, {
     timestamps: true,
