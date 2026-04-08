@@ -50,7 +50,7 @@ export function LiveVisualSearch({
   const calculateRelevance = useCallback((artwork: ArtworkRecord, searchQuery: string): SearchResult => {
     const query = searchQuery.toLowerCase()
     const artist = artwork.artist_name.toLowerCase()
-    const description = (artwork.description || "").toLowerCase()
+    const description = "".toLowerCase()
 
     let score = 0
     const matchedFields: string[] = []
@@ -274,7 +274,7 @@ export function LiveVisualSearch({
                       <div className="relative w-16 h-16 rounded overflow-hidden flex-shrink-0">
                         <img
                           src={result.artwork.image_url}
-                          alt={result.artwork.description}
+                          alt="Artwork"
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
@@ -286,7 +286,7 @@ export function LiveVisualSearch({
                       {/* Artwork Info */}
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-foreground truncate group-hover:text-primary transition-colors">
-                          {result.artwork.description}
+                          Artwork
                         </h4>
                         <p className="text-sm text-muted-foreground truncate">
                           by {result.artwork.artist_name}

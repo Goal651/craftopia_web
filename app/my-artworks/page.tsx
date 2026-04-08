@@ -40,7 +40,7 @@ export default function MyArtworksPage() {
   // Filter and sort artworks
   const filteredArtworks = userArtworks
     .filter(artwork =>
-      artwork.description.toLowerCase().includes(searchTerm.toLowerCase())
+      artwork.artist_name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
       switch (sortBy) {
@@ -51,7 +51,7 @@ export default function MyArtworksPage() {
         case "views":
           return b.view_count - a.view_count
         case "title":
-          return a.description.localeCompare(b.description)
+          return a.artist_name.localeCompare(b.artist_name)
         default:
           return 0
       }

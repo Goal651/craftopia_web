@@ -795,14 +795,14 @@ export default function AdminPanel() {
         <DialogContent className="glass-strong border-0 max-w-2xl shadow-2xl p-0 overflow-hidden">
           <DialogHeader className="bg-muted/10 p-8 border-b border-border/50">
             <DialogTitle className="text-3xl font-semibold text-white">Refine Masterpiece</DialogTitle>
-            <CardDescription className="text-muted-foreground text-lg">Modify details for <span className="text-primary italic font-medium">{selectedArtwork?.description}</span></CardDescription>
+            <CardDescription className="text-muted-foreground text-lg">Modify details for <span className="text-primary italic font-medium">Artwork</span></CardDescription>
           </DialogHeader>
           <form onSubmit={handleUpdateArtwork}>
             <div className="p-8 space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <Label htmlFor="title" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Masterpiece Title</Label>
-                  <Input name="title" defaultValue={selectedArtwork?.description} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground" required />
+                  <Input name="title" defaultValue="Artwork" className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="price" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Market Valuation ($)</Label>
@@ -819,7 +819,7 @@ export default function AdminPanel() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Narrative & Description</Label>
-                <Textarea name="description" defaultValue={selectedArtwork?.description || ''} rows={5} className="glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground leading-relaxed p-4" />
+                <Textarea name="description" defaultValue='' rows={5} className="glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground leading-relaxed p-4" />
               </div>
             </div>
             <DialogFooter className="bg-muted/10 p-8 border-t border-border/50 gap-4">
@@ -862,7 +862,7 @@ export default function AdminPanel() {
           <DialogHeader className="bg-muted/10 p-8 border-b border-border/50">
             <div className="flex justify-between items-start">
               <div className="space-y-1">
-                <DialogTitle className="text-3xl font-semibold text-foreground">{selectedArtwork?.description}</DialogTitle>
+                <DialogTitle className="text-3xl font-semibold text-foreground">Artwork</DialogTitle>
                 <CardDescription className="text-primary text-lg font-medium flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4" />
                   {selectedArtwork?.artist_name}
@@ -874,7 +874,7 @@ export default function AdminPanel() {
             <div className="relative aspect-square md:aspect-auto h-full min-h-[400px]">
               <Image
                 src={selectedArtwork?.image_url || "/placeholder.svg"}
-                alt={selectedArtwork?.description || "Artwork"}
+                alt="Artwork"
                 fill
                 className="object-cover"
               />
@@ -883,7 +883,7 @@ export default function AdminPanel() {
               <div className="space-y-4">
                 <h4 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground border-b border-white/5 pb-2">Description</h4>
                 <p className="text-foreground leading-relaxed text-lg italic">
-                  {selectedArtwork?.description || "No description provided for this masterpiece."}
+                  No description provided for this masterpiece.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-6">
