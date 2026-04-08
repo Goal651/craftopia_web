@@ -100,9 +100,7 @@ export function Navbar() {
             {/* Logo */}
             <div className="flex items-center space-x-2 group"
               onClick={() => router.push('/')}>
-              <div className="w-9 h-9 gradient-blue-green rounded flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-primary/20">
-                <Palette className="w-5 h-5 text-white" />
-              </div>
+              
               <span className="font-bold text-xl tracking-tight text-gradient-primary">
                 CRAFTOPIA
               </span>
