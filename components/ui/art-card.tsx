@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import Link from "next/link"
-import { Eye, Heart, Star, Mail, ArrowUpRight, User2 } from "lucide-react"
+import { Eye, Heart, Star, Phone, ArrowUpRight, User2 } from "lucide-react"
 import { ArtworkRecord, User } from "@/types"
 import { ArtworkImage } from "./artwork-image"
 import { Badge } from "./badge"
@@ -88,10 +88,11 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
       className={cn("group perspective-1000 ", className)}
     >
       <motion.div
-        className="relative bg-card/50 backdrop-blur-xl rounded overflow-hidden border border-border/50 shadow-2xl transition-shadow duration-500 hover:shadow-primary/20 h-96 flex flex-col"
+        className="relative bg-card/50 backdrop-blur-xl rounded overflow-hidden border border-border/50 shadow-2xl transition-shadow duration-500 hover:shadow-primary/20 h-[28rem] flex flex-col cursor-pointer"
+        onClick={() => window.location.href = `/artworks/${artwork.id}`}
       >
         {/* Image Container */}
-        <div className="relative overflow-hidden aspect-[3/4]">
+        <div className="relative overflow-hidden aspect-[4/5] flex">
           <motion.div
             animate={{
               scale: isHovered ? 1.1 : 1
@@ -103,7 +104,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
               src={artwork.image_url}
               alt="Artwork"
               title="Artwork"
-              className="w-auto h-auto object-cover"
+              className="w-full h-full object-cover"
             />
           </motion.div>
 
@@ -115,71 +116,10 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
             transition={{ duration: 0.3 }}
             className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
           />
-
-
-          {/* Quick Actions */}
-          <motion.div
-            animate={{
-              opacity: isHovered ? 1 : 0,
-              y: isHovered ? 0 : 20
-            }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-            className="absolute top-4 right-4 flex flex-col gap-2 z-10"
-          >
-            <Button
-              size="icon"
-              className="bg-background/90 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground transition-all duration-300 shadow-lg h-10 w-10"
-              aria-label="Add to wishlist"
-            >
-              <Heart className="w-4 h-4" />
-            </Button>
-            <Button
-              size="icon"
-              className="bg-background/90 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground transition-all duration-300 shadow-lg h-10 w-10"
-              aria-label="Quick view"
-            >
-              <Eye className="w-4 h-4" />
-            </Button>
-          </motion.div>
-
-          {/* View Count */}
-          <motion.div
-            animate={{
-              opacity: isHovered ? 1 : 0,
-              y: isHovered ? 0 : 20
-            }}
-            transition={{ duration: 0.3, delay: 0.15 }}
-            className="absolute bottom-4 left-4 flex items-center gap-2 bg-background/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg z-10"
-          >
-            <Eye className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm font-medium">{artwork.view_count}</span>
-          </motion.div>
-
-          {/* Rating */}
-          <motion.div
-            animate={{
-              opacity: isHovered ? 1 : 0,
-              y: isHovered ? 0 : 20
-            }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-            className="absolute bottom-4 right-4 flex items-center gap-1 bg-background/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg z-10"
-          >
-            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm font-medium">{(4.5 + (artwork.view_count % 5) / 10).toFixed(1)}</span>
-          </motion.div>
         </div>
 
         {/* Content */}
         <div className="p-6 flex-1 flex flex-col">
-          <div className="flex-1">
-            <Link href={`/artworks/${artwork.id}`} className="group/link">
-              <h3 className="text-xl font-semibold mb-2 group-hover/link:text-primary transition-colors line-clamp-2">
-                Artwork
-              </h3>
-            </Link>
-            <p className="text-muted-foreground text-sm mb-4">by {artwork.artist_name}</p>
-          </div>
-
           {/* Footer */}
           <div className="flex items-center justify-between pt-4 border-t border-border/50">
             <div className="flex flex-col">
@@ -197,12 +137,15 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
               )}
             </div>
             <Button
-              onClick={handleContactOwner}
+              onClick={(e) => {
+                e.stopPropagation()
+                handleContactOwner()
+              }}
               className="btn-primary group/btn"
               size="sm"
             >
-              <Mail className="w-4 h-4 mr-2" />
-              Contact
+              <Phone className="w-4 h-4 mr-2" />
+              Call
               <ArrowUpRight className="w-4 h-4 ml-1 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
             </Button>
           </div>
@@ -262,7 +205,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
               {/* Contact Info */}
               <div className="p-4 glass rounded space-y-3">
                 <h4 className="font-semibold mb-2 flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
+                  <Phone className="w-4 h-4" />
                   Contact Information
                 </h4>
                 <div className="space-y-2">
@@ -293,9 +236,9 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
                   asChild
                   className="btn-primary flex-1"
                 >
-                  <a href={`mailto:${artistInfo.email}?subject=Inquiry about Artwork`}>
-                    <Mail className="w-4 h-4 mr-2" />
-                    Send Email
+                  <a href={`tel:${artistInfo.phone_number}`}>
+                    <Phone className="w-4 h-4 mr-2" />
+                    Call Now
                   </a>
                 </Button>
                 <Button
