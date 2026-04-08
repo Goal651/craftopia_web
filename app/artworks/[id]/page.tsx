@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { formatDateSafe, getRelativeTime } from "@/lib/utils/date-utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -14,7 +14,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ArtworkRecord } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
-import { LiveViewCounter } from "@/components/ui/live-view-counter"
 import { ArtworkImage } from "@/components/ui/artwork-image"
 import { useAuth } from "@/contexts/AuthContext"
 import {
@@ -42,7 +41,10 @@ import {
   Globe,
   Camera,
   Award,
-  Sparkles
+  Sparkles,
+  Maximize2,
+  ArrowUpRight,
+  ArrowRight
 } from "lucide-react"
 import Head from 'next/head'
 import { cn } from "@/lib/utils"
@@ -429,42 +431,46 @@ export default function ArtworkDetailPage() {
         )}
       </Head>
 
-      <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
-        <div className="container-modern px-6 lg:px-10">
-          {/* Cinema Layout: Immersive Hero Section */}
-          <div className="space-y-16 lg:space-y-24">
+      <div className="min-h-screen bg-background">
+        {/* Cinema Hero Section */}
+        <section className="relative pt-12 pb-16 md:pt-20 md:pb-24 overflow-hidden">
+          <div className="container-modern px-6 lg:px-10">
             <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}
-              className="relative mx-auto group cursor-zoom-in max-w-7xl"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="relative group cursor-zoom-in max-w-7xl mx-auto"
               onClick={() => setIsFullscreen(true)}
             >
-              <div className="relative rounded-3xl overflow-hidden glass-strong border border-border/50 shadow-[0_48px_100px_-20px_rgba(0,0,0,0.6)] transition-all duration-700 hover:shadow-primary/10">
+              <div className="relative rounded-[2rem] overflow-hidden glass-strong border border-border/50 shadow-[0_48px_100px_-20px_rgba(0,0,0,0.6)] transition-all duration-700 hover:shadow-primary/20">
                 <ArtworkImage
                   src={artwork.image_url}
                   alt={artwork.description}
                   title={artwork.description}
-                  className="w-full h-auto max-h-[75vh] object-contain mx-auto"
+                  className="w-full h-auto max-h-[80vh] object-contain mx-auto"
                   priority
                 />
                 
-                {/* Immersive Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center pb-10 pointer-events-none">
-                  <div className="flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/20 px-6 py-3 rounded-full shadow-2xl scale-90 group-hover:scale-100 transition-transform">
+                {/* Immersive Inspect Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-end justify-center pb-12 pointer-events-none">
+                  <motion.div 
+                    initial={{ y: 20 }}
+                    whileHover={{ y: 0 }}
+                    className="flex items-center gap-3 bg-white/10 backdrop-blur-2xl border border-white/20 px-8 py-4 rounded-full shadow-2xl"
+                  >
                     <Maximize2 className="w-5 h-5 text-primary" />
-                    <span className="text-sm font-bold uppercase tracking-[0.2em] text-white">Inspect Detail</span>
-                  </div>
+                    <span className="text-sm font-black uppercase tracking-[0.25em] text-white">Full View</span>
+                  </motion.div>
                 </div>
 
-                {/* Minimalist Action Float */}
-                <div className="absolute top-6 right-6 flex items-center gap-3 z-20">
+                {/* Floating Action Float */}
+                <div className="absolute top-8 right-8 flex items-center gap-4 z-20">
                   <Button
                     size="icon"
                     variant="ghost"
                     className={cn(
-                      "w-12 h-12 rounded-full glass-strong border border-white/10 backdrop-blur-2xl shadow-2xl transition-all",
-                      isLiked ? "text-red-500 bg-red-500/10" : "text-white hover:text-red-400"
+                      "w-14 h-14 rounded-full glass-strong border border-white/10 backdrop-blur-3xl shadow-2xl transition-all duration-500",
+                      isLiked ? "text-red-500 bg-red-500/20 border-red-500/30" : "text-white hover:text-red-400 hover:bg-white/10"
                     )}
                     onClick={(e) => {
                       e.stopPropagation()
@@ -476,7 +482,7 @@ export default function ArtworkDetailPage() {
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="w-12 h-12 rounded-full glass-strong border border-white/10 backdrop-blur-2xl shadow-2xl text-white transition-all hover:bg-white/10"
+                    className="w-14 h-14 rounded-full glass-strong border border-white/10 backdrop-blur-3xl shadow-2xl text-white transition-all duration-500 hover:bg-white/10"
                     onClick={(e) => {
                       e.stopPropagation()
                       setShowShareMenu(!showShareMenu)
@@ -493,13 +499,13 @@ export default function ArtworkDetailPage() {
                       initial={{ opacity: 0, scale: 0.95, y: 10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                      className="absolute top-20 right-6 glass-strong border border-white/20 rounded-xl p-3 z-30 min-w-[200px] shadow-2xl"
+                      className="absolute top-24 right-8 glass-strong border border-white/20 rounded-2xl p-4 z-30 min-w-[240px] shadow-[0_32px_64px_rgba(0,0,0,0.5)]"
                     >
-                      <div className="flex flex-col gap-1">
+                      <div className="space-y-2">
                         {[
-                          { id: 'twitter', label: 'X / Twitter', color: 'bg-blue-400' },
-                          { id: 'facebook', label: 'Facebook', color: 'bg-blue-600' },
-                          { id: 'copy', label: copiedToClipboard ? 'Link Copied!' : 'Copy Link', color: 'bg-gray-500' }
+                          { id: 'twitter', label: 'X / Twitter', icon: <Globe className="w-4 h-4" /> },
+                          { id: 'facebook', label: 'Facebook', icon: <Users className="w-4 h-4" /> },
+                          { id: 'copy', label: copiedToClipboard ? 'Link Copied!' : 'Copy Link', icon: <ExternalLink className="w-4 h-4" /> }
                         ].map(p => (
                           <Button
                             key={p.id}
@@ -509,9 +515,9 @@ export default function ArtworkDetailPage() {
                               e.stopPropagation()
                               handleShare(p.id)
                             }}
-                            className="w-full justify-start text-white hover:bg-white/10 gap-3"
+                            className="w-full justify-start text-white/80 hover:text-white hover:bg-white/10 gap-3 font-medium"
                           >
-                            <div className={cn("w-2 h-2 rounded-full", p.color)} />
+                            {p.icon}
                             {p.label}
                           </Button>
                         ))}
@@ -521,395 +527,198 @@ export default function ArtworkDetailPage() {
                 </AnimatePresence>
               </div>
             </motion.div>
+          </div>
+        </section>
 
-            {/* Header / Narrative Section below the image */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-24">
-              <div className="lg:col-span-2 space-y-8">
-                <div className="space-y-6">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 uppercase tracking-widest text-[10px] font-black shadow-lg shadow-primary/5">
-                      {artwork.category || "Artworks"}
-                    </Badge>
-                    <div className="h-1 w-1 rounded-full bg-border" />
-                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                      {artwork.view_count.toLocaleString()} Views
-                    </span>
+        {/* Info & Engagement Section */}
+        <section className="pb-24">
+          <div className="container-modern px-6 lg:px-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+              
+              {/* Primary Content (8 columns) */}
+              <div className="lg:col-span-8 space-y-12">
+                <div className="space-y-8">
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <Badge className="bg-primary/10 text-primary border-primary/20 px-5 py-2 uppercase tracking-widest text-[11px] font-black shadow-lg shadow-primary/5">
+                        {artwork.category || "Fine Art"}
+                      </Badge>
+                      <div className="h-1 w-1 rounded-full bg-border" />
+                      <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
+                        {artwork.view_count.toLocaleString()} Global Views
+                      </span>
+                    </div>
+                    
+                    <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-foreground leading-[1] max-w-4xl">
+                      {artwork.description || "Experimental Vision"}
+                    </h1>
                   </div>
-                  
-                  <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-foreground leading-[1.05]">
-                    {artwork.description || "Experimental Piece"}
-                  </h1>
 
-                  <Link
-                    href={`/gallery/artist/${artwork.artist_id}`}
-                    className="inline-flex items-center gap-3 group px-4 py-2 rounded-full border border-border/50 bg-muted/10 hover:border-primary/50 transition-all duration-300"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-foreground flex items-center justify-center text-[10px] font-black text-white">
+                  <div className="flex items-center gap-6 p-1 pr-6 bg-muted/10 border border-border/50 rounded-full w-fit group hover:border-primary/50 transition-all duration-500">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary-foreground flex items-center justify-center text-sm font-black text-white shadow-xl">
                       {artwork.artist_name.charAt(0)}
                     </div>
-                    <span className="text-sm font-bold text-muted-foreground group-hover:text-primary transition-colors">
-                      Created by {artwork.artist_name}
-                    </span>
-                    <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </Link>
+                    <div className="flex flex-col">
+                      <p className="text-[10px] uppercase tracking-widest font-black text-muted-foreground">Mastermind</p>
+                      <Link
+                        href={`/gallery/artist/${artwork.artist_id}`}
+                        className="text-base font-bold text-foreground hover:text-primary transition-colors flex items-center gap-1"
+                      >
+                        {artwork.artist_name}
+                        <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </Link>
+                    </div>
+                  </div>
 
-                  {/* Sidebar-style fields now integrated into flow if needed, OR keep the sidebar below */}
+                  <div className="prose prose-invert max-w-none">
+                    <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed">
+                      {artwork.description}
+                    </p>
+                  </div>
                 </div>
 
-
-              {/* Comments Section */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <Card className="glass-strong border border-border/50">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-6">
-                      <h3 className="text-xl font-semibold text-foreground flex items-center gap-2">
-                        <MessageCircle className="w-5 h-5 text-primary" />
-                        Comments ({comments.length})
-                      </h3>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowComments(!showComments)}
-                        className="text-muted-foreground hover:text-foreground"
-                      >
-                        {showComments ? 'Hide' : 'Show'}
-                      </Button>
-                    </div>
-
-                    {showComments && (
-                      <div className="space-y-4">
-                        {/* Comment Input */}
-                        <div className="flex gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center flex-shrink-0">
-                            <User className="w-5 h-5 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <textarea
-                              value={comment}
-                              onChange={(e) => setComment(e.target.value)}
-                              placeholder="Share your thoughts about this artwork..."
-                              className="w-full p-3 glass-strong border border-white/20 rounded text-white placeholder-gray-400 resize-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50"
-                              rows={3}
-                            />
-                            <div className="flex justify-between items-center mt-2">
-                              <span className="text-xs text-gray-400">
-                                Be respectful and constructive in your comments
-                              </span>
-                              <Button
-                                onClick={handleCommentSubmit}
-                                disabled={!comment.trim()}
-                                className="btn-primary h-8 px-4"
-                              >
-                                <Send className="w-3 h-3 mr-1" />
-                                Post
-                              </Button>
-                            </div>
-                          </div>
+                {/* Technical Specifications */}
+                <div className="pt-12 border-t border-border/30 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                       <Palette className="w-4 h-4" /> Technical Profile
+                    </h4>
+                    <div className="space-y-3">
+                      {[
+                        { label: 'Medium', value: artwork.medium || 'Digital' },
+                        { label: 'Dimensions', value: artwork.dimensions || 'Variable' },
+                        { label: 'Edition', value: artwork.stock_quantity > 0 ? 'Limited' : 'Collection' }
+                      ].map(item => (
+                        <div key={item.label} className="flex justify-between items-center py-2 border-b border-border/10">
+                          <span className="text-sm text-muted-foreground">{item.label}</span>
+                          <span className="text-sm font-bold text-foreground">{item.value}</span>
                         </div>
-
-                        {/* Comments List */}
-                        {comments.length > 0 && (
-                          <div className="space-y-4 pt-4 border-t border-white/10">
-                            {comments.map((comment) => (
-                              <motion.div
-                                key={comment._id}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="flex gap-3"
-                              >
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                                  {comment.user_id?.avatar_url ? (
-                                    <img
-                                      src={comment.user_id.avatar_url}
-                                      alt={comment.user_id.display_name}
-                                      className="w-full h-full object-cover"
-                                    />
-                                  ) : (
-                                    <User className="w-4 h-4 text-white" />
-                                  )}
-                                </div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <span className="font-medium text-white text-sm">
-                                      {comment.user_id?.display_name || 'Anonymous User'}
-                                    </span>
-                                    <span className="text-xs text-gray-500">
-                                      {getRelativeTime(comment.created_at)}
-                                    </span>
-                                  </div>
-                                  <p className="text-gray-300 text-sm leading-relaxed">{comment.content}</p>
-                                  <div className="flex items-center gap-4 mt-2">
-                                    <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white h-6 px-2">
-                                      <ThumbsUp className="w-3 h-3 mr-1" />
-                                      <span className="text-xs">Like</span>
-                                    </Button>
-                                    <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white h-6 px-2">
-                                      <MessageCircle className="w-3 h-3 mr-1" />
-                                      <span className="text-xs">Reply</span>
-                                    </Button>
-                                  </div>
-
-                                  {/* Show replies */}
-                                  {comment.replies && comment.replies.length > 0 && (
-                                    <div className="mt-3 space-y-2 pl-4 border-l-2 border-white/10">
-                                      {comment.replies.map((reply: any) => (
-                                        <div key={reply._id} className="flex gap-2">
-                                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                                            {reply.user_id?.avatar_url ? (
-                                              <img
-                                                src={reply.user_id.avatar_url}
-                                                alt={reply.user_id.display_name}
-                                                className="w-full h-full object-cover"
-                                              />
-                                            ) : (
-                                              <User className="w-3 h-3 text-white" />
-                                            )}
-                                          </div>
-                                          <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-1">
-                                              <span className="font-medium text-white text-xs">
-                                                {reply.user_id?.display_name || 'Anonymous User'}
-                                              </span>
-                                              <span className="text-xs text-gray-500">
-                                                {getRelativeTime(reply.created_at)}
-                                              </span>
-                                            </div>
-                                            <p className="text-gray-300 text-xs leading-relaxed">{reply.content}</p>
-                                          </div>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                              </motion.div>
-                            ))}
-                          </div>
-                        )}
-
-                        {commentsLoading && (
-                          <div className="flex items-center justify-center py-4">
-                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </div>
-
-            {/* Sidebar - 1 column */}
-            <div className="space-y-8">
-              {/* Artwork Details Card */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <Card className="glass-strong border border-border/50 overflow-hidden">
-                  <CardContent className="p-6 space-y-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-xl font-semibold text-foreground">Details</h3>
-                      <Frame className="w-5 h-5 text-gray-400" />
+                      ))}
                     </div>
-
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between py-3 border-b border-border/50">
-                        <span className="text-gray-400 flex items-center gap-2">
-                          <Tag className="w-4 h-4" />
-                          Price
-                        </span>
-                        <span className="text-primary font-bold text-xl">
-                          {artwork.price > 0 ? `$${artwork.price.toLocaleString()}` : "Not for Sale"}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between py-3 border-b border-border/50">
-                        <span className="text-gray-400 flex items-center gap-2">
-                          <Bookmark className="w-4 h-4" />
-                          Availability
-                        </span>
-                        <span className={cn(
-                          "font-bold",
-                          artwork.stock_quantity > 0 ? "text-emerald-500" : "text-red-500"
-                        )}>
-                          {artwork.stock_quantity > 0 ? `${artwork.stock_quantity} In Stock` : "Sold Out"}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between py-3 border-b border-border/50">
-                        <span className="text-gray-400 flex items-center gap-2">
-                          <Calendar className="w-4 h-4" />
-                          Created
-                        </span>
-                        <span className="text-foreground font-medium">
-                          {formatDateSafe(artwork.createdAt, { format: 'medium' })}
-                        </span>
-                      </div>
-
-
-                      <div className="flex items-center justify-between py-3 border-b border-border/50">
-                        <span className="text-gray-400 flex items-center gap-2">
-                          <User className="w-4 h-4" />
-                          Artist
-                        </span>
-                        <Link
-                          href={`/gallery/artist/${artwork.artist_id}`}
-                          className="text-primary hover:text-primary/80 transition-colors font-medium"
-                        >
-                          {artwork.artist_name}
-                        </Link>
-                      </div>
-
-                      {artwork.medium && (
-                        <div className="flex items-center justify-between py-3 border-b border-border/50">
-                          <span className="text-gray-400">Medium</span>
-                          <span className="text-foreground font-medium">{artwork.medium}</span>
+                  </div>
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                       <Clock className="w-4 h-4" /> Acquisition Details
+                    </h4>
+                    <div className="space-y-3">
+                       <div className="flex justify-between items-center py-2 border-b border-border/10">
+                          <span className="text-sm text-muted-foreground">Released</span>
+                          <span className="text-sm font-bold text-foreground">{formatDateSafe(artwork.createdAt)}</span>
                         </div>
-                      )}
-
-                      {artwork.dimensions && (
-                        <div className="flex items-center justify-between py-3 border-b border-border/50">
-                          <span className="text-gray-400">Dimensions</span>
-                          <span className="text-foreground font-medium">{artwork.dimensions}</span>
+                        <div className="flex justify-between items-center py-2 border-b border-border/10">
+                          <span className="text-sm text-muted-foreground">Availability</span>
+                          <span className={cn("text-sm font-black", artwork.stock_quantity > 0 ? "text-emerald-500" : "text-red-500")}>
+                            {artwork.stock_quantity > 0 ? "Instant Download" : "Vaulted"}
+                          </span>
                         </div>
-                      )}
-
-                      {artwork.year && (
-                        <div className="flex items-center justify-between py-3">
-                          <span className="text-gray-400">Year</span>
-                          <span className="text-foreground font-medium">{artwork.year}</span>
-                        </div>
-                      )}
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                  </div>
+                </div>
 
-              {/* Actions Card */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                <Card className="glass-strong border border-border/50">
-                  <CardContent className="p-6 space-y-4">
-                    <Button className="w-full btn-primary h-12 text-base font-medium">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      View in Gallery
-                    </Button>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <Button
-                        variant="outline"
-                        className="glass-strong border border-white/20 h-11"
-                        onClick={handleLike}
-                      >
-                        <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
-                        {isLiked ? 'Liked' : 'Like'}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="glass-strong border border-white/20 h-11"
-                        onClick={() => setIsBookmarked(!isBookmarked)}
-                      >
-                        <Bookmark className={`w-4 h-4 mr-2 ${isBookmarked ? 'fill-yellow-500 text-yellow-500' : ''}`} />
-                        {isBookmarked ? 'Saved' : 'Save'}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* Artist Info Card */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 }}
-              >
-                <Card className="glass-strong border border-border/50">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/60 p-0.5">
-                        <div className="w-full h-full bg-black rounded-full flex items-center justify-center">
-                          <User className="w-6 h-6 text-primary" />
-                        </div>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-semibold text-foreground">{artwork.artist_name}</h4>
-                        <p className="text-sm text-gray-400">Digital Artist</p>
-                      </div>
-                    </div>
-                    <Button asChild className="w-full glass-strong border border-white/20">
-                      <Link href={`/gallery/artist/${artwork.artist_id}`}>
-                        View Profile
+                {/* Action Section */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-12">
+                   <Button asChild size="lg" className="h-16 px-12 text-lg font-black bg-primary text-primary-foreground shadow-2xl shadow-primary/20 hover:scale-[1.02] transition-transform rounded-2xl flex-1">
+                      <Link href={`mailto:${artwork.artist_id}?subject=Inquiry about ${artwork.description}`}>
+                        Secure Acquisition at ${artwork.price.toLocaleString()}
+                        <ArrowUpRight className="ml-2 w-5 h-5" />
                       </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </div>
-          </div>
-
-          {/* Related Artworks */}
-          {relatedArtworks.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="mt-20"
-            >
-              <div className="mb-8 text-center">
-                <h2 className="text-3xl font-bold text-foreground mb-4">Related Artworks</h2>
-                <p className="text-gray-400 text-lg">Discover more pieces you might love</p>
+                   </Button>
+                   <Button variant="outline" size="lg" className="h-16 px-8 glass-strong border-border/50 text-foreground hover:bg-muted/20 rounded-2xl transition-all" onClick={handleLike}>
+                      <Heart className={cn("w-5 h-5 mr-2", isLiked && "fill-red-500 text-red-500")} />
+                      {isLiked ? 'In Collection' : 'Add to Wishlist'}
+                   </Button>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {relatedArtworks.map((relatedArtwork, index) => (
+              {/* Sidebar / Comments (4 columns) */}
+              <div className="lg:col-span-4 space-y-12">
+                 <div className="glass-strong border border-border/50 rounded-3xl p-8 space-y-8 h-full flex flex-col">
+                    <div className="flex items-center justify-between">
+                       <h3 className="text-xl font-black tracking-tight">Community</h3>
+                       <MessageCircle className="w-5 h-5 text-muted-foreground" />
+                    </div>
+
+                    <div className="flex-1 space-y-6">
+                       <div className="space-y-4">
+                          <textarea 
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            placeholder="Drop a thought..."
+                            className="w-full bg-muted/5 p-4 rounded-2xl border border-border/50 text-foreground placeholder:text-muted-foreground/50 focus:ring-2 focus:ring-primary/30 outline-none transition-all resize-none h-32"
+                          />
+                          <Button onClick={handleCommentSubmit} disabled={!comment.trim()} className="w-full btn-primary h-12 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/10">
+                             Send Pulse
+                             <Send className="ml-2 w-3.5 h-3.5" />
+                          </Button>
+                       </div>
+
+                       <div className="h-px bg-border/30" />
+
+                       <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                           {comments.length > 0 ? comments.map(c => (
+                             <div key={c._id} className="space-y-2 group">
+                                <div className="flex items-center gap-3">
+                                   <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-[8px] font-black uppercase">
+                                      {c.user_id?.display_name?.charAt(0) || 'A'}
+                                   </div>
+                                   <span className="text-xs font-bold text-foreground/80">{c.user_id?.display_name || 'Anonymous'}</span>
+                                   <span className="text-[10px] text-muted-foreground ml-auto">{getRelativeTime(c.created_at)}</span>
+                                </div>
+                                <p className="text-sm text-muted-foreground leading-relaxed pl-9">{c.content}</p>
+                             </div>
+                           )) : (
+                             <div className="text-center py-12 space-y-3 opacity-30">
+                                <Sparkles className="w-8 h-8 mx-auto text-primary" />
+                                <p className="text-xs uppercase tracking-[0.2em] font-black">Be the first to pulse</p>
+                             </div>
+                           )}
+                       </div>
+                    </div>
+                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Related Creations Section */}
+        {relatedArtworks.length > 0 && (
+          <section className="py-24 border-t border-border/20 bg-muted/5">
+            <div className="container-modern px-6 lg:px-10">
+              <div className="mb-16 flex items-end justify-between">
+                <div className="space-y-2">
+                   <p className="text-xs font-black uppercase tracking-[0.3em] text-primary">Discover More</p>
+                   <h2 className="text-3xl md:text-5xl font-black tracking-tighter">Related <span className="text-gradient-primary">Creations</span></h2>
+                </div>
+                <Button asChild variant="ghost" className="hidden md:flex text-muted-foreground hover:text-primary">
+                   <Link href="/gallery" className="flex items-center gap-2">View All Collection <ArrowRight className="w-4 h-4" /></Link>
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {relatedArtworks.map((art, i) => (
                   <motion.div
-                    key={relatedArtwork.id}
+                    key={art.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.1 * index }}
+                    transition={{ delay: i * 0.1 }}
                   >
-                    <Link href={`/artworks/${relatedArtwork.id}`}>
-                      <Card className="glass-card border border-white/10 overflow-hidden group hover:border-white/20 transition-all duration-300 cursor-pointer">
-                        <div className="aspect-[4/5] overflow-hidden relative">
-                          <ArtworkImage
-                            src={relatedArtwork.image_url}
-                            alt={relatedArtwork.description}
-                            title={relatedArtwork.description}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                            width={400}
-                            height={500}
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <Link href={`/artworks/${art.id}`}>
+                      <div className="group space-y-4">
+                        <div className="aspect-[4/5] rounded-[2rem] overflow-hidden glass border border-border/50 shadow-xl transition-all duration-500 group-hover:shadow-primary/10 group-hover:border-primary/20">
+                           <ArtworkImage src={art.image_url} alt={art.description} title={art.description} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         </div>
-                        <CardContent className="p-4">
-                          <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-1">
-                            {relatedArtwork.description}
-                          </h3>
-                          <p className="text-sm text-gray-400 mb-3">
-                            by {relatedArtwork.artist_name}
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-500">
-                              {formatDateSafe(relatedArtwork.createdAt, { format: 'short' })}
-                            </span>
-                          </div>
-                        </CardContent>
-                      </Card>
+                        <div className="px-2">
+                           <h4 className="font-bold text-lg group-hover:text-primary transition-colors line-clamp-1">{art.description}</h4>
+                           <p className="text-sm text-muted-foreground">by {art.artist_name}</p>
+                        </div>
+                      </div>
                     </Link>
                   </motion.div>
                 ))}
               </div>
-            </motion.div>
-          )}
-        </div>
+            </div>
+          </section>
+        )}
       </div>
 
       <ArtworkFullView

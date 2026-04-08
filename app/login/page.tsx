@@ -145,7 +145,7 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full h-14 btn-primary glow-primary text-base font-bold uppercase tracking-widest shadow-xl transition-all"
+                className="w-full h-14 bg-background text-foreground btn-primary glow-primary font-bold uppercase tracking-widest shadow-xl transition-all"
                 disabled={isLoading}
               >
                 {isLoading ? (
