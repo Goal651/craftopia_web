@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect, Suspense } from "react"
+import Head from 'next/head'
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -24,6 +25,32 @@ function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
   const searchParams = useSearchParams()
+
+  // SEO: Generate structured data for contact page
+  const generateStructuredData = () => {
+    const baseUrl = 'https://craftopia-arts.vercel.app'
+    
+    return {
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      "name": "Contact CRAFTOPIA Art Gallery",
+      "description": "Get in touch with CRAFTOPIA art gallery. Contact us for artwork inquiries, artist collaborations, or general questions about our contemporary art collection.",
+      "url": `${baseUrl}/contact`,
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "CRAFTOPIA",
+        "url": baseUrl,
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+250-788-123-456",
+          "contactType": "customer service",
+          "availableLanguage": ["English", "French", "Kinyarwanda"]
+        }
+      }
+    }
+  }
+
+  const structuredData = generateStructuredData()
 
   useEffect(() => {
     const artwork = searchParams.get('artwork')
@@ -155,6 +182,32 @@ function ContactForm() {
 }
 
 export default function ContactPage() {
+  // SEO: Generate structured data for contact page
+  const generateStructuredData = () => {
+    const baseUrl = 'https://craftopia-arts.vercel.app'
+    
+    return {
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      "name": "Contact CRAFTOPIA Art Gallery",
+      "description": "Get in touch with CRAFTOPIA art gallery. Contact us for artwork inquiries, artist collaborations, or general questions about our contemporary art collection.",
+      "url": `${baseUrl}/contact`,
+      "mainEntity": {
+        "@@type": "Organization",
+        "name": "CRAFTOPIA",
+        "url": baseUrl,
+        "contactPoint": {
+          "@@type": "ContactPoint",
+          "telephone": "+250-788-123-456",
+          "contactType": "customer service",
+          "availableLanguage": ["English", "French", "Kinyarwanda"]
+        }
+      }
+    }
+  }
+
+  const structuredData = generateStructuredData()
+
   const contactInfo = [
     {
       icon: Phone,
@@ -183,13 +236,51 @@ export default function ContactPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        <div className="space-y-12 md:space-y-16">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+    <>
+      {/* SEO Meta Tags */}
+      <Head>
+        <title>Contact CRAFTOPIA Art Gallery | Get in Touch</title>
+        <meta name="description" content="Get in touch with CRAFTOPIA art gallery. Contact us for artwork inquiries, artist collaborations, or general questions about our contemporary art collection." />
+        <meta name="keywords" content="contact art gallery, art inquiries, artist collaboration, contemporary art, craftopia contact, rwanda art gallery" />
+        <meta name="author" content="CRAFTOPIA" />
+        <meta name="robots" content="index, follow" />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://craftopia-arts.vercel.app/contact" />
+        <meta property="og:title" content="Contact CRAFTOPIA Art Gallery | Get in Touch" />
+        <meta property="og:description" content="Get in touch with CRAFTOPIA art gallery for artwork inquiries and collaborations." />
+        <meta property="og:image" content="https://craftopia-arts.vercel.app/og-image.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="CRAFTOPIA" />
+        
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://craftopia-arts.vercel.app/contact" />
+        <meta property="twitter:title" content="Contact CRAFTOPIA Art Gallery" />
+        <meta property="twitter:description" content="Get in touch with CRAFTOPIA art gallery for artwork inquiries and collaborations." />
+        <meta property="twitter:image" content="https://craftopia-arts.vercel.app/og-image.jpg" />
+        
+        {/* Additional SEO */}
+        <link rel="canonical" href="https://craftopia-arts.vercel.app/contact" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      </Head>
+      
+      <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
+        <div className="container mx-auto px-4 py-8 md:py-12">
+          <div className="space-y-12 md:space-y-16">
+            {/* Header */}
+            <header className="text-center space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-center space-y-4 md:space-y-6 mb-16"
           >
@@ -201,6 +292,8 @@ export default function ContactPage() {
               Have questions about a particular artwork, interested in commissioning a piece, or want to learn more? We'd love to hear from you.
             </p>
           </motion.div>
+          </header>
+          <motion.div>
 
           <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
             {/* Contact Form */}
@@ -256,9 +349,11 @@ export default function ContactPage() {
 
             </motion.div>
           </div>
+        </motion.div>
         </div>
       </div>
     </div>
+    </>
   )
 }
 

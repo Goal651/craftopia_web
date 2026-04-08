@@ -118,19 +118,56 @@ export default function ArtworksPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
-      <div className="container mx-auto px-6">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-          {/* Header */}
-          <div className="text-center space-y-6">
-            <Badge className="glass px-6 py-2 border-primary/20 text-primary">Artistic Collection</Badge>
-            <h1 className="text-4xl lg:text-7xl font-semibold tracking-tight text-foreground">
-              Art <span className="text-gradient-primary">Exploration</span>
-            </h1>
+    <>
+      {/* SEO Meta Tags */}
+      <Head>
+        <title>Artworks Gallery - Browse Contemporary Art | CRAFTOPIA</title>
+        <meta name="description" content="Browse our complete collection of contemporary artworks including paintings, digital art, photography, and sculptures from talented artists. Filter by price, category, and style." />
+        <meta name="keywords" content="artworks gallery, contemporary art, paintings for sale, digital art, photography, sculptures, online art gallery, rwandan artists, art collection" />
+        <meta name="author" content="CRAFTOPIA" />
+        <meta name="robots" content="index, follow" />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://craftopia-arts.vercel.app/artworks" />
+        <meta property="og:title" content="Artworks Gallery - Browse Contemporary Art | CRAFTOPIA" />
+        <meta property="og:description" content="Browse our complete collection of contemporary artworks including paintings, digital art, photography, and sculptures from talented artists." />
+        <meta property="og:image" content="https://craftopia-arts.vercel.app/og-image.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="CRAFTOPIA" />
+        
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://craftopia-arts.vercel.app/artworks" />
+        <meta property="twitter:title" content="Artworks Gallery - CRAFTOPIA" />
+        <meta property="twitter:description" content="Browse our complete collection of contemporary artworks from talented artists." />
+        <meta property="twitter:image" content="https://craftopia-arts.vercel.app/og-image.jpg" />
+        
+        {/* Additional SEO */}
+        <link rel="canonical" href="https://craftopia-arts.vercel.app/artworks" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      </Head>
+      
+      <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
+        <div className="container mx-auto px-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
+            {/* Header */}
+            <header className="text-center space-y-6">
+              <Badge className="glass px-6 py-2 border-primary/20 text-primary" aria-label="Artistic collection badge">Artistic Collection</Badge>
+              <h1 className="text-4xl lg:text-7xl font-semibold tracking-tight text-foreground">
+                Art <span className="text-gradient-primary">Exploration</span>
+              </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Discover extraordinary contemporary artworks. Each piece tells a unique story through color, form, and emotion.
             </p>
-          </div>
+          </header>
 
           {/* Search and Filters */}
           <div className="space-y-4 md:space-y-6">
@@ -304,5 +341,6 @@ export default function ArtworksPage() {
         {selectedArtwork && <ProductModal artwork={selectedArtwork} onClose={() => setSelectedArtwork(null)} />}
       </AnimatePresence>
     </div>
+    </>
   )
 }
