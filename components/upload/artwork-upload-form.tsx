@@ -34,9 +34,6 @@ import { useUploadThing } from "@/lib/uploadthing";
 
 // Validation schema
 const artworkUploadSchema = z.object({
-  description: z.string()
-    .min(10, 'Description must be at least 10 characters')
-    .max(1000, 'Description must be less than 1000 characters'),
   price: z.number()
     .min(0, 'Price cannot be negative'),
   stock_quantity: z.number()
@@ -76,7 +73,6 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
   const form = useForm<ArtworkUploadFormValues>({
     resolver: zodResolver(artworkUploadSchema),
     defaultValues: {
-      description: editingArtwork?.description || '',
       price: editingArtwork?.price || 0,
       stock_quantity: editingArtwork?.stock_quantity || 1,
       imageFile: undefined
@@ -145,14 +141,13 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          description: data.description,
           price: data.price,
           stock_quantity: data.stock_quantity,
           image_url: imageUrl,
           artist_id: user.id,
           artist_name: user.display_name || user.email,
           category: 'Artworks', // Default category
-          title: data.description.substring(0, 50) // Use start of description as title
+          title: 'Artwork' // Default title
         })
       })
 
@@ -302,23 +297,6 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
             />
 
 
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium">Artwork Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Share the story behind this piece..."
-                      className="bg-muted/30 border-border/50 focus:bg-background transition-all min-h-[100px] resize-none p-4"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <FormField

@@ -196,7 +196,6 @@ export default function AdminPanel() {
         category: formData.get('category'),
         medium: formData.get('medium'),
         dimensions: formData.get('dimensions'),
-        description: formData.get('description'),
       }
 
       const res = await fetch(`/api/artworks/${selectedArtwork.id}`, {
@@ -220,7 +219,7 @@ export default function AdminPanel() {
 
   const filteredArtworks = artworks.filter((artwork) => {
     const matchesSearch =
-      artwork.description.toLowerCase().includes(searchTerm.toLowerCase())
+      artwork.artist_name.toLowerCase().includes(searchTerm.toLowerCase())
     return matchesSearch
   })
 
@@ -489,14 +488,14 @@ export default function AdminPanel() {
                                     <div className="relative w-16 h-16 rounded overflow-hidden shadow-xl group-hover:scale-105 transition-transform duration-500">
                                       <Image
                                         src={artwork.image_url || "/placeholder.svg"}
-                                        alt={artwork.description}
+                                        alt="Artwork"
                                         fill
                                         className="object-cover"
                                         sizes="64px"
                                       />
                                     </div>
                                     <div>
-                                      <div className="font-semibold text-foreground text-lg line-clamp-1">{artwork.description}</div>
+                                      <div className="font-semibold text-foreground text-lg line-clamp-1">Artwork</div>
                                       <div className="text-sm text-primary font-medium flex items-center gap-1.5">
                                         <ShieldCheck className="w-3 h-3" />
                                         {artwork.artist_name}
@@ -553,7 +552,7 @@ export default function AdminPanel() {
                                         <AlertDialogHeader>
                                           <DialogTitle className="text-2xl text-white font-semibold">Incinerate Masterpiece?</DialogTitle>
                                           <AlertDialogDescription className="text-muted-foreground text-lg py-4">
-                                            This action is irreversible. <span className="text-white font-semibold">"{artwork.description}"</span> will be permanently purged from the global archives.
+                                            This action is irreversible. <span className="text-white font-semibold">"Artwork"</span> will be permanently purged from the global archives.
                                           </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter className="gap-4">

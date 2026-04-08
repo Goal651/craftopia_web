@@ -101,8 +101,8 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
           >
             <ArtworkImage
               src={artwork.image_url}
-              alt={artwork.description}
-              title={artwork.description}
+              alt="Artwork"
+              title="Artwork"
               className="w-auto h-auto object-cover"
             />
           </motion.div>
@@ -174,7 +174,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
           <div className="flex-1">
             <Link href={`/artworks/${artwork.id}`} className="group/link">
               <h3 className="text-xl font-semibold mb-2 group-hover/link:text-primary transition-colors line-clamp-2">
-                {artwork.description}
+                Artwork
               </h3>
             </Link>
             <p className="text-muted-foreground text-sm mb-4">by {artwork.artist_name}</p>
@@ -278,7 +278,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-muted-foreground">Email:</span>
                     <a
-                      href={`mailto:${artistInfo.email}?subject=Inquiry about "${artwork.description}"`}
+                      href={`mailto:${artistInfo.email}?subject=Inquiry about Artwork`}
                       className="text-primary hover:underline"
                     >
                       {artistInfo.email}
@@ -293,7 +293,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
                   asChild
                   className="btn-primary flex-1"
                 >
-                  <a href={`mailto:${artistInfo.email}?subject=Inquiry about "${artwork.description}"`}>
+                  <a href={`mailto:${artistInfo.email}?subject=Inquiry about Artwork`}>
                     <Mail className="w-4 h-4 mr-2" />
                     Send Email
                   </a>

@@ -137,7 +137,7 @@ export default function ArtworkDetailPage() {
     const url = window.location.href
     const title = 'Amazing Artwork'
     const artist = artwork?.artist_name || 'Talented Artist'
-    const description = artwork?.description || `Check out this stunning artwork by ${artist} on Craftopia!`
+    const description = `Check out this stunning artwork by ${artist} on Craftopia!`
 
     switch (platform) {
       case 'twitter':
@@ -209,7 +209,7 @@ export default function ArtworkDetailPage() {
     return {
       "@context": "https://schema.org",
       "@type": "CreativeWork",
-      "description": artwork.description || `Stunning artwork by ${artwork.artist_name}`,
+      "description": `Stunning artwork by ${artwork.artist_name}`,
       "image": artwork.image_url,
       "author": {
         "@type": "Person",
@@ -300,16 +300,16 @@ export default function ArtworkDetailPage() {
   }
 
   const structuredData = generateStructuredData()
-  const seoDescription = artwork.description || `Discover this stunning artwork by ${artwork.artist_name}. Explore more amazing digital artworks on Craftopia.`
+  const seoDescription = `Discover this stunning artwork by ${artwork.artist_name}. Explore more amazing digital artworks on Craftopia.`
   const seoImage = artwork.image_url
 
   return (
     <>
       {/* SEO Meta Tags */}
       <Head>
-        <title>{artwork.description}</title>
+        <title>Artwork by {artwork.artist_name}</title>
         <meta name="description" content={seoDescription} />
-        <meta name="keywords" content={`${artwork.description}, ${artwork.artist_name}, digital art, artwork, craftopia, online gallery, art`} />
+        <meta name="keywords" content={`${artwork.artist_name}, digital art, artwork, craftopia, online gallery, art`} />
         <meta name="author" content={artwork.artist_name} />
         <meta name="robots" content="index, follow" />
 
@@ -357,8 +357,8 @@ export default function ArtworkDetailPage() {
               >
                 <ArtworkImage
                   src={artwork.image_url}
-                  alt={artwork.description}
-                  title={artwork.description}
+                  alt="Artwork"
+                  title="Artwork"
                   className="w-full h-full object-contain mx-auto transition-transform duration-700 hover:scale-105"
                   priority
                 />
@@ -373,18 +373,13 @@ export default function ArtworkDetailPage() {
                     {artwork.category || "Fine Art"}
                   </Badge>
                   <h1 className="text-2xl md:text-3xl font-black tracking-tight text-foreground leading-[1.2] break-words">
-                    {artwork.description || "Untitled Creation"}
+                    Artwork
                   </h1>
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     by <span className="text-foreground font-black">{artwork.artist_name}</span>
                   </p>
                 </div>
 
-                <div className="border-t border-border pt-4">
-                  <p className="text-sm text-muted-foreground leading-relaxed break-words whitespace-pre-wrap">
-                    {artwork.description}
-                  </p>
-                </div>
 
                 {/* Economic Profile Grid */}
                 <div className="grid grid-cols-2 gap-3">
@@ -470,7 +465,7 @@ export default function ArtworkDetailPage() {
       {/* Simplified Full Screen View */}
       <ArtworkFullView
         src={artwork.image_url}
-        alt={artwork.description}
+        alt="Artwork"
         isOpen={isFullscreen}
         onClose={() => setIsFullscreen(false)}
       />
