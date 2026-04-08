@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ArtworkRecord } from "@/types/index"
 import { ArtworkImage } from "@/components/ui/artwork-image"
+import { ArtworkGallery } from "@/components/ui/artwork-gallery"
 import { useAuth } from "@/contexts/AuthContext"
 import {
   Heart,
@@ -503,17 +504,14 @@ export default function ArtworkDetailPage() {
             {/* Artwork Display - 2 Columns */}
             <div className="lg:col-span-2">
               <motion.div
-                initial={{ opacity: 0, scale: 0.98 }}
+                initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8 }}
-                className="relative rounded-lg overflow-hidden glass border border-border shadow-md bg-muted/5 aspect-[4/3] max-h-[500px] flex items-center justify-center p-4"
               >
-                <ArtworkImage
-                  src={artwork.image_url}
-                  alt="Artwork"
-                  title="Artwork"
-                  className="w-full h-full object-contain mx-auto transition-transform duration-700 hover:scale-105"
-                  priority
+                <ArtworkGallery
+                  images={artwork.images}
+                  mainImage={artwork.image_url}
+                  alt={`${artwork.category || 'Artwork'} by ${artwork.artist_name}`}
                 />
               </motion.div>
             </div>

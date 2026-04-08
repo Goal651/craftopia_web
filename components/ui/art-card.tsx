@@ -107,15 +107,16 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
               className="w-full h-full object-cover"
             />
           </motion.div>
-
-          {/* Gradient Overlay */}
-          <motion.div
-            animate={{
-              opacity: isHovered ? 1 : 0
-            }}
-            transition={{ duration: 0.3 }}
-            className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
-          />
+          
+          {/* Multiple Images Indicator */}
+          {artwork.images && artwork.images.length > 0 && (
+            <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 4-8z"/>
+              </svg>
+              {artwork.images.length + 1}
+            </div>
+          )}
         </div>
 
         {/* Content */}

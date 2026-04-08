@@ -14,6 +14,7 @@ import { ArtworkRecord } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
 import { ArtworkImage } from "@/components/ui/artwork-image"
+import { ArtworkGallery } from "@/components/ui/artwork-gallery"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -322,20 +323,11 @@ export default function GalleryArtworkDetailPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="space-y-4">
-              <div className="aspect-square relative overflow-hidden rounded glass">
-                <ArtworkImage
-                  src={artwork.image_url}
-                  alt="Artwork"
-                  title="Artwork"
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  variant="artworkDetail"
-                  enableOptimizations={true}
-                  aspectRatio="1/1"
-                />
-              </div>
+              <ArtworkGallery
+                images={artwork.images}
+                mainImage={artwork.image_url}
+                alt={`${artwork.category || 'Community Artwork'} by ${artwork.artist_name}`}
+              />
             </div>
 
             <div className="space-y-6">
