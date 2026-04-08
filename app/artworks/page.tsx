@@ -24,42 +24,6 @@ export default function ArtworksPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [wishlist, setWishlist] = useState<string[]>([])
 
-  // SEO: Generate structured data for artworks
-  const generateStructuredData = () => {
-    const baseUrl = 'https://craftopia-arts.vercel.app'
-    
-    return {
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      "name": "Artworks Gallery - CRAFTOPIA",
-      "description": "Browse our complete collection of contemporary artworks including paintings, digital art, photography, and sculptures from talented artists.",
-      "url": `${baseUrl}/artworks`,
-      "mainEntity": {
-        "@type": "ItemList",
-        "numberOfItems": filteredAndSortedArtworks.length,
-        "itemListElement": filteredAndSortedArtworks.map((artwork, index) => ({
-          "@type": "VisualArtwork",
-          "position": index + 1,
-          "name": "Artwork",
-          "creator": {
-            "@type": "Person",
-            "name": artwork.artist_name
-          },
-          "image": artwork.image_url,
-          "url": `${baseUrl}/artworks/${artwork.id}`,
-          "offers": {
-            "@type": "Offer",
-            "price": artwork.price,
-            "priceCurrency": "RWF",
-            "availability": artwork.stock_quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
-          }
-        }))
-      }
-    }
-  }
-
-  const structuredData = generateStructuredData()
-
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -96,6 +60,40 @@ export default function ArtworksPage() {
 
     return filtered
   }, [artworks, searchTerm, categoryFilter, priceFilter, sortBy])
+
+  // SEO: Generate structured data after filteredAndSortedArtworks is available
+  const structuredData = useMemo(() => {
+    const baseUrl = 'https://craftopia-arts.vercel.app'
+    
+    return {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Artworks Gallery - CRAFTOPIA",
+      "description": "Browse our complete collection of contemporary artworks including paintings, digital art, photography, and sculptures from talented artists.",
+      "url": `${baseUrl}/artworks`,
+      "mainEntity": {
+        "@@type": "ItemList",
+        "numberOfItems": filteredAndSortedArtworks.length,
+        "itemListElement": filteredAndSortedArtworks.map((artwork, index) => ({
+          "@@type": "VisualArtwork",
+          "position": index + 1,
+          "name": "Artwork",
+          "creator": {
+            "@@type": "Person",
+            "name": artwork.artist_name
+          },
+          "image": artwork.image_url,
+          "url": `${baseUrl}/artworks/${artwork.id}`,
+          "offers": {
+            "@@type": "Offer",
+            "price": artwork.price,
+            "priceCurrency": "RWF",
+            "availability": artwork.stock_quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+          }
+        }))
+      }
+    }
+  }, [filteredAndSortedArtworks])
 
   const toggleWishlist = (artworkId: string) => {
     setWishlist((prev) => (prev.includes(artworkId) ? prev.filter((id) => id !== artworkId) : [...prev, artworkId]))

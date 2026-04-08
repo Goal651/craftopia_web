@@ -18,9 +18,7 @@ const nextConfig = {
     },
   },
   // Increase body size limit for uploads
-  experimental: {
-    serverComponentsExternalPackages: ['uploadthing'],
-  },
+  serverExternalPackages: ['uploadthing'],
 }
 
 export default nextConfig
