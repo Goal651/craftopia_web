@@ -86,33 +86,33 @@ export default function RegisterPage() {
         {/* Back to home */}
         <Link
           href="/"
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors group mb-4"
+          className="inline-flex items-center text-xs text-muted-foreground hover:text-primary transition-colors group mb-2"
         >
-          <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mr-3 group-hover:bg-primary/10 group-hover:text-primary transition-all">
-            <ArrowLeft className="h-4 w-4" />
+          <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center mr-2 group-hover:bg-primary/10 group-hover:text-primary transition-all">
+            <ArrowLeft className="h-3 w-3" />
           </div>
-          <span className="font-medium tracking-wide uppercase">Back to Gallery</span>
+          <span className="font-medium tracking-wide uppercase text-xs">Back to Gallery</span>
         </Link>
 
         <Card className="glass-strong border-border/50 shadow-2xl relative z-10 w-full">
-          <CardHeader className="space-y-4 text-center px-6 pt-10">
+          <CardHeader className="space-y-3 text-center px-6 pt-6">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring" }}
               className="flex justify-center"
             >
-              <div className="h-14 w-14 bg-primary/10 rounded flex items-center justify-center shadow-inner">
-                <Palette className="w-7 h-7 text-primary" />
+              <div className="h-10 w-10 bg-primary/10 rounded flex items-center justify-center shadow-inner">
+                <Palette className="w-5 h-5 text-primary" />
               </div>
             </motion.div>
-            <div className="space-y-1.5">
-              <CardTitle className="text-2xl font-semibold tracking-tight text-foreground">Create <span className="text-gradient-primary">Account</span></CardTitle>
-              <CardDescription className="text-sm text-muted-foreground">Join the elite CRAFTOPIA community</CardDescription>
+            <div className="space-y-1">
+              <CardTitle className="text-lg font-semibold tracking-tight text-foreground">Create <span className="text-gradient-primary">Account</span></CardTitle>
+              <CardDescription className="text-xs text-muted-foreground">Join the elite CRAFTOPIA community</CardDescription>
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-6 px-6 pb-10">
+          <CardContent className="space-y-4 px-6 pb-6">
             <form onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-x-6 gap-y-4">
               <div className="space-y-2">
                 <Label htmlFor="displayName" className="text-sm font-medium text-foreground/80">
@@ -126,7 +126,7 @@ export default function RegisterPage() {
                     placeholder="Enter your name"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="pl-10 h-11 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
+                    className="pl-10 h-9 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
                     required
                   />
                 </div>
@@ -144,7 +144,7 @@ export default function RegisterPage() {
                     placeholder="e.g. +250..."
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="pl-10 h-11 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
+                    className="pl-10 h-9 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
                     required
                   />
                 </div>
@@ -162,7 +162,7 @@ export default function RegisterPage() {
                     placeholder="your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-11 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
+                    className="pl-10 h-9 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
                     required
                   />
                 </div>
@@ -180,17 +180,17 @@ export default function RegisterPage() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-12 h-11 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
+                    className="pl-10 pr-12 h-9 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                   </Button>
                 </div>
               </div>
@@ -207,17 +207,17 @@ export default function RegisterPage() {
                     placeholder="••••••••"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pl-10 pr-12 h-11 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
+                    className="pl-10 pr-12 h-9 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
-                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showConfirmPassword ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                   </Button>
                 </div>
               </div>
@@ -233,12 +233,12 @@ export default function RegisterPage() {
               <div className="sm:col-span-2 mt-4 space-y-6">
                 <Button
                   type="submit"
-                  className="w-full h-11 btn-primary glow-primary text-xs font-semibold uppercase tracking-widest shadow-xl transition-all"
+                  className="w-full h-9 btn-primary glow-primary text-xs font-semibold uppercase tracking-widest shadow-xl transition-all"
                   disabled={isLoading}
                 >
                   {isLoading ? (
                     <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
                       Creating account...
                     </div>
                   ) : (

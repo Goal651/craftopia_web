@@ -64,33 +64,33 @@ export default function LoginPage() {
         {/* Back to home */}
         <Link
           href="/"
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors group mb-4"
+          className="inline-flex items-center text-xs text-muted-foreground hover:text-primary transition-colors group mb-2"
         >
-          <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mr-3 group-hover:bg-primary/10 group-hover:text-primary transition-all">
-            <ArrowLeft className="h-4 w-4" />
+          <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center mr-2 group-hover:bg-primary/10 group-hover:text-primary transition-all">
+            <ArrowLeft className="h-3 w-3" />
           </div>
-          <span className="font-medium tracking-wide uppercase">Back to Gallery</span>
+          <span className="font-medium tracking-wide uppercase text-xs">Back to Gallery</span>
         </Link>
 
         <Card className="glass-strong border-border/50 shadow-2xl relative z-10">
-          <CardHeader className="space-y-4 text-center px-6 pt-10">
+          <CardHeader className="space-y-3 text-center px-6 pt-6">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring" }}
               className="flex justify-center"
             >
-              <div className="h-14 w-14 bg-primary/10 rounded flex items-center justify-center shadow-inner">
-                <Palette className="w-7 h-7 text-primary" />
+              <div className="h-10 w-10 bg-primary/10 rounded flex items-center justify-center shadow-inner">
+                <Palette className="w-5 h-5 text-primary" />
               </div>
             </motion.div>
-            <div className="space-y-1.5">
-              <CardTitle className="text-2xl font-semibold tracking-tight text-foreground">Welcome <span className="text-gradient-primary">Back</span></CardTitle>
-              <CardDescription className="text-sm text-muted-foreground">Sign in to your CRAFTOPIA account</CardDescription>
+            <div className="space-y-1">
+              <CardTitle className="text-lg font-semibold tracking-tight text-foreground">Welcome <span className="text-gradient-primary">Back</span></CardTitle>
+              <CardDescription className="text-xs text-muted-foreground">Sign in to your CRAFTOPIA account</CardDescription>
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-4 md:space-y-6 px-4 md:px-6 pb-6 md:pb-8">
+          <CardContent className="space-y-3 md:space-y-4 px-4 md:px-6 pb-4 md:pb-6">
             <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium text-foreground/80">
@@ -104,7 +104,7 @@ export default function LoginPage() {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-12 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
+                    className="pl-10 h-10 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
                     required
                   />
                 </div>
@@ -122,17 +122,17 @@ export default function LoginPage() {
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-12 h-12 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
+                    className="pl-10 pr-12 h-10 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                   </Button>
                 </div>
               </div>
@@ -145,12 +145,12 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full h-11 bg-background text-foreground btn-primary glow-primary font-semibold uppercase tracking-widest text-xs shadow-xl transition-all"
+                className="w-full h-9 bg-background text-foreground btn-primary glow-primary font-semibold uppercase tracking-widest text-xs shadow-xl transition-all"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
                     Signing in...
                   </div>
                 ) : (
