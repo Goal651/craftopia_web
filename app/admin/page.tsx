@@ -237,7 +237,7 @@ export default function AdminPanel() {
             <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <ShieldCheck className="w-10 h-10 text-red-500" />
             </div>
-            <h1 className="text-3xl font-bold mb-4 text-white">Access Denied</h1>
+            <h1 className="text-3xl font-semibold mb-4 text-white">Access Denied</h1>
             <p className="text-muted-foreground mb-8 text-lg">You don't have administrative privileges to access this panel.</p>
             <Button asChild className="btn-primary w-full py-6 text-lg">
               <a href="/">Return to Homepage</a>
@@ -273,7 +273,7 @@ export default function AdminPanel() {
                 <div className="p-2 bg-primary/10 rounded">
                   <ShieldCheck className="w-6 h-6 text-primary" />
                 </div>
-                <h1 className="text-4xl font-bold tracking-tight text-foreground">Admin Command Center</h1>
+                <h1 className="text-4xl font-semibold tracking-tight text-foreground">Admin Command Center</h1>
               </div>
               <div className="flex items-center gap-3">
                 <p className="text-muted-foreground text-lg italic">Signed in as <span className="text-primary font-semibold">{user?.display_name || user?.email}</span></p>
@@ -305,7 +305,7 @@ export default function AdminPanel() {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{stat.label}</p>
-                      <p className="text-3xl font-bold text-foreground mt-1">{stat.value || 0}</p>
+                      <p className="text-3xl font-semibold text-foreground mt-1">{stat.value || 0}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -333,7 +333,7 @@ export default function AdminPanel() {
                 <Card className="glass-strong border-0 shadow-2xl">
                   <CardHeader className="flex flex-row items-center justify-between pb-8">
                     <div className="space-y-1">
-                      <CardTitle className="text-2xl font-bold text-foreground">Recent Movements</CardTitle>
+                      <CardTitle className="text-2xl font-semibold text-foreground">Recent Movements</CardTitle>
                       <CardDescription className="text-muted-foreground">Latest uploads across the platform</CardDescription>
                     </div>
                     <Activity className="w-6 h-6 text-primary" />
@@ -352,7 +352,7 @@ export default function AdminPanel() {
                         </div>
                         <div className="flex-1">
                           <p className="text-sm text-foreground">
-                            <span className="font-bold text-base block">{activity.title}</span>
+                            <span className="font-semibold text-base block">{activity.title}</span>
                             <span className="text-muted-foreground italic text-xs">by</span> <span className="text-primary font-medium">{activity.artist_name}</span>
                           </p>
                         </div>
@@ -373,7 +373,7 @@ export default function AdminPanel() {
                 <Card className="glass-strong border-0 shadow-2xl">
                   <CardHeader className="flex flex-row items-center justify-between pb-8">
                     <div className="space-y-1">
-                      <CardTitle className="text-2xl font-bold text-white">Creative Landscape</CardTitle>
+                      <CardTitle className="text-2xl font-semibold text-white">Creative Landscape</CardTitle>
                       <CardDescription className="text-muted-foreground">Distribution by artwork category</CardDescription>
                     </div>
                     <PieChart className="w-6 h-6 text-primary" />
@@ -413,7 +413,7 @@ export default function AdminPanel() {
                 <CardHeader className="bg-white/5 border-b border-white/5 p-8">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                     <div className="space-y-1">
-                      <CardTitle className="text-2xl font-bold text-foreground">Art Inventory Management</CardTitle>
+                      <CardTitle className="text-2xl font-semibold text-foreground">Art Inventory Management</CardTitle>
                       <CardDescription className="text-muted-foreground">Total of {artworks.length} items curated</CardDescription>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4">
@@ -466,11 +466,11 @@ export default function AdminPanel() {
                       <Table>
                         <TableHeader>
                           <TableRow className="border-white/5 hover:bg-transparent">
-                            <TableHead className="text-muted-foreground font-bold uppercase tracking-wider p-6">Masterpiece</TableHead>
-                            <TableHead className="text-muted-foreground font-bold uppercase tracking-wider">Genre</TableHead>
-                            <TableHead className="text-muted-foreground font-bold uppercase tracking-wider">Valuation</TableHead>
-                            <TableHead className="text-muted-foreground font-bold uppercase tracking-wider">Engagement</TableHead>
-                            <TableHead className="text-muted-foreground font-bold uppercase tracking-wider text-right pr-10">Command</TableHead>
+                            <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider p-6">Masterpiece</TableHead>
+                            <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider">Genre</TableHead>
+                            <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider">Valuation</TableHead>
+                            <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider">Engagement</TableHead>
+                            <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider text-right pr-10">Command</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -496,7 +496,7 @@ export default function AdminPanel() {
                                       />
                                     </div>
                                     <div>
-                                      <div className="font-bold text-foreground text-lg line-clamp-1">{artwork.description}</div>
+                                      <div className="font-semibold text-foreground text-lg line-clamp-1">{artwork.description}</div>
                                       <div className="text-sm text-primary font-medium flex items-center gap-1.5">
                                         <ShieldCheck className="w-3 h-3" />
                                         {artwork.artist_name}
@@ -505,14 +505,14 @@ export default function AdminPanel() {
                                   </div>
                                 </TableCell>
                                 <TableCell>
-                                  <div className="font-mono text-lg font-bold text-foreground">
+                                  <div className="font-mono text-lg font-semibold text-foreground">
                                     {artwork.price ? `$${artwork.price.toLocaleString()}` : '--'}
                                   </div>
                                 </TableCell>
                                 <TableCell>
                                   <div className="flex items-center gap-2 bg-primary/10 w-fit py-1.5 px-4 rounded-full border border-primary/20">
                                     <Eye className="w-4 h-4 text-primary" />
-                                    <span className="font-bold text-primary">{artwork.view_count || 0}</span>
+                                    <span className="font-semibold text-primary">{artwork.view_count || 0}</span>
                                   </div>
                                 </TableCell>
                                 <TableCell className="text-right pr-10">
@@ -551,16 +551,16 @@ export default function AdminPanel() {
                                       </AlertDialogTrigger>
                                       <AlertDialogContent className="glass-strong border-0 shadow-2xl scale-105">
                                         <AlertDialogHeader>
-                                          <DialogTitle className="text-2xl text-white font-bold">Incinerate Masterpiece?</DialogTitle>
+                                          <DialogTitle className="text-2xl text-white font-semibold">Incinerate Masterpiece?</DialogTitle>
                                           <AlertDialogDescription className="text-muted-foreground text-lg py-4">
-                                            This action is irreversible. <span className="text-white font-bold">"{artwork.description}"</span> will be permanently purged from the global archives.
+                                            This action is irreversible. <span className="text-white font-semibold">"{artwork.description}"</span> will be permanently purged from the global archives.
                                           </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter className="gap-4">
                                           <AlertDialogCancel className="glass border-0 py-6 text-lg">Retain Artwork</AlertDialogCancel>
                                           <AlertDialogAction
                                             onClick={() => handleDeleteArtwork(artwork.id)}
-                                            className="bg-red-600 hover:bg-red-700 py-6 text-lg font-bold shadow-lg shadow-red-600/20"
+                                            className="bg-red-600 hover:bg-red-700 py-6 text-lg font-semibold shadow-lg shadow-red-600/20"
                                           >
                                             Confirm Purge
                                           </AlertDialogAction>
@@ -623,7 +623,7 @@ export default function AdminPanel() {
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                   <AlertDialogCancel className="glass border-0">Abort</AlertDialogCancel>
-                                  <AlertDialogAction onClick={() => handleDeleteArtwork(artwork.id)} className="bg-red-600 hover:bg-red-700 font-bold">Purge</AlertDialogAction>
+                                  <AlertDialogAction onClick={() => handleDeleteArtwork(artwork.id)} className="bg-red-600 hover:bg-red-700 font-semibold">Purge</AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
                             </AlertDialog>
@@ -642,7 +642,7 @@ export default function AdminPanel() {
                 <CardHeader className="bg-white/5 border-b border-white/5 p-8">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                     <div className="space-y-1">
-                      <CardTitle className="text-2xl font-bold text-foreground">Citizen & Staff Network</CardTitle>
+                      <CardTitle className="text-2xl font-semibold text-foreground">Citizen & Staff Network</CardTitle>
                       <CardDescription className="text-muted-foreground">{users.length} authenticated profiles managed</CardDescription>
                     </div>
                     <div className="relative group">
@@ -661,12 +661,12 @@ export default function AdminPanel() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-white/5 hover:bg-transparent">
-                          <TableHead className="text-muted-foreground font-bold uppercase tracking-wider p-6">Individual</TableHead>
-                          <TableHead className="text-muted-foreground font-bold uppercase tracking-wider">Classification</TableHead>
-                          <TableHead className="text-muted-foreground font-bold uppercase tracking-wider">Portfolio</TableHead>
-                          <TableHead className="text-muted-foreground font-bold uppercase tracking-wider">Status</TableHead>
-                          <TableHead className="text-muted-foreground font-bold uppercase tracking-wider">Joined</TableHead>
-                          <TableHead className="text-muted-foreground font-bold uppercase tracking-wider text-right pr-10">Command</TableHead>
+                          <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider p-6">Individual</TableHead>
+                          <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider">Classification</TableHead>
+                          <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider">Portfolio</TableHead>
+                          <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider">Status</TableHead>
+                          <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider">Joined</TableHead>
+                          <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider text-right pr-10">Command</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -682,7 +682,7 @@ export default function AdminPanel() {
                             >
                               <TableCell className="p-6">
                                 <div className="flex items-center gap-4">
-                                  <div className="w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-white font-bold text-xl overflow-hidden shadow-2xl shadow-primary/10 border-2 border-white/5">
+                                  <div className="w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-white font-semibold text-xl overflow-hidden shadow-2xl shadow-primary/10 border-2 border-white/5">
                                     {u.avatar_url ? (
                                       <img src={u.avatar_url} alt={u.display_name} className="w-full h-full object-cover" />
                                     ) : (
@@ -690,7 +690,7 @@ export default function AdminPanel() {
                                     )}
                                   </div>
                                   <div>
-                                    <div className="font-bold text-foreground text-lg">{u.display_name}</div>
+                                    <div className="font-semibold text-foreground text-lg">{u.display_name}</div>
                                     <div className="text-sm text-muted-foreground flex items-center gap-1.5">
                                       <Mail className="w-3 h-3" />
                                       {u.email}
@@ -703,13 +703,13 @@ export default function AdminPanel() {
                                   defaultValue={u.role}
                                   onValueChange={(val: any) => handleUpdateUser(u.id, { role: val })}
                                 >
-                                  <SelectTrigger className="glass border-0 h-9 px-3 text-xs font-bold uppercase tracking-widest w-32">
+                                  <SelectTrigger className="glass border-0 h-9 px-3 text-xs font-semibold uppercase tracking-widest w-32">
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent className="glass-strong border-0">
-                                    <SelectItem value="user" className="text-xs uppercase font-bold tracking-widest">Citizen</SelectItem>
-                                    <SelectItem value="staff" className="text-xs uppercase font-bold tracking-widest text-secondary">Staff</SelectItem>
-                                    <SelectItem value="admin" className="text-xs uppercase font-bold tracking-widest text-primary">Admin</SelectItem>
+                                    <SelectItem value="user" className="text-xs uppercase font-semibold tracking-widest">Citizen</SelectItem>
+                                    <SelectItem value="staff" className="text-xs uppercase font-semibold tracking-widest text-secondary">Staff</SelectItem>
+                                    <SelectItem value="admin" className="text-xs uppercase font-semibold tracking-widest text-primary">Admin</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </TableCell>
@@ -728,7 +728,7 @@ export default function AdminPanel() {
                               <TableCell>
                                 <Badge
                                   variant="outline"
-                                  className={`text-[10px] font-bold uppercase tracking-widest py-1 px-3 ${u.status === 'active'
+                                  className={`text-[10px] font-semibold uppercase tracking-widest py-1 px-3 ${u.status === 'active'
                                     ? 'border-primary/30 text-primary bg-primary/5'
                                     : 'border-destructive/30 text-destructive bg-destructive/5'
                                     }`}
@@ -795,31 +795,31 @@ export default function AdminPanel() {
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className="glass-strong border-0 max-w-2xl shadow-2xl p-0 overflow-hidden">
           <DialogHeader className="bg-muted/10 p-8 border-b border-border/50">
-            <DialogTitle className="text-3xl font-bold text-white">Refine Masterpiece</DialogTitle>
+            <DialogTitle className="text-3xl font-semibold text-white">Refine Masterpiece</DialogTitle>
             <CardDescription className="text-muted-foreground text-lg">Modify details for <span className="text-primary italic font-medium">{selectedArtwork?.description}</span></CardDescription>
           </DialogHeader>
           <form onSubmit={handleUpdateArtwork}>
             <div className="p-8 space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                  <Label htmlFor="title" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Masterpiece Title</Label>
+                  <Label htmlFor="title" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Masterpiece Title</Label>
                   <Input name="title" defaultValue={selectedArtwork?.description} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground" required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="price" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Market Valuation ($)</Label>
+                  <Label htmlFor="price" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Market Valuation ($)</Label>
                   <Input name="price" type="number" defaultValue={selectedArtwork?.price} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground font-mono text-lg" required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="medium" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Artistic Medium</Label>
+                  <Label htmlFor="medium" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Artistic Medium</Label>
                   <Input name="medium" defaultValue={selectedArtwork?.medium} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground" placeholder="e.g., Oil on Canvas" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="dimensions" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Spatial Dimensions</Label>
+                  <Label htmlFor="dimensions" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Spatial Dimensions</Label>
                   <Input name="dimensions" defaultValue={selectedArtwork?.dimensions} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground" placeholder='e.g., 24" x 36"' />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="description" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Narrative & Description</Label>
+                <Label htmlFor="description" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Narrative & Description</Label>
                 <Textarea name="description" defaultValue={selectedArtwork?.description || ''} rows={5} className="glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground leading-relaxed p-4" />
               </div>
             </div>
@@ -843,11 +843,11 @@ export default function AdminPanel() {
             <UserPlus className="w-10 h-10 text-primary" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold text-foreground">System Expansion</h2>
+            <h2 className="text-3xl font-semibold text-foreground">System Expansion</h2>
             <p className="text-muted-foreground text-lg italic">The administrative upload gateway is being optimized for batch processing.</p>
           </div>
           <div className="flex flex-col gap-4">
-            <Button asChild className="btn-primary py-8 text-xl font-bold shadow-2xl shadow-primary/20">
+            <Button asChild className="btn-primary py-8 text-xl font-semibold shadow-2xl shadow-primary/20">
               <a href="/upload">Proceed to Universal Upload Gateway</a>
             </Button>
             <Button variant="ghost" onClick={() => setIsAddModalOpen(false)} className="h-14 text-muted-foreground hover:text-white text-lg">
@@ -863,7 +863,7 @@ export default function AdminPanel() {
           <DialogHeader className="bg-muted/10 p-8 border-b border-border/50">
             <div className="flex justify-between items-start">
               <div className="space-y-1">
-                <DialogTitle className="text-3xl font-bold text-foreground">{selectedArtwork?.description}</DialogTitle>
+                <DialogTitle className="text-3xl font-semibold text-foreground">{selectedArtwork?.description}</DialogTitle>
                 <CardDescription className="text-primary text-lg font-medium flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4" />
                   {selectedArtwork?.artist_name}
@@ -882,31 +882,31 @@ export default function AdminPanel() {
             </div>
             <div className="p-8 space-y-8 bg-muted/10 overflow-y-auto max-h-[600px]">
               <div className="space-y-4">
-                <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground border-b border-white/5 pb-2">Description</h4>
+                <h4 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground border-b border-white/5 pb-2">Description</h4>
                 <p className="text-foreground leading-relaxed text-lg italic">
                   {selectedArtwork?.description || "No description provided for this masterpiece."}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-1">
-                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Market Value</p>
-                  <p className="text-2xl font-bold text-foreground font-mono">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Market Value</p>
+                  <p className="text-2xl font-semibold text-foreground font-mono">
                     {selectedArtwork?.price ? `$${selectedArtwork.price.toLocaleString()}` : "Price on Request"}
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Engagement</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Engagement</p>
                   <div className="flex items-center gap-2 text-blue-400">
                     <Eye className="w-5 h-5" />
-                    <p className="text-2xl font-bold">{selectedArtwork?.view_count || 0}</p>
+                    <p className="text-2xl font-semibold">{selectedArtwork?.view_count || 0}</p>
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Artistic Medium</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Artistic Medium</p>
                   <p className="text-lg text-white font-medium">{selectedArtwork?.medium || "Mixed Media"}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Spatial Dimensions</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Spatial Dimensions</p>
                   <p className="text-lg text-foreground font-medium">{selectedArtwork?.dimensions || "Variable"}</p>
                 </div>
               </div>
@@ -929,7 +929,7 @@ export default function AdminPanel() {
         <DialogContent className="glass-strong border-0 max-w-2xl shadow-2xl p-0 overflow-hidden">
           <div className="relative h-32 bg-gradient-to-r from-primary/20 to-secondary/20 border-b border-white/5">
             <div className="absolute -bottom-12 left-8">
-              <div className="w-24 h-24 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-white font-bold text-4xl overflow-hidden shadow-2xl border-4 border-background">
+              <div className="w-24 h-24 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-white font-semibold text-4xl overflow-hidden shadow-2xl border-4 border-background">
                 {selectedUser?.avatar_url ? (
                   <img src={selectedUser.avatar_url} alt={selectedUser.display_name} className="w-full h-full object-cover" />
                 ) : (
@@ -939,7 +939,7 @@ export default function AdminPanel() {
             </div>
             <div className="absolute bottom-4 right-8">
               <Badge
-                className={`text-[10px] font-bold uppercase tracking-widest py-1 px-4 ${selectedUser?.status === 'active'
+                className={`text-[10px] font-semibold uppercase tracking-widest py-1 px-4 ${selectedUser?.status === 'active'
                   ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10'
                   : 'border-red-500/30 text-red-400 bg-red-500/10'
                   }`}
@@ -951,13 +951,13 @@ export default function AdminPanel() {
           <div className="p-8 pt-16 space-y-8">
             <div className="flex justify-between items-start">
               <div className="space-y-1">
-                <h3 className="text-3xl font-bold text-foreground">{selectedUser?.display_name}</h3>
+                <h3 className="text-3xl font-semibold text-foreground">{selectedUser?.display_name}</h3>
                 <p className="text-muted-foreground flex items-center gap-2">
                   <Mail className="w-4 h-4 text-primary" />
                   {selectedUser?.email}
                 </p>
               </div>
-              <Badge className={`text-xs font-bold uppercase py-1.5 px-4 tracking-widest ${selectedUser?.role === 'admin' ? 'bg-primary shadow-lg shadow-primary/20' :
+              <Badge className={`text-xs font-semibold uppercase py-1.5 px-4 tracking-widest ${selectedUser?.role === 'admin' ? 'bg-primary shadow-lg shadow-primary/20' :
                 selectedUser?.role === 'staff' ? 'bg-secondary' : 'bg-white/10'
                 }`}>
                 {selectedUser?.role}
@@ -967,27 +967,27 @@ export default function AdminPanel() {
             <div className="grid grid-cols-3 gap-4">
               <div className="glass p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
                 <Package className="w-5 h-5 text-primary mx-auto opacity-50" />
-                <p className="text-2xl font-bold text-foreground">{selectedUser?.artwork_count}</p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Artworks</p>
+                <p className="text-2xl font-semibold text-foreground">{selectedUser?.artwork_count}</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Artworks</p>
               </div>
               <div className="glass p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
                 <Eye className="w-5 h-5 text-emerald-400 mx-auto opacity-50" />
-                <p className="text-2xl font-bold text-foreground">{selectedUser?.total_views.toLocaleString()}</p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Views</p>
+                <p className="text-2xl font-semibold text-foreground">{selectedUser?.total_views.toLocaleString()}</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Views</p>
               </div>
               <div className="glass p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
                 <Calendar className="w-5 h-5 text-purple-400 mx-auto opacity-50" />
-                <p className="text-lg font-bold text-foreground">
+                <p className="text-lg font-semibold text-foreground">
                   {selectedUser?.createdAt ? new Date(selectedUser.createdAt).getFullYear() : '2024'}
                 </p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Member Since</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Member Since</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="flex items-center gap-2 pb-2 border-b border-white/5">
                 <ShieldCheck className="w-4 h-4 text-primary" />
-                <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Network Directives</h4>
+                <h4 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Network Directives</h4>
               </div>
               <div className="flex flex-wrap gap-3">
                 {selectedUser?.status === 'active' ? (

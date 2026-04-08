@@ -126,7 +126,7 @@ export default function ProfilePage() {
             <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mb-6">
               <User className="w-8 h-8 text-destructive" />
             </div>
-            <h3 className="text-xl font-bold text-foreground mb-2">Profile Error</h3>
+            <h3 className="text-xl font-semibold text-foreground mb-2">Profile Error</h3>
             <p className="text-muted-foreground mb-8 leading-relaxed">{profileError}</p>
             <Button onClick={refreshProfile} className="btn-primary w-full h-11">
               <RefreshCw className="w-4 h-4 mr-2" />
@@ -160,7 +160,7 @@ export default function ProfilePage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <CardTitle className="text-4xl font-bold tracking-tight text-foreground">
+                <CardTitle className="text-4xl font-semibold tracking-tight text-foreground">
                   {displayName || user.email.split('@')[0]}
                 </CardTitle>
                 <div className="flex items-center justify-center gap-3 text-muted-foreground">
@@ -182,7 +182,7 @@ export default function ProfilePage() {
               <CardContent className="p-8">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Your Artworks</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Your Artworks</p>
                     <p className="text-4xl font-black text-foreground tabular-nums">
                       {statsLoading ? <Loader2 className="w-6 h-6 animate-spin inline text-primary" /> : stats.artwork_count}
                     </p>
@@ -198,7 +198,7 @@ export default function ProfilePage() {
               <CardContent className="p-8">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Total Views</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Total Views</p>
                     <p className="text-4xl font-black text-foreground tabular-nums">
                       {statsLoading ? <Loader2 className="w-6 h-6 animate-spin inline text-secondary" /> : stats.total_views.toLocaleString()}
                     </p>
@@ -214,13 +214,13 @@ export default function ProfilePage() {
           {/* Profile Information */}
           <Card className="glass-strong border-border/50 overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between px-8 pt-8">
-              <CardTitle className="text-2xl font-bold tracking-tight text-foreground">Profile Information</CardTitle>
+              <CardTitle className="text-2xl font-semibold tracking-tight text-foreground">Profile Information</CardTitle>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setIsEditing(!isEditing)}
                 disabled={isSaving}
-                className="glass-strong border-primary/20 text-primary hover:bg-primary/10 transition-all font-bold h-10 px-6 rounded-full group"
+                className="glass-strong border-primary/20 text-primary hover:bg-primary/10 transition-all font-semibold h-10 px-6 rounded-full group"
               >
                 {isSaving ? (
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />

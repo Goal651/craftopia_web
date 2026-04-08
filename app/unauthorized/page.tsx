@@ -12,7 +12,7 @@ export default function UnauthorizedPage() {
             <div className="w-20 h-20 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <Shield className="h-10 w-10 text-destructive" />
             </div>
-            <CardTitle className="text-3xl font-bold tracking-tight text-foreground">Access <span className="text-destructive">Restricted</span></CardTitle>
+            <CardTitle className="text-3xl font-semibold tracking-tight text-foreground">Access <span className="text-destructive">Restricted</span></CardTitle>
           </CardHeader>
           <CardContent className="text-center space-y-8 px-8 pb-10">
             <p className="text-lg text-muted-foreground leading-relaxed">
@@ -25,7 +25,7 @@ export default function UnauthorizedPage() {
                   Return to Gallery
                 </Link>
               </Button>
-              <Button variant="outline" asChild className="glass-strong border-border/50 w-full h-12 hover:bg-muted font-bold">
+              <Button variant="outline" asChild className="glass-strong border-border/50 w-full h-12 hover:bg-muted font-semibold">
                 <Link href="/login">Sign In as Admin</Link>
               </Button>
             </div>

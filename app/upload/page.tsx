@@ -70,7 +70,7 @@ function UploadPageContent() {
               <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
                 <CheckCircle className="w-12 h-12 text-green-500" />
               </div>
-              <h1 className="text-3xl font-bold mb-4 text-foreground">
+              <h1 className="text-3xl font-semibold mb-4 text-foreground">
                 {editingArtwork ? 'Artwork Updated' : 'Upload Successful!'}
               </h1>
               <p className="text-muted-foreground text-lg mb-10 max-w-md mx-auto">
@@ -115,43 +115,43 @@ function UploadPageContent() {
   return (
     <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
       <div className="w-full max-w-2xl mx-auto px-6">
-          {/* Header */}
-          <div className="mb-12">
-            <Button
-              variant="ghost"
-              onClick={() => router.back()}
-              className="mb-8 p-0 text-muted-foreground hover:text-foreground group flex items-center"
-            >
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mr-3 group-hover:bg-primary/10 group-hover:text-primary transition-all">
-                <ArrowLeft className="w-4 h-4" />
-              </div>
-              <span className="text-sm font-medium tracking-wide uppercase">Back to previous</span>
-            </Button>
-
-            <div className="space-y-4">
-              <Badge className="glass  bg-background px-4 py-1.5 border-primary/20 text-primary">Creator Space</Badge>
-              <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
-                {editingArtwork ? 'Refine Your' : 'Share Your'} <span className="text-gradient-primary">Masterpiece</span>
-              </h1>
-              <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
-                {editingArtwork 
-                  ? 'Fine-tune the details of your artwork to ensure it perfectly represents your artistic vision.'
-                  : 'Join our community of elite artists. Your creative journey starts with a single upload.'
-                }
-              </p>
+        {/* Header */}
+        <div className="mb-12">
+          <Button
+            variant="ghost"
+            onClick={() => router.back()}
+            className="mb-8 p-0 text-muted-foreground hover:text-foreground group flex items-center"
+          >
+            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mr-3 group-hover:bg-primary/10 group-hover:text-primary transition-all">
+              <ArrowLeft className="w-4 h-4" />
             </div>
-          </div>
+            <span className="text-sm font-medium tracking-wide uppercase">Back to previous</span>
+          </Button>
 
-          {/* Upload Form */}
-          <ArtworkUploadForm
-            onSuccess={handleUploadSuccess}
-            onError={handleUploadError}
-            editingArtwork={editingArtwork}
-          />
+          <div className="space-y-4">
+            <Badge className="glass  bg-background px-4 py-1.5 border-primary/20 text-primary">Creator Space</Badge>
+            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-foreground">
+              {editingArtwork ? 'Refine Your' : 'Share Your'} <span className="text-gradient-primary">Masterpiece</span>
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
+              {editingArtwork
+                ? 'Fine-tune the details of your artwork to ensure it perfectly represents your artistic vision.'
+                : 'Join our community of elite artists. Your creative journey starts with a single upload.'
+              }
+            </p>
+          </div>
         </div>
+
+        {/* Upload Form */}
+        <ArtworkUploadForm
+          onSuccess={handleUploadSuccess}
+          onError={handleUploadError}
+          editingArtwork={editingArtwork}
+        />
       </div>
-    )
-  }
+    </div>
+  )
+}
 
 export default function UploadPage() {
   return (
@@ -161,7 +161,7 @@ export default function UploadPage() {
           <Card className="glass-strong border-border/50">
             <CardContent className="p-8 text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-              <h1 className="text-xl font-bold text-foreground">Loading...</h1>
+              <h1 className="text-xl font-semibold text-foreground">Loading...</h1>
             </CardContent>
           </Card>
         </div>

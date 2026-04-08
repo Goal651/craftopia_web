@@ -87,7 +87,7 @@ export default function MyArtworksPage() {
         >
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">
+              <h1 className="text-3xl md:text-4xl font-semibold mb-2">
                 My <span className="text-gradient-primary">Artworks</span>
               </h1>
               <p className="text-muted-foreground">
@@ -121,7 +121,7 @@ export default function MyArtworksPage() {
             <CardContent className="p-8">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Total Artworks</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Total Artworks</p>
                   <p className="text-4xl font-black text-foreground tabular-nums">{userArtworks.length}</p>
                 </div>
                 <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
@@ -135,7 +135,7 @@ export default function MyArtworksPage() {
             <CardContent className="p-8">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Total Views</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Total Views</p>
                   <p className="text-4xl font-black text-foreground tabular-nums">{totalViews.toLocaleString()}</p>
                 </div>
                 <div className="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
@@ -149,7 +149,7 @@ export default function MyArtworksPage() {
             <CardContent className="p-8">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Total Likes</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Total Likes</p>
                   <p className="text-4xl font-black text-foreground tabular-nums">{totalLikes.toLocaleString()}</p>
                 </div>
                 <div className="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
@@ -259,7 +259,7 @@ export default function MyArtworksPage() {
                   <Plus className="w-10 h-10" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-2xl font-bold text-foreground">
+                  <h3 className="text-2xl font-semibold text-foreground">
                     {searchTerm ? "No masterpieces found" : "Your gallery is empty"}
                   </h3>
                   <p className="text-muted-foreground leading-relaxed">
@@ -269,7 +269,7 @@ export default function MyArtworksPage() {
                     }
                   </p>
                 </div>
-                <Button asChild className="btn-primary h-12 px-8 rounded-full font-bold shadow-xl">
+                <Button asChild className="btn-primary h-12 px-8 rounded-full font-semibold shadow-xl">
                   <Link href="/upload">
                     <Plus className="w-4 h-4 mr-2" />
                     Upload Your First Artwork

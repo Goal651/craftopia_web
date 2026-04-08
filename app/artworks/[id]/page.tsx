@@ -8,44 +8,18 @@ import { motion, AnimatePresence } from "framer-motion"
 import { formatDateSafe, getRelativeTime } from "@/lib/utils/date-utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ArtworkRecord } from "@/types/index"
-import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
-import { BackButton } from "@/components/ui/back-button"
 import { ArtworkImage } from "@/components/ui/artwork-image"
 import { useAuth } from "@/contexts/AuthContext"
 import {
-  ArrowLeft,
-  Eye,
   Heart,
   Share2,
-  Calendar,
-  User,
-  AlertCircle,
-  RefreshCw,
-  Download,
   ExternalLink,
-  Palette,
-  Frame,
-  Tag,
-  Clock,
-  TrendingUp,
-  MessageCircle,
-  Bookmark,
-  MoreHorizontal,
-  Send,
-  ThumbsUp,
-  Users,
+  Phone,
   Globe,
-  Camera,
-  Award,
-  Sparkles,
-  Maximize2,
-  ArrowUpRight,
-  ArrowRight,
-  Phone
+  AlertCircle,
+  RefreshCw
 } from "lucide-react"
 import Head from 'next/head'
 import { cn } from "@/lib/utils"
@@ -61,13 +35,8 @@ export default function ArtworkDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [viewCountUpdated, setViewCountUpdated] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
-  const [isBookmarked, setIsBookmarked] = useState(false)
   const [showShareMenu, setShowShareMenu] = useState(false)
-  const [comment, setComment] = useState("")
-  const [comments, setComments] = useState<Array<any>>([])
-  const [showComments, setShowComments] = useState(false)
   const [copiedToClipboard, setCopiedToClipboard] = useState(false)
-  const [commentsLoading, setCommentsLoading] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
 
   const artworkId = Array.isArray(params.id) ? params.id[0] : params.id
@@ -175,15 +144,6 @@ export default function ArtworkDetailPage() {
         const twitterText = `🎨 "${title}" by ${artist} - ${description.substring(0, 100)}... #Art #DigitalArt #Craftopia`
         window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(twitterText)}&url=${encodeURIComponent(url)}`, '_blank', 'width=550,height=420')
         break
-      case 'facebook':
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(description)}`, '_blank', 'width=580,height=400')
-        break
-      case 'pinterest':
-        window.open(`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent(artwork?.image_url || '')}&description=${encodeURIComponent(description)}`, '_blank', 'width=750,height=550')
-        break
-      case 'linkedin':
-        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank', 'width=750,height=550')
-        break
       case 'copy':
         try {
           await navigator.clipboard.writeText(url)
@@ -242,68 +202,6 @@ export default function ArtworkDetailPage() {
     }
   }
 
-  const handleCommentSubmit = async () => {
-    if (!comment.trim()) {
-      return
-    }
-
-    if (!user) {
-      alert('Please log in to comment')
-      return
-    }
-
-    try {
-      const response = await fetch(`/api/artworks/${artworkId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: comment.trim()
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to post comment')
-      }
-
-      const data = await response.json()
-      // Add new comment to the beginning of the list
-      setComments(prev => [data.comment, ...prev])
-      setComment("")
-
-      // Refresh comments list
-      fetchComments()
-    } catch (error) {
-      console.error('Failed to post comment:', error)
-      alert('Failed to post comment. Please try again.')
-    }
-  }
-
-  const fetchComments = async () => {
-    if (!artworkId) return
-
-    setCommentsLoading(true)
-    try {
-      const response = await fetch(`/api/artworks/${artworkId}/comments`)
-      if (response.ok) {
-        const data = await response.json()
-        setComments(data.comments || [])
-      }
-    } catch (error) {
-      console.error('Failed to fetch comments:', error)
-    } finally {
-      setCommentsLoading(false)
-    }
-  }
-
-  // Fetch comments when showing comments section
-  useEffect(() => {
-    if (showComments && artworkId) {
-      fetchComments()
-    }
-  }, [showComments, artworkId])
-
   // Generate structured data for SEO
   const generateStructuredData = () => {
     if (!artwork) return null
@@ -342,23 +240,25 @@ export default function ArtworkDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32 flex items-center justify-center">
+      <div className="min-h-screen bg-background py-10 sm:py-12 flex items-center justify-center">
         <div className="w-full max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2 space-y-8">
-              <Skeleton className="aspect-[4/5] w-full bg-muted/50 rounded-2xl" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div className="lg:col-span-2">
+              <Skeleton className="aspect-[4/3] w-full max-h-[500px] bg-muted/20 rounded-lg" />
             </div>
-            <div className="space-y-8">
-              <div className="space-y-6">
-                <div className="space-y-4">
-                  <Skeleton className="h-10 w-3/4 bg-muted/50 rounded" />
-                  <Skeleton className="h-6 w-1/2 bg-muted/50 rounded" />
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-16 bg-muted/20 rounded" />
+                  <Skeleton className="h-8 w-3/4 bg-muted/20 rounded" />
+                  <Skeleton className="h-4 w-1/2 bg-muted/20 rounded" />
                 </div>
-                <Skeleton className="h-32 w-full bg-muted/50 rounded-xl" />
-                <div className="grid grid-cols-2 gap-4">
-                  <Skeleton className="h-24 w-full bg-muted/50 rounded" />
-                  <Skeleton className="h-24 w-full bg-muted/50 rounded" />
+                <Skeleton className="h-24 w-full bg-muted/20 rounded" />
+                <div className="grid grid-cols-2 gap-3">
+                  <Skeleton className="h-20 w-full bg-muted/20 rounded" />
+                  <Skeleton className="h-20 w-full bg-muted/20 rounded" />
                 </div>
+                <Skeleton className="h-12 w-full bg-muted/20 rounded" />
               </div>
             </div>
           </div>
@@ -375,7 +275,7 @@ export default function ArtworkDetailPage() {
             <AlertCircle className="w-10 h-10" />
           </div>
           <div className="space-y-4 mb-12">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground">
               {error === 'Artwork not found' ? 'Masterpiece Not Found' : 'Something went wrong'}
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
@@ -426,7 +326,7 @@ export default function ArtworkDetailPage() {
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={typeof window !== 'undefined' ? window.location.href : ''} />
         <meta property="twitter:description" content={seoDescription} />
-        <meta property="twitter:image" content={seoImage} /> 
+        <meta property="twitter:image" content={seoImage} />
 
         {/* Additional SEO */}
         <meta name="theme-color" content="#000000" />
@@ -446,7 +346,7 @@ export default function ArtworkDetailPage() {
         <div className="container-modern px-6 lg:px-8">
           {/* Main Content Grid: 2/3 Left, 1/3 Right */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            
+
             {/* Artwork Display - 2 Columns */}
             <div className="lg:col-span-2">
               <motion.div

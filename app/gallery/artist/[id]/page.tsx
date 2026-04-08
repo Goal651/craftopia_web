@@ -299,11 +299,11 @@ export default function ArtistProfilePage() {
 
                   <div className="flex gap-6">
                     <div>
-                      <p className="text-2xl font-bold text-white">{artist.total_views?.toLocaleString() || '0'}</p>
+                      <p className="text-2xl font-semibold text-white">{artist.total_views?.toLocaleString() || '0'}</p>
                       <p className="text-sm text-gray-400">Total Views</p>
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-white">{artist.artwork_count || 0}</p>
+                      <p className="text-2xl font-semibold text-white">{artist.artwork_count || 0}</p>
                       <p className="text-sm text-gray-400">Artworks</p>
                     </div>
                   </div>

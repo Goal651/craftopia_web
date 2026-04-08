@@ -107,7 +107,7 @@ export default function RegisterPage() {
               </div>
             </motion.div>
             <div className="space-y-2">
-              <CardTitle className="text-3xl font-bold tracking-tight text-foreground">Create <span className="text-gradient-primary">Account</span></CardTitle>
+              <CardTitle className="text-3xl font-semibold tracking-tight text-foreground">Create <span className="text-gradient-primary">Account</span></CardTitle>
               <CardDescription className="text-base text-muted-foreground">Join the elite CRAFTOPIA community</CardDescription>
             </div>
           </CardHeader>
@@ -233,7 +233,7 @@ export default function RegisterPage() {
               <div className="sm:col-span-2 mt-4 space-y-6">
                 <Button
                   type="submit"
-                  className="w-full h-14 btn-primary glow-primary text-base font-bold uppercase tracking-widest shadow-xl transition-all"
+                  className="w-full h-14 btn-primary glow-primary text-base font-semibold uppercase tracking-widest shadow-xl transition-all"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -249,7 +249,7 @@ export default function RegisterPage() {
                 <div className="text-center">
                   <p className="text-sm text-muted-foreground">
                     Already have an account?{" "}
-                    <Link href="/login" className="text-primary hover:underline font-bold transition-all">
+                    <Link href="/login" className="text-primary hover:underline font-semibold transition-all">
                       Sign in here
                     </Link>
                   </p>

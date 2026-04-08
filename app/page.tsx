@@ -80,7 +80,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-12 md:mb-16">
             <Badge className="mb-6 md:mb-8 glass-strong px-6 py-3 shadow-lg">Featured Collection</Badge>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
               Curated <span className="text-gradient-primary">Masterpieces</span>
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto font-light">
@@ -128,7 +128,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-12 md:mb-16">
             <Badge className="mb-6 md:mb-8 glass-strong px-6 py-3 shadow-lg">Explore Categories</Badge>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
               Art <span className="text-gradient-primary">Categories</span>
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto font-light">
@@ -151,7 +151,7 @@ export default function HomePage() {
                     <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-40 group-hover:opacity-60 transition-opacity duration-300`} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                     <div className="absolute bottom-6 left-6 right-6 text-white">
-                      <h3 className="text-2xl md:text-3xl font-bold mb-2">{category.name}</h3>
+                      <h3 className="text-2xl md:text-3xl font-semibold mb-2">{category.name}</h3>
                       <p className="text-sm md:text-base opacity-90">
                         {category.count} {category.count === 1 ? 'artwork' : 'artworks'}
                       </p>
@@ -170,7 +170,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
             <div className="glass-strong rounded p-12 md:p-16 lg:p-20 border border-border/50 shadow-2xl">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
                 Ready to Start Your <span className="text-gradient-primary">Art Journey</span>?
               </h2>
               <p className="text-lg md:text-xl text-muted-foreground mb-10 font-light">

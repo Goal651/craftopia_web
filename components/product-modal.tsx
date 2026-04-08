@@ -149,7 +149,7 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
                   <div className="flex items-start justify-between">
                     <div className="space-y-2">
                       <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">{artwork.category}</Badge>
-                      <h1 className="text-2xl lg:text-3xl font-bold text-white">{artwork.title}</h1>
+                      <h1 className="text-2xl lg:text-3xl font-semibold text-white">{artwork.title}</h1>
                       <p className="text-lg text-gray-400">by {artwork.artist_name}</p>
                     </div>
                     <div className="flex gap-2">
@@ -177,7 +177,7 @@ export function ProductModal({ artwork, onClose }: ProductModalProps) {
 
                   {/* Price */}
                   <div className="space-y-2">
-                    <div className="text-3xl font-bold text-gradient-blue">${(artwork.price || 0).toLocaleString()}</div>
+                    <div className="text-3xl font-semibold text-gradient-blue">${(artwork.price || 0).toLocaleString()}</div>
                     <p className="text-sm text-gray-400">Free shipping worldwide • 30-day return policy</p>
                   </div>
                 </div>

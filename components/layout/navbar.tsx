@@ -100,8 +100,8 @@ export function Navbar() {
             {/* Logo */}
             <div className="flex items-center space-x-2 group"
               onClick={() => router.push('/')}>
-              
-              <span className="font-bold text-xl tracking-tight text-gradient-primary">
+
+              <span className="font-semibold text-xl tracking-tight text-gradient-primary">
                 CRAFTOPIA
               </span>
             </div>
@@ -190,7 +190,7 @@ export function Navbar() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 glass-strong border-border/50">
                     <div className="px-3 py-2.5">
-                      <p className="text-sm font-bold text-foreground truncate">{user.display_name || user.email}</p>
+                      <p className="text-sm font-semibold text-foreground truncate">{user.display_name || user.email}</p>
                       <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                     </div>
                     <DropdownMenuSeparator className="bg-border/50" />

@@ -203,14 +203,14 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
             {isEditMode ? <Edit className="w-6 h-6" /> : <Upload className="w-6 h-6" />}
           </div>
           <div>
-            <CardTitle className="text-2xl font-bold text-foreground">
+            <CardTitle className="text-2xl font-semibold text-foreground">
               {isEditMode ? 'Edit Artwork' : 'Upload Artwork'}
             </CardTitle>
             <p className="text-sm text-muted-foreground mt-1">
               Fill in the details below to showcase your art.
             </p>
           </div>
-        </div> 
+        </div>
       </CardHeader>
       <CardContent className="px-6 sm:px-8 py-6">
         <Form {...form}>
@@ -225,11 +225,10 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
                   </FormLabel>
                   <FormControl>
                     <div
-                      className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center transition-all duration-300 relative overflow-hidden ${
-                        dragActive 
-                          ? 'border-primary bg-primary/5 scale-[0.99]' 
+                      className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center transition-all duration-300 relative overflow-hidden ${dragActive
+                          ? 'border-primary bg-primary/5 scale-[0.99]'
                           : 'border-border hover:border-primary/40 hover:bg-muted/30'
-                      }`}
+                        }`}
                       onDragEnter={handleDrag}
                       onDragLeave={handleDrag}
                       onDragOver={handleDrag}
@@ -239,10 +238,10 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
                         <div className="space-y-6">
                           <div className="relative inline-block group">
                             <div className="relative rounded-lg overflow-hidden shadow-2xl border border-border/50">
-                              <img 
-                                src={previewUrl} 
-                                alt="Preview" 
-                                className="max-w-full max-h-64 sm:max-h-80 object-contain mx-auto" 
+                              <img
+                                src={previewUrl}
+                                alt="Preview"
+                                className="max-w-full max-h-64 sm:max-h-80 object-contain mx-auto"
                               />
                             </div>
                             <Button
@@ -302,7 +301,7 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
               )}
             />
 
-      
+
             <FormField
               control={form.control}
               name="description"
@@ -310,10 +309,10 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
                 <FormItem>
                   <FormLabel className="text-sm font-medium">Artwork Description</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Share the story behind this piece..." 
-                      className="bg-muted/30 border-border/50 focus:bg-background transition-all min-h-[100px] resize-none p-4" 
-                      {...field} 
+                    <Textarea
+                      placeholder="Share the story behind this piece..."
+                      className="bg-muted/30 border-border/50 focus:bg-background transition-all min-h-[100px] resize-none p-4"
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -327,12 +326,12 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium">Price (USD)</FormLabel>
+                    <FormLabel className="text-sm font-medium">Price (RWF)</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="number" 
+                      <Input
+                        type="number"
                         placeholder="0.00"
-                        className="bg-muted/30 border-border/50 focus:bg-background transition-all" 
+                        className="bg-muted/30 border-border/50 focus:bg-background transition-all"
                         {...field}
                         onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                       />
@@ -350,10 +349,10 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
                   <FormItem>
                     <FormLabel className="text-sm font-medium">Available Copies</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="number" 
+                      <Input
+                        type="number"
                         placeholder="1"
-                        className="bg-muted/30 border-border/50 focus:bg-background transition-all" 
+                        className="bg-muted/30 border-border/50 focus:bg-background transition-all"
                         {...field}
                         onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                       />

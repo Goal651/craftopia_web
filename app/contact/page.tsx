@@ -67,7 +67,7 @@ function ContactForm() {
       <CardContent className="p-6 md:p-8">
         <div className="space-y-6">
           <div className="space-y-2">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Send a Message</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-foreground">Send a Message</h2>
             <p className="text-sm md:text-base text-muted-foreground">
               Fill out the form below to connect.
             </p>
@@ -132,7 +132,7 @@ function ContactForm() {
             <Button
               type="submit"
               size="lg"
-              className="w-full btn-primary glow-primary py-7 text-lg font-bold uppercase tracking-widest"
+              className="w-full btn-primary glow-primary py-7 text-lg font-semibold uppercase tracking-widest"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -194,7 +194,7 @@ export default function ContactPage() {
             className="text-center space-y-4 md:space-y-6 mb-16"
           >
             <Badge className="glass px-6 py-2 border-primary/20 text-primary">Get in Touch</Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-foreground px-4">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tight text-foreground px-4">
               Contact <span className="text-gradient-primary">CRAFTOPIA</span>
             </h1>
             <p className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
@@ -222,7 +222,7 @@ export default function ContactPage() {
               className="space-y-10"
             >
               <div className="space-y-4">
-                <h2 className="text-3xl font-bold tracking-tight text-foreground">Reach Out Direct</h2>
+                <h2 className="text-3xl font-semibold tracking-tight text-foreground">Reach Out Direct</h2>
                 <p className="text-lg text-muted-foreground leading-relaxed">
                   Have questions? Our team is here to help you navigate the world of premium art.
                 </p>
@@ -243,8 +243,8 @@ export default function ContactPage() {
                             <info.icon className="w-6 h-6" />
                           </div>
                           <div className="space-y-1 flex-1 min-w-0">
-                             <h3 className="font-bold text-lg text-foreground">{info.title}</h3>
-                             <p className="text-base text-primary font-medium tracking-tight break-words">{info.details}</p>
+                            <h3 className="font-semibold text-lg text-foreground">{info.title}</h3>
+                            <p className="text-base text-primary font-medium tracking-tight break-words">{info.details}</p>
                             <p className="text-xs md:text-sm text-muted-foreground">{info.description}</p>
                           </div>
                         </div>

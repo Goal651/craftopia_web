@@ -85,7 +85,7 @@ export default function LoginPage() {
               </div>
             </motion.div>
             <div className="space-y-2">
-              <CardTitle className="text-3xl font-bold tracking-tight text-foreground">Welcome <span className="text-gradient-primary">Back</span></CardTitle>
+              <CardTitle className="text-3xl font-semibold tracking-tight text-foreground">Welcome <span className="text-gradient-primary">Back</span></CardTitle>
               <CardDescription className="text-base text-muted-foreground">Sign in to your CRAFTOPIA account</CardDescription>
             </div>
           </CardHeader>
@@ -145,7 +145,7 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full h-14 bg-background text-foreground btn-primary glow-primary font-bold uppercase tracking-widest shadow-xl transition-all"
+                className="w-full h-14 bg-background text-foreground btn-primary glow-primary font-semibold uppercase tracking-widest shadow-xl transition-all"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -162,7 +162,7 @@ export default function LoginPage() {
             <div className="text-center pt-2">
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}
-                <Link href="/register" className="text-primary hover:underline font-bold transition-all">
+                <Link href="/register" className="text-primary hover:underline font-semibold transition-all">
                   Create one here
                 </Link>
               </p>

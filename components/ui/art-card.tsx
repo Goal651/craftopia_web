@@ -173,7 +173,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
         <div className="p-6 flex-1 flex flex-col">
           <div className="flex-1">
             <Link href={`/artworks/${artwork.id}`} className="group/link">
-              <h3 className="text-xl font-bold mb-2 group-hover/link:text-primary transition-colors line-clamp-2">
+              <h3 className="text-xl font-semibold mb-2 group-hover/link:text-primary transition-colors line-clamp-2">
                 {artwork.description}
               </h3>
             </Link>
@@ -183,15 +183,15 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
           {/* Footer */}
           <div className="flex items-center justify-between pt-4 border-t border-border/50">
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-gradient-primary">
+              <span className="text-xl font-semibold text-gradient-primary">
                 {artwork.price > 0 ? `$${artwork.price.toLocaleString()}` : "Not for Sale"}
               </span>
               {artwork.stock_quantity > 0 ? (
-                <span className="text-[10px] uppercase tracking-widest text-emerald-500 font-bold">
+                <span className="text-[10px] uppercase tracking-widest text-emerald-500 font-semibold">
                   {artwork.stock_quantity} in stock
                 </span>
               ) : (
-                <span className="text-[10px] uppercase tracking-widest text-red-500 font-bold">
+                <span className="text-[10px] uppercase tracking-widest text-red-500 font-semibold">
                   Sold Out
                 </span>
               )}

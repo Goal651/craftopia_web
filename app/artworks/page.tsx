@@ -87,7 +87,7 @@ export default function ArtworksPage() {
           {/* Header */}
           <div className="text-center space-y-6">
             <Badge className="glass px-6 py-2 border-primary/20 text-primary">Artistic Collection</Badge>
-            <h1 className="text-4xl lg:text-7xl font-bold tracking-tight text-foreground">
+            <h1 className="text-4xl lg:text-7xl font-semibold tracking-tight text-foreground">
               Art <span className="text-gradient-primary">Exploration</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
@@ -240,12 +240,12 @@ export default function ArtworksPage() {
                   <Search className="w-10 h-10" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-2xl font-bold text-foreground">No masterpieces found</h3>
+                  <h3 className="text-2xl font-semibold text-foreground">No masterpieces found</h3>
                   <p className="text-muted-foreground leading-relaxed">Try adjusting your search criteria or filters to discover new artistic visions.</p>
                 </div>
                 <Button
                   variant="outline"
-                  className="glass-strong border-primary/20 text-primary hover:bg-primary/10 h-12 px-8 rounded-full font-bold"
+                  className="glass-strong border-primary/20 text-primary hover:bg-primary/10 h-12 px-8 rounded-full font-semibold"
                   onClick={() => {
                     setSearchTerm("")
                     setCategoryFilter("all")

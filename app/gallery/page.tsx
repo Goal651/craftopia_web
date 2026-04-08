@@ -103,7 +103,7 @@ function PublicGalleryPageContent() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
           <div className="text-center space-y-6">
             <Badge className="glass px-6 py-2 border-primary/20 text-primary">Artistic Exploration</Badge>
-            <h1 className="text-4xl lg:text-7xl font-bold tracking-tight text-foreground">
+            <h1 className="text-4xl lg:text-7xl font-semibold tracking-tight text-foreground">
               Public <span className="text-gradient-primary">Gallery</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">

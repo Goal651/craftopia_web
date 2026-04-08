@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ArtworkRecord} from "@/types/index"
+import { ArtworkRecord } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
 import { ArtworkImage } from "@/components/ui/artwork-image"
@@ -121,7 +121,7 @@ export default function GalleryArtworkDetailPage() {
               <AlertCircle className="w-8 h-8 text-red-400" />
             </div>
             <div className="space-y-2">
-              <h1 className="text-2xl font-bold text-white">
+              <h1 className="text-2xl font-semibold text-white">
                 {error === 'Artwork not found' ? 'Artwork Not Found' : 'Failed to Load Artwork'}
               </h1>
               <p className="text-gray-400 max-w-md mx-auto">
@@ -182,7 +182,7 @@ export default function GalleryArtworkDetailPage() {
               <div className="space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="space-y-3">
-                  
+
                     <h1 className="text-3xl lg:text-4xl font-light text-white">{artwork.description}</h1>
                     <Link
                       href={`/gallery/artist/${artwork.artist_id}`}
@@ -255,7 +255,7 @@ export default function GalleryArtworkDetailPage() {
                     </Link>
                   </div>
 
-                 
+
                 </div>
               </div>
 

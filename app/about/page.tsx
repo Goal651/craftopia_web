@@ -82,7 +82,7 @@ export default function AboutPage() {
           <motion.section variants={itemVariants} className="text-center space-y-6">
             <div className="space-y-4">
               <Badge className="glass px-6 py-2 border-primary/20 text-primary">About CRAFTOPIA</Badge>
-              <h1 className="text-4xl lg:text-7xl font-bold tracking-tight text-foreground">
+              <h1 className="text-4xl lg:text-7xl font-semibold tracking-tight text-foreground">
                 Revolutionizing <span className="text-gradient-primary">Digital Art</span>
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
@@ -106,7 +106,7 @@ export default function AboutPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               </div>
 
-            
+
             </motion.div>
 
             {/* Biography and Mission */}
