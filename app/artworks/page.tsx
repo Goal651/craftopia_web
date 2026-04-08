@@ -36,9 +36,9 @@ export default function ArtworksPage() {
 
       const matchesPrice =
         priceFilter === "all" ||
-        (priceFilter === "under-1000" && artwork.price < 1000) ||
-        (priceFilter === "1000-3000" && artwork.price >= 1000 && artwork.price <= 3000) ||
-        (priceFilter === "over-3000" && artwork.price > 3000)
+        (priceFilter === "under-100000" && artwork.price < 100000) ||
+        (priceFilter === "100000-300000" && artwork.price >= 100000 && artwork.price <= 300000) ||
+        (priceFilter === "over-300000" && artwork.price > 300000)
 
       return matchesSearch && matchesPrice
     })
@@ -102,9 +102,9 @@ export default function ArtworksPage() {
   const categories = ["all", "painting", "digital", "sculpture", "photography"]
   const priceRanges = [
     { value: "all", label: "All Prices" },
-    { value: "under-1000", label: "Under $1,000" },
-    { value: "1000-3000", label: "$1,000 - $3,000" },
-    { value: "over-3000", label: "Over $3,000" },
+    { value: "under-100000", label: "Under RWF 100,000" },
+    { value: "100000-300000", label: "RWF 100,000 - 300,000" },
+    { value: "over-300000", label: "Over RWF 300,000" },
   ]
 
   const sortOptions = [

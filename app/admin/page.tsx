@@ -29,7 +29,6 @@ import {
   Edit,
   Trash2,
   Eye,
-  DollarSign,
   Package,
   Users,
   TrendingUp,
@@ -505,7 +504,7 @@ export default function AdminPanel() {
                                 </TableCell>
                                 <TableCell>
                                   <div className="font-mono text-lg font-semibold text-foreground">
-                                    {artwork.price ? `$${artwork.price.toLocaleString()}` : '--'}
+                                    {artwork.price ? `RWF ${artwork.price.toLocaleString()}` : '--'}
                                   </div>
                                 </TableCell>
                                 <TableCell>
@@ -805,7 +804,7 @@ export default function AdminPanel() {
                   <Input name="title" defaultValue="Artwork" className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground" required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="price" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Market Valuation ($)</Label>
+                  <Label htmlFor="price" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Market Valuation (RWF)</Label>
                   <Input name="price" type="number" defaultValue={selectedArtwork?.price} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground font-mono text-lg" required />
                 </div>
                 <div className="space-y-2">
@@ -890,7 +889,7 @@ export default function AdminPanel() {
                 <div className="space-y-1">
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Market Value</p>
                   <p className="text-2xl font-semibold text-foreground font-mono">
-                    {selectedArtwork?.price ? `$${selectedArtwork.price.toLocaleString()}` : "Price on Request"}
+                    {selectedArtwork?.price ? `RWF ${selectedArtwork.price.toLocaleString()}` : "Price on Request"}
                   </p>
                 </div>
                 <div className="space-y-1">
