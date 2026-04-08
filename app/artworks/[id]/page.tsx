@@ -611,7 +611,7 @@ export default function ArtworkDetailPage() {
                       {artist?.phone_number && (
                         <DropdownMenuItem asChild>
                           <Link 
-                            href={`https://wa.me/${artist.phone_number.replace(/\D/g, '')}?text=Hi!%20I'm%20interested%20in%20your%20artwork%20on%20CRAFTOPIA.%20View%20it%20here:%20https://craftopia-arts.vercel.app/artworks/${artwork.id}%20I%20can%20help%20you%20with%20pricing,%20shipping,%20or%20any%20questions!`}
+                            href={`https://wa.me/${artist.phone_number.replace(/\D/g, '')}?text=Hi!%20I'm%20interested%20in%20your%20artwork%20on%20CRAFTOPIA.%20View%20it%20here:%20https://craftopia-arts.vercel.app/artworks/${artwork.id}!`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-2"
