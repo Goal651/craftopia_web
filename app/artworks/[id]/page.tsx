@@ -57,7 +57,6 @@ export default function ArtworkDetailPage() {
   const { user } = useAuth()
   const [artwork, setArtwork] = useState<ArtworkRecord | null>(null)
   const [artist, setArtist] = useState<any | null>(null)
-  const [relatedArtworks, setRelatedArtworks] = useState<ArtworkRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [viewCountUpdated, setViewCountUpdated] = useState(false)
@@ -122,13 +121,6 @@ export default function ArtworkDetailPage() {
       // Fetch artist info for phone number
       if (data.artist_id) {
         fetchArtist(data.artist_id)
-      }
-
-      // Fetch related artworks
-      const relatedRes = await fetch(`/api/artworks?category=${data.category}&limit=5`)
-      if (relatedRes.ok) {
-        const relatedData = await relatedRes.json()
-        setRelatedArtworks(relatedData.artworks.filter((a: ArtworkRecord) => a.id !== artworkId).slice(0, 4))
       }
 
     } catch (err) {
@@ -450,60 +442,60 @@ export default function ArtworkDetailPage() {
         )}
       </Head>
 
-      <div className="min-h-screen bg-background py-16 sm:py-24">
-        <div className="container-modern px-6 lg:px-10">
+      <div className="min-h-screen bg-background py-10 sm:py-12">
+        <div className="container-modern px-6 lg:px-8">
           {/* Main Content Grid: 2/3 Left, 1/3 Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             
             {/* Artwork Display - 2 Columns */}
-            <div className="lg:col-span-2 space-y-8">
+            <div className="lg:col-span-2">
               <motion.div
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8 }}
-                className="relative rounded overflow-hidden glass border border-border shadow-xl hover:shadow-2xl transition-all duration-500"
+                className="relative rounded-lg overflow-hidden glass border border-border shadow-md bg-muted/5 aspect-[4/3] max-h-[500px] flex items-center justify-center p-4"
               >
                 <ArtworkImage
                   src={artwork.image_url}
                   alt={artwork.description}
                   title={artwork.description}
-                  className="w-full h-auto object-contain mx-auto"
+                  className="w-full h-full object-contain mx-auto transition-transform duration-700 hover:scale-105"
                   priority
                 />
               </motion.div>
             </div>
 
             {/* Artwork Details & Commerce - 1 Column */}
-            <div className="space-y-10">
-              <div className="space-y-6">
-                <div className="space-y-4">
-                  <Badge className="bg-primary/5 text-primary border-primary/20 px-3 py-1 uppercase tracking-widest text-[10px] font-black rounded">
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <div className="space-y-3">
+                  <Badge className="bg-primary/5 text-primary border-primary/20 px-2 py-0.5 uppercase tracking-widest text-[9px] font-black rounded">
                     {artwork.category || "Fine Art"}
                   </Badge>
-                  <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground leading-[1.1]">
+                  <h1 className="text-2xl md:text-3xl font-black tracking-tight text-foreground leading-[1.2] break-words">
                     {artwork.description || "Untitled Creation"}
                   </h1>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Created by <span className="text-foreground font-black">{artwork.artist_name}</span>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    by <span className="text-foreground font-black">{artwork.artist_name}</span>
                   </p>
                 </div>
 
-                <div className="prose prose-invert border-t border-border pt-8">
-                  <p className="text-base text-muted-foreground leading-relaxed">
+                <div className="border-t border-border pt-4">
+                  <p className="text-sm text-muted-foreground leading-relaxed break-words whitespace-pre-wrap">
                     {artwork.description}
                   </p>
                 </div>
 
                 {/* Economic Profile Grid */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="rounded border border-border bg-muted/5 p-6 flex flex-col items-center justify-center text-center">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-black text-muted-foreground mb-3">Amount</span>
-                    <span className="text-2xl font-black text-primary">${artwork.price.toLocaleString()}</span>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded border border-border bg-muted/5 p-4 flex flex-col items-center justify-center text-center">
+                    <span className="text-[9px] uppercase tracking-[0.2em] font-black text-muted-foreground mb-2">Amount</span>
+                    <span className="text-xl font-black text-primary">${artwork.price.toLocaleString()}</span>
                   </div>
-                  <div className="rounded border border-border bg-muted/5 p-6 flex flex-col items-center justify-center text-center">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-black text-muted-foreground mb-3">Stock</span>
+                  <div className="rounded border border-border bg-muted/5 p-4 flex flex-col items-center justify-center text-center">
+                    <span className="text-[9px] uppercase tracking-[0.2em] font-black text-muted-foreground mb-2">Stock</span>
                     <span className={cn(
-                      "text-2xl font-black",
+                      "text-xl font-black",
                       artwork.stock_quantity > 0 ? "text-foreground" : "text-destructive"
                     )}>
                       {artwork.stock_quantity > 0 ? artwork.stock_quantity : "Out"}
@@ -512,32 +504,29 @@ export default function ArtworkDetailPage() {
                 </div>
 
                 {/* Primary Interaction Area */}
-                <div className="space-y-4 pt-6">
-                  {/* Phone Contact - User Requested Primary Action */}
-                  <Button asChild size="lg" className="w-full btn-primary h-16 rounded font-black text-base shadow-lg shadow-primary/10">
+                <div className="space-y-3 pt-2">
+                  <Button asChild className="w-full btn-primary h-12 rounded font-black text-sm uppercase tracking-widest shadow-md">
                     <Link href={artist?.phone_number ? `tel:${artist.phone_number}` : "#"}>
-                      <Phone className="w-5 h-5 mr-3" />
+                      <Phone className="w-4 h-4 mr-2" />
                       Contact via Phone
                     </Link>
                   </Button>
 
-                  <div className="flex gap-4">
+                  <div className="flex gap-3">
                     <Button
                       variant="outline"
-                      size="lg"
-                      className="flex-1 rounded border-border hover:bg-muted font-bold text-xs uppercase tracking-widest"
+                      className="flex-1 h-11 rounded border-border hover:bg-muted font-black text-[10px] uppercase tracking-[0.2em]"
                       onClick={handleLike}
                     >
-                      <Heart className={cn("w-4 h-4 mr-2", isLiked && "fill-destructive text-destructive")} />
-                      {isLiked ? "Saved" : "Save Piece"}
+                      <Heart className={cn("w-3.5 h-3.5 mr-2", isLiked && "fill-destructive text-destructive")} />
+                      {isLiked ? "Saved" : "Save"}
                     </Button>
                     <Button
                       variant="outline"
-                      size="lg"
-                      className="rounded px-6 border-border hover:bg-muted"
+                      className="h-11 px-4 rounded border-border hover:bg-muted"
                       onClick={() => setShowShareMenu(!showShareMenu)}
                     >
-                      <Share2 className="w-4 h-4" />
+                      <Share2 className="w-3.5 h-3.5" />
                     </Button>
                   </div>
 
@@ -545,26 +534,26 @@ export default function ArtworkDetailPage() {
                   <AnimatePresence>
                     {showShareMenu && (
                       <motion.div
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="p-5 rounded border border-border bg-card shadow-2xl mt-4"
+                        exit={{ opacity: 0, y: 5 }}
+                        className="p-4 rounded border border-border bg-card shadow-xl space-y-3"
                       >
-                        <p className="text-[9px] uppercase tracking-[0.3em] font-black text-muted-foreground mb-4">Sharing Options</p>
-                        <div className="grid grid-cols-2 gap-3">
+                        <p className="text-[8px] uppercase tracking-[0.2em] font-black text-muted-foreground mb-2">Sharing Options</p>
+                        <div className="grid grid-cols-2 gap-2">
                           {[
-                            { id: 'twitter', label: 'X/Twitter', icon: <Globe className="w-4 h-4" /> },
-                            { id: 'copy', label: copiedToClipboard ? 'Link Copied' : 'Copy URL', icon: <ExternalLink className="w-4 h-4" /> }
+                            { id: 'twitter', label: 'X', icon: <Globe className="w-3.5 h-3.5" /> },
+                            { id: 'copy', label: copiedToClipboard ? 'Copied' : 'Link', icon: <ExternalLink className="w-3.5 h-3.5" /> }
                           ].map(p => (
                             <Button
                               key={p.id}
                               variant="ghost"
                               size="sm"
                               onClick={() => handleShare(p.id)}
-                              className="justify-start gap-3 h-12 px-4 hover:bg-muted rounded"
+                              className="justify-start gap-2 h-9 px-3 hover:bg-muted rounded"
                             >
                               {p.icon}
-                              <span className="text-[10px] font-black uppercase tracking-wider">{p.label}</span>
+                              <span className="text-[9px] font-black uppercase tracking-wider">{p.label}</span>
                             </Button>
                           ))}
                         </div>
