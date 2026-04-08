@@ -46,6 +46,7 @@ import {
 } from "lucide-react"
 import Head from 'next/head'
 import { cn } from "@/lib/utils"
+import { ArtworkFullView } from "@/components/ui/artwork-full-view"
 
 export default function ArtworkDetailPage() {
   const params = useParams()
@@ -64,6 +65,7 @@ export default function ArtworkDetailPage() {
   const [showComments, setShowComments] = useState(false)
   const [copiedToClipboard, setCopiedToClipboard] = useState(false)
   const [commentsLoading, setCommentsLoading] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
   const artworkId = Array.isArray(params.id) ? params.id[0] : params.id
 
@@ -429,216 +431,131 @@ export default function ArtworkDetailPage() {
 
       <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
         <div className="container-modern px-6 lg:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
-            {/* Main Artwork Section - 2 columns */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* Artwork Image */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
-                className="relative group h-full flex flex-col items-center justify-center p-4 bg-muted/20 rounded-2xl"
-              >
-                <div className="relative rounded-2xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] border border-border/50">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
-                  <ArtworkImage
-                    src={artwork.image_url}
-                    alt={artwork.description}
-                    title={artwork.description}
-                    className="w-full h-full object-cover  transition-transform duration-1000 group-hover:scale-105"
-                    priority
-                    width={500}
-                    height={300}
-                  />
-
-                  {/* Floating Action Buttons */}
-                  <div className="absolute top-6 right-6 flex flex-col gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
-                    <Button
-                      size="icon"
-                      className="w-12 h-12 rounded-full glass-strong border border-white/20 backdrop-blur-xl shadow-lg hover:scale-110 transition-transform"
-                      onClick={handleLike}
-                    >
-                      <Heart className={`w-5 h-5 ${isLiked ? 'fill-red-500 text-red-500' : 'text-white'}`} />
-                    </Button>
-                    <Button
-                      size="icon"
-                      className="w-12 h-12 rounded-full glass-strong border border-white/20 backdrop-blur-xl shadow-lg hover:scale-110 transition-transform"
-                      onClick={() => setIsBookmarked(!isBookmarked)}
-                    >
-                      <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-yellow-500 text-yellow-500' : 'text-white'}`} />
-                    </Button>
-                    <Button
-                      size="icon"
-                      className="w-12 h-12 rounded-full glass-strong border border-white/20 backdrop-blur-xl shadow-lg hover:scale-110 transition-transform"
-                      onClick={() => setShowShareMenu(!showShareMenu)}
-                    >
-                      <Share2 className="w-5 h-5 text-white" />
-                    </Button>
+          {/* Cinema Layout: Immersive Hero Section */}
+          <div className="space-y-16 lg:space-y-24">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="relative mx-auto group cursor-zoom-in max-w-7xl"
+              onClick={() => setIsFullscreen(true)}
+            >
+              <div className="relative rounded-3xl overflow-hidden glass-strong border border-border/50 shadow-[0_48px_100px_-20px_rgba(0,0,0,0.6)] transition-all duration-700 hover:shadow-primary/10">
+                <ArtworkImage
+                  src={artwork.image_url}
+                  alt={artwork.description}
+                  title={artwork.description}
+                  className="w-full h-auto max-h-[75vh] object-contain mx-auto"
+                  priority
+                />
+                
+                {/* Immersive Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center pb-10 pointer-events-none">
+                  <div className="flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/20 px-6 py-3 rounded-full shadow-2xl scale-90 group-hover:scale-100 transition-transform">
+                    <Maximize2 className="w-5 h-5 text-primary" />
+                    <span className="text-sm font-bold uppercase tracking-[0.2em] text-white">Inspect Detail</span>
                   </div>
+                </div>
 
-                  {/* Share Menu */}
+                {/* Minimalist Action Float */}
+                <div className="absolute top-6 right-6 flex items-center gap-3 z-20">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className={cn(
+                      "w-12 h-12 rounded-full glass-strong border border-white/10 backdrop-blur-2xl shadow-2xl transition-all",
+                      isLiked ? "text-red-500 bg-red-500/10" : "text-white hover:text-red-400"
+                    )}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleLike()
+                    }}
+                  >
+                    <Heart className={cn("w-6 h-6", isLiked && "fill-current")} />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="w-12 h-12 rounded-full glass-strong border border-white/10 backdrop-blur-2xl shadow-2xl text-white transition-all hover:bg-white/10"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setShowShareMenu(!showShareMenu)
+                    }}
+                  >
+                    <Share2 className="w-6 h-6" />
+                  </Button>
+                </div>
+
+                {/* Share Dropdown */}
+                <AnimatePresence>
                   {showShareMenu && (
                     <motion.div
-                      initial={{ opacity: 0, scale: 0.9, y: -10 }}
+                      initial={{ opacity: 0, scale: 0.95, y: 10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.9, y: -10 }}
-                      className="absolute top-24 right-6 glass-strong border border-white/20 rounded p-4 z-30 min-w-[220px]"
+                      exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                      className="absolute top-20 right-6 glass-strong border border-white/20 rounded-xl p-3 z-30 min-w-[200px] shadow-2xl"
                     >
-                      <div className="space-y-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleShare('twitter')}
-                          className="w-full justify-start text-white hover:bg-white/10"
-                        >
-                          <div className="w-4 h-4 mr-2 bg-blue-400 rounded-full" />
-                          Twitter
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleShare('facebook')}
-                          className="w-full justify-start text-white hover:bg-white/10"
-                        >
-                          <div className="w-4 h-4 mr-2 bg-blue-600 rounded-full" />
-                          Facebook
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleShare('pinterest')}
-                          className="w-full justify-start text-white hover:bg-white/10"
-                        >
-                          <div className="w-4 h-4 mr-2 bg-red-600 rounded-full" />
-                          Pinterest
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleShare('linkedin')}
-                          className="w-full justify-start text-white hover:bg-white/10"
-                        >
-                          <div className="w-4 h-4 mr-2 bg-blue-700 rounded-full" />
-                          LinkedIn
-                        </Button>
-                        <div className="h-px bg-white/10 my-1" />
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleShare('copy')}
-                          className="w-full justify-start text-white hover:bg-white/10"
-                        >
-                          {copiedToClipboard ? (
-                            <>
-                              <div className="w-4 h-4 mr-2 bg-green-400 rounded-full flex items-center justify-center">
-                                <span className="text-xs text-black">✓</span>
-                              </div>
-                              Copied!
-                            </>
-                          ) : (
-                            <>
-                              <div className="w-4 h-4 mr-2 bg-gray-400 rounded-full" />
-                              Copy Link
-                            </>
-                          )}
-                        </Button>
+                      <div className="flex flex-col gap-1">
+                        {[
+                          { id: 'twitter', label: 'X / Twitter', color: 'bg-blue-400' },
+                          { id: 'facebook', label: 'Facebook', color: 'bg-blue-600' },
+                          { id: 'copy', label: copiedToClipboard ? 'Link Copied!' : 'Copy Link', color: 'bg-gray-500' }
+                        ].map(p => (
+                          <Button
+                            key={p.id}
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleShare(p.id)
+                            }}
+                            className="w-full justify-start text-white hover:bg-white/10 gap-3"
+                          >
+                            <div className={cn("w-2 h-2 rounded-full", p.color)} />
+                            {p.label}
+                          </Button>
+                        ))}
                       </div>
                     </motion.div>
                   )}
-                </div>
-              </motion.div>
+                </AnimatePresence>
+              </div>
+            </motion.div>
 
-              {/* Title and Basic Info */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="space-y-2"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className="space-y-2">
-                   
-                    <div className="flex items-center gap-4 text-muted-foreground">
-                      <Link
-                        href={`/gallery/artist/${artwork.artist_id}`}
-                        className="flex items-center gap-2 text-primary hover:text-primary/80 transition-all font-bold group"
-                      >
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all">
-                          <User className="w-4 h-4" />
-                        </div>
-                        {artwork.artist_name}
-                      </Link>
-                      <span className="text-border">|</span>
-                      <span className="text-sm font-medium">{getRelativeTime(artwork.createdAt)}</span>
-                    </div>
+            {/* Header / Narrative Section below the image */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-24">
+              <div className="lg:col-span-2 space-y-8">
+                <div className="space-y-6">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 uppercase tracking-widest text-[10px] font-black shadow-lg shadow-primary/5">
+                      {artwork.category || "Artworks"}
+                    </Badge>
+                    <div className="h-1 w-1 rounded-full bg-border" />
+                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                      {artwork.view_count.toLocaleString()} Views
+                    </span>
                   </div>
+                  
+                  <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-foreground leading-[1.05]">
+                    {artwork.description || "Experimental Piece"}
+                  </h1>
+
+                  <Link
+                    href={`/gallery/artist/${artwork.artist_id}`}
+                    className="inline-flex items-center gap-3 group px-4 py-2 rounded-full border border-border/50 bg-muted/10 hover:border-primary/50 transition-all duration-300"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-foreground flex items-center justify-center text-[10px] font-black text-white">
+                      {artwork.artist_name.charAt(0)}
+                    </div>
+                    <span className="text-sm font-bold text-muted-foreground group-hover:text-primary transition-colors">
+                      Created by {artwork.artist_name}
+                    </span>
+                    <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </Link>
+
+                  {/* Sidebar-style fields now integrated into flow if needed, OR keep the sidebar below */}
                 </div>
 
-                {/* Description */}
-                {artwork.description && (
-                  <div className="prose prose-invert max-w-none">
-                    <p className="text-2xl text-foreground font-light leading-relaxed">
-                      {artwork.description}
-                    </p>
-                  </div>
-                )}
-              </motion.div>
-
-              {/* Engagement Stats */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="grid grid-cols-2 sm:grid-cols-4 gap-4"
-              >
-                <Card className="glass-strong border border-primary/10 bg-primary/5">
-                  <CardContent className="p-6 text-center">
-                    <div className="flex items-center justify-center mb-3">
-                      <Eye className="w-6 h-6 text-primary" />
-                    </div>
-                    <div className="text-3xl font-bold text-foreground">
-                      {artwork.view_count.toLocaleString()}
-                    </div>
-                    <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Views</div>
-                  </CardContent>
-                </Card>
-
-                <Card className="glass-strong border border-border/50">
-                  <CardContent className="p-6 text-center">
-                    <div className="flex items-center justify-center mb-3">
-                      <Heart className="w-6 h-6 text-red-500" />
-                    </div>
-                    <div className="text-3xl font-bold text-foreground">
-                      {Math.floor(artwork.view_count * 0.12)}
-                    </div>
-                    <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Likes</div>
-                  </CardContent>
-                </Card>
-
-                <Card className="glass-strong border border-border/50">
-                  <CardContent className="p-6 text-center">
-                    <div className="flex items-center justify-center mb-3">
-                      <MessageCircle className="w-6 h-6 text-blue-500" />
-                    </div>
-                    <div className="text-3xl font-bold text-foreground">
-                      {Math.floor(artwork.view_count * 0.05)}
-                    </div>
-                    <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Comments</div>
-                  </CardContent>
-                </Card>
-
-                <Card className="glass-strong border border-border/50">
-                  <CardContent className="p-6 text-center">
-                    <div className="flex items-center justify-center mb-3">
-                      <TrendingUp className="w-6 h-6 text-green-500" />
-                    </div>
-                    <div className="text-3xl font-bold text-foreground">
-                      +{Math.floor(artwork.view_count * 0.08)}
-                    </div>
-                    <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Growth</div>
-                  </CardContent>
-                </Card>
-              </motion.div>
 
               {/* Comments Section */}
               <motion.div
@@ -994,6 +911,13 @@ export default function ArtworkDetailPage() {
           )}
         </div>
       </div>
+
+      <ArtworkFullView
+        src={artwork.image_url}
+        alt={artwork.description}
+        isOpen={isFullscreen}
+        onClose={() => setIsFullscreen(false)}
+      />
     </>
   )
 }
