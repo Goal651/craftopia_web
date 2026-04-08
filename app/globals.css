@@ -70,7 +70,7 @@
   
   /* Glass Effect */
   --glass-bg: 255, 255, 255;
-  --glass-border: 0, 0%, 90%;
+  --glass-border: 229, 229, 229;
   
   /* Blue Gradient */
   --gradient-from: 214 95% 55%;
@@ -117,8 +117,8 @@
   --surface-elevated: 0 0% 10%;
   --surface-hover: 0 0% 15%;
   
-  --glass-bg: 0, 0, 0;
-  --glass-border: 255, 255, 255;
+  --glass-bg: 20, 20, 20;
+  --glass-border: 60, 60, 60;
   
   /* Blue Gradient */
   --gradient-from: 214 95% 60%;

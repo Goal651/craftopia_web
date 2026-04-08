@@ -123,7 +123,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Categories with Enhanced Hover */}
+      {/* Categories with Enhanced Hover
       <section className="py-16 md:py-24 lg:py-32">
         <div className="container mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-12 md:mb-16">
@@ -162,7 +162,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Premium CTA Section */}
       <section className="py-20 md:py-32 relative overflow-hidden">
