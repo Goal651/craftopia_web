@@ -1,10 +1,22 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
-const f = createUploadthing();
+const f = createUploadthing({
+  errorFormatter: (err) => {
+    return {
+      message: err.message,
+      code: err.code,
+    };
+  },
+});
 
 export const ourFileRouter = {
-    imageUploader: f({ image: { maxFileSize: "8MB" } })
+    imageUploader: f({ 
+        image: { 
+            maxFileSize: "8MB",
+            maxFileCount: 1,
+        }
+    })
         .middleware(async ({ req }) => {
             // In a real app, you would check auth here
             return { userId: "demo-user" };
