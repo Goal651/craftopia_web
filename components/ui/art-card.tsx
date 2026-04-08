@@ -182,10 +182,19 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
 
           {/* Footer */}
           <div className="flex items-center justify-between pt-4 border-t border-border/50">
-            <div>
-              <span className="text-2xl font-bold text-gradient-primary">
-                Gallery
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-gradient-primary">
+                {artwork.price > 0 ? `$${artwork.price.toLocaleString()}` : "Not for Sale"}
               </span>
+              {artwork.stock_quantity > 0 ? (
+                <span className="text-[10px] uppercase tracking-widest text-emerald-500 font-bold">
+                  {artwork.stock_quantity} in stock
+                </span>
+              ) : (
+                <span className="text-[10px] uppercase tracking-widest text-red-500 font-bold">
+                  Sold Out
+                </span>
+              )}
             </div>
             <Button
               onClick={handleContactOwner}

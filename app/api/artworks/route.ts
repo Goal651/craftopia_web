@@ -64,22 +64,24 @@ export async function POST(request: NextRequest) {
         await dbConnect()
         const body = await request.json()
 
-        const { title, description, category, image_url, artist_id, artist_name } = body
+        const { title, description, category, image_url, artist_id, artist_name, price, stock_quantity } = body
 
-        if (!title || !category || !image_url || !artist_id || !artist_name) {
+        if (!image_url || !artist_id || !artist_name) {
             return NextResponse.json(
-                { error: 'Missing required fields' },
+                { error: 'Missing required fields (image, artist information)' },
                 { status: 400 }
             )
         }
 
         const newArtwork = await Artwork.create({
-            title,
+            title: title || '',
             description,
-            category,
+            category: category || 'Artworks',
             image_url,
             artist_id,
             artist_name,
+            price: price || 0,
+            stock_quantity: stock_quantity || 1,
             view_count: 0
         })
 

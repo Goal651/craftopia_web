@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 const ArtworkSchema = new mongoose.Schema({
     title: {
         type: String,
-        required: true,
+        required: false,
     },
     description: {
         type: String,

@@ -45,6 +45,7 @@ import {
   Sparkles
 } from "lucide-react"
 import Head from 'next/head'
+import { cn } from "@/lib/utils"
 
 export default function ArtworkDetailPage() {
   const params = useParams()
@@ -800,6 +801,29 @@ export default function ArtworkDetailPage() {
                     </div>
 
                     <div className="space-y-4">
+                      <div className="flex items-center justify-between py-3 border-b border-white/10">
+                        <span className="text-gray-400 flex items-center gap-2">
+                          <Tag className="w-4 h-4" />
+                          Price
+                        </span>
+                        <span className="text-primary font-bold text-xl">
+                          {artwork.price > 0 ? `$${artwork.price.toLocaleString()}` : "Not for Sale"}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between py-3 border-b border-white/10">
+                        <span className="text-gray-400 flex items-center gap-2">
+                          <Bookmark className="w-4 h-4" />
+                          Availability
+                        </span>
+                        <span className={cn(
+                          "font-bold",
+                          artwork.stock_quantity > 0 ? "text-emerald-500" : "text-red-500"
+                        )}>
+                          {artwork.stock_quantity > 0 ? `${artwork.stock_quantity} In Stock` : "Sold Out"}
+                        </span>
+                      </div>
+
                       <div className="flex items-center justify-between py-3 border-b border-white/10">
                         <span className="text-gray-400 flex items-center gap-2">
                           <Calendar className="w-4 h-4" />

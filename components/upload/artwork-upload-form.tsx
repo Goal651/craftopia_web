@@ -33,27 +33,18 @@ import type { ArtworkRecord } from '@/types'
 import { useUploadThing } from "@/lib/uploadthing";
 
 // Validation schema
-const createArtworkUploadSchema = (isEditMode: boolean) => z.object({
+const artworkUploadSchema = z.object({
   description: z.string()
-    .max(1000, 'Description must be less than 1000 characters')
-    .optional(),
-  imageFile: isEditMode
-    ? z.instanceof(File, { message: 'Please select an image file' })
-      .refine((file) => file.size <= 8 * 1024 * 1024, 'File size must be under 8MB')
-      .refine(
-        (file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type),
-        'File must be JPG, PNG, or WebP format'
-      )
-      .optional()
-    : z.instanceof(File, { message: 'Please select an image file' })
-      .refine((file) => file.size <= 8 * 1024 * 1024, 'File size must be under 8MB')
-      .refine(
-        (file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type),
-        'File must be JPG, PNG, or WebP format'
-      )
+    .min(10, 'Description must be at least 10 characters')
+    .max(1000, 'Description must be less than 1000 characters'),
+  price: z.number()
+    .min(0, 'Price cannot be negative'),
+  stock_quantity: z.number()
+    .min(0, 'Stock cannot be negative'),
+  imageFile: z.any().optional()
 })
 
-type ArtworkUploadFormValues = z.infer<ReturnType<typeof createArtworkUploadSchema>>
+type ArtworkUploadFormValues = z.infer<typeof artworkUploadSchema>
 
 interface ArtworkUploadFormProps {
   onSuccess?: (artwork: ArtworkRecord) => void
@@ -83,9 +74,11 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
   });
 
   const form = useForm<ArtworkUploadFormValues>({
-    resolver: zodResolver(createArtworkUploadSchema(isEditMode)),
+    resolver: zodResolver(artworkUploadSchema),
     defaultValues: {
       description: editingArtwork?.description || '',
+      price: editingArtwork?.price || 0,
+      stock_quantity: editingArtwork?.stock_quantity || 1,
       imageFile: undefined
     }
   })
@@ -153,9 +146,13 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           description: data.description,
+          price: data.price,
+          stock_quantity: data.stock_quantity,
           image_url: imageUrl,
           artist_id: user.id,
-          artist_name: user.display_name || user.email
+          artist_name: user.display_name || user.email,
+          category: 'Artworks', // Default category
+          title: data.description.substring(0, 50) // Use start of description as title
         })
       })
 
@@ -311,11 +308,11 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">Description (Optional)</FormLabel>
+                  <FormLabel className="text-sm font-medium">Artwork Description</FormLabel>
                   <FormControl>
                     <Textarea 
                       placeholder="Share the story behind this piece..." 
-                      className="bg-muted/30 border-border/50 focus:bg-background transition-all min-h-[120px] resize-none p-4" 
+                      className="bg-muted/30 border-border/50 focus:bg-background transition-all min-h-[100px] resize-none p-4" 
                       {...field} 
                     />
                   </FormControl>
@@ -323,6 +320,50 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
                 </FormItem>
               )}
             />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">Price (USD)</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="number" 
+                        placeholder="0.00"
+                        className="bg-muted/30 border-border/50 focus:bg-background transition-all" 
+                        {...field}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-xs">Set to 0 if not for sale</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="stock_quantity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">Available Copies</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="number" 
+                        placeholder="1"
+                        className="bg-muted/30 border-border/50 focus:bg-background transition-all" 
+                        {...field}
+                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-xs">Inventory quantity</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {isUploading && (
               <div className="space-y-2">
