@@ -5,9 +5,6 @@ const ArtworkSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    description: {
-        type: String,
-    },
     image_url: {
         type: String,
         required: true,
@@ -42,8 +39,7 @@ const ArtworkSchema = new mongoose.Schema({
 // Text index for search
 ArtworkSchema.index({
     title: "text",
-    artist_name: "text",
-    description: "text"
+    artist_name: "text"
 })
 
 export default mongoose.models.Artwork || mongoose.model("Artwork", ArtworkSchema)

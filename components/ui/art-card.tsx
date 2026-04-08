@@ -184,7 +184,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
           <div className="flex items-center justify-between pt-4 border-t border-border/50">
             <div className="flex flex-col">
               <span className="text-xl font-semibold text-gradient-primary">
-                {artwork.price > 0 ? `$${artwork.price.toLocaleString()}` : "Not for Sale"}
+                {artwork.price > 0 ? `RWF ${artwork.price.toLocaleString()}` : "Not for Sale"}
               </span>
               {artwork.stock_quantity > 0 ? (
                 <span className="text-[10px] uppercase tracking-widest text-emerald-500 font-semibold">
