@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import Head from 'next/head'
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArtCard } from "@/components/ui/art-card"
@@ -21,6 +22,49 @@ export default function HomePage() {
     href: string;
     color: string;
   }[]>([])
+
+  // SEO: Generate structured data
+  const generateStructuredData = () => {
+    const baseUrl = 'https://craftopia-arts.vercel.app'
+    
+    return {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "CRAFTOPIA - Premium Art Gallery",
+      "description": "Discover extraordinary contemporary artworks from talented artists. Browse paintings, digital art, photography, sculptures and more in our curated online gallery.",
+      "url": baseUrl,
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": `${baseUrl}/artworks?search={search_term_string}`,
+        "query-input": "required name=search_term_string"
+      },
+      "mainEntity": {
+        "@type": "ItemList",
+        "name": "Featured Artworks",
+        "description": "Handpicked collection of exceptional artworks",
+        "numberOfItems": featuredArtworks.length,
+        "itemListElement": featuredArtworks.map((artwork, index) => ({
+          "@type": "VisualArtwork",
+          "position": index + 1,
+          "name": "Artwork",
+          "creator": {
+            "@type": "Person",
+            "name": artwork.artist_name
+          },
+          "image": artwork.image_url,
+          "url": `${baseUrl}/artworks/${artwork.id}`,
+          "offers": {
+            "@type": "Offer",
+            "price": artwork.price,
+            "priceCurrency": "RWF",
+            "availability": artwork.stock_quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+          }
+        }))
+      }
+    }
+  }
+
+  const structuredData = generateStructuredData()
 
   useEffect(() => {
     fetchCategories()
@@ -74,37 +118,76 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <>
+      {/* SEO Meta Tags */}
+      <Head>
+        <title>CRAFTOPIA - Premium Art Gallery | Contemporary Artworks for Sale</title>
+        <meta name="description" content="Discover extraordinary contemporary artworks from talented artists. Browse paintings, digital art, photography, sculptures and more in our curated online gallery." />
+        <meta name="keywords" content="art gallery, contemporary art, paintings, digital art, photography, sculptures, online gallery, artworks for sale, rwandan art, craftopia" />
+        <meta name="author" content="CRAFTOPIA" />
+        <meta name="robots" content="index, follow" />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://craftopia-arts.vercel.app" />
+        <meta property="og:title" content="CRAFTOPIA - Premium Art Gallery | Contemporary Artworks for Sale" />
+        <meta property="og:description" content="Discover extraordinary contemporary artworks from talented artists. Browse paintings, digital art, photography, sculptures and more in our curated online gallery." />
+        <meta property="og:image" content="https://craftopia-arts.vercel.app/og-image.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="CRAFTOPIA" />
+        
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://craftopia-arts.vercel.app" />
+        <meta property="twitter:title" content="CRAFTOPIA - Premium Art Gallery" />
+        <meta property="twitter:description" content="Discover extraordinary contemporary artworks from talented artists." />
+        <meta property="twitter:image" content="https://craftopia-arts.vercel.app/og-image.jpg" />
+        
+        {/* Additional SEO */}
+        <link rel="canonical" href="https://craftopia-arts.vercel.app" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      </Head>
+      
+      <div className="min-h-screen">
       {/* Featured Artworks with Premium Cards */}
-      <section className="pb-16 md:pb-24 lg:pb-32 relative z-10 pt-4">
+      <section className="pb-16 md:pb-24 lg:pb-32 relative z-10 pt-4" aria-labelledby="featured-heading">
         <div className="container mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-12 md:mb-16">
-            <Badge className="mb-6 md:mb-8 glass-strong px-6 py-3 shadow-lg">Featured Collection</Badge>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
+            <Badge className="mb-6 md:mb-8 glass-strong px-6 py-3 shadow-lg" aria-label="Featured collection">Featured Collection</Badge>
+            <h2 id="featured-heading" className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
               Curated <span className="text-gradient-primary">Masterpieces</span>
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto font-light">
-              Handpicked artworks that showcase exceptional creativity and artistic vision
+              Handpicked artworks that showcase exceptional creativity and artistic vision from our talented artists
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" role="list" aria-label="Featured artworks">
             {loading ? (
               [...Array(6)].map((_, i) => (
-                <div key={i} className="h-[600px] glass-strong rounded animate-pulse" />
+                <div key={i} className="h-[600px] glass-strong rounded animate-pulse" role="status" aria-label="Loading artwork" />
               ))
             ) : featuredArtworks.length > 0 ? (
               featuredArtworks.map((artwork, index) => (
-                <ArtCard
-                  key={artwork.id}
-                  artwork={artwork}
-                  index={index}
-                />
+                <div key={artwork.id} role="listitem">
+                  <ArtCard
+                    artwork={artwork}
+                    index={index}
+                  />
+                </div>
               ))
             ) : (
-              <div className="col-span-full py-20 text-center glass-strong rounded">
+              <div className="col-span-full py-20 text-center glass-strong rounded" role="status">
                 <p className="text-xl text-muted-foreground mb-6">No featured artworks found.</p>
-                <Button variant="outline" className="glass-strong" onClick={() => window.location.reload()}>
+                <Button variant="outline" className="glass-strong" onClick={() => window.location.reload()} aria-label="Reload featured artworks collection">
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Reload Collection
                 </Button>
@@ -113,7 +196,7 @@ export default function HomePage() {
           </div>
 
           <div className="text-center mt-16">
-            <Button asChild variant="outline" size="lg" className="glass-strong text-lg px-10 py-5 border-2">
+            <Button asChild variant="outline" size="lg" className="glass-strong text-lg px-10 py-5 border-2" aria-label="Browse all available artworks">
               <Link href="/artworks">
                 View All Artworks
                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -165,25 +248,25 @@ export default function HomePage() {
       </section> */}
 
       {/* Premium CTA Section */}
-      <section className="py-20 md:py-32 relative overflow-hidden">
+      <section className="py-20 md:py-32 relative overflow-hidden" aria-labelledby="cta-heading">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
             <div className="glass-strong rounded p-12 md:p-16 lg:p-20 border border-border/50 shadow-2xl">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
+              <h2 id="cta-heading" className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
                 Ready to Start Your <span className="text-gradient-primary">Art Journey</span>?
               </h2>
               <p className="text-lg md:text-xl text-muted-foreground mb-10 font-light">
-                Join thousands of art enthusiasts who have discovered their perfect pieces
+                Join thousands of art enthusiasts who have discovered their perfect pieces in our curated gallery
               </p>
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
-                <Button asChild size="lg" className="btn-primary text-lg px-10 py-5 shadow-xl">
+                <Button asChild size="lg" className="btn-primary text-lg px-10 py-5 shadow-xl" aria-label="Browse our complete art collection">
                   <Link href="/artworks">
                     Browse Collection
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="glass-strong text-lg px-10 py-5 border-2">
+                <Button asChild variant="outline" size="lg" className="glass-strong text-lg px-10 py-5 border-2" aria-label="Contact us for inquiries">
                   <Link href="/contact">Get in Touch</Link>
                 </Button>
               </div>
@@ -192,5 +275,6 @@ export default function HomePage() {
         </div>
       </section>
     </div>
+    </>
   )
 }
