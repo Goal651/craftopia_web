@@ -132,6 +132,11 @@ export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: 
       let imageUrl = editingArtwork?.image_url
       let additionalImages: string[] = []
 
+      // Start with existing images if editing
+      if (isEditMode && editingArtwork?.images) {
+        additionalImages = [...editingArtwork.images]
+      }
+
       // Upload new images if files were provided
       if (data.imageFiles && data.imageFiles.length > 0) {
         const uploadRes = await startUpload(data.imageFiles);
@@ -140,9 +145,15 @@ export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: 
           throw new Error("Failed to upload images");
         }
 
-        // First image becomes main image, others become additional
-        imageUrl = uploadRes[0].url;
-        additionalImages = uploadRes.slice(1).map(img => img.url);
+        // In edit mode, add new images to existing ones
+        if (isEditMode) {
+          // Append new images to existing additional images
+          additionalImages = [...additionalImages, ...uploadRes.map(img => img.url)]
+        } else {
+          // In create mode, first image becomes main, others become additional
+          imageUrl = uploadRes[0].url;
+          additionalImages = uploadRes.slice(1).map(img => img.url);
+        }
       }
 
       // Save metadata to MongoDB
