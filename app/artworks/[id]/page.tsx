@@ -343,9 +343,9 @@ export default function ArtworkDetailPage() {
       </Head>
 
       <div className="min-h-screen bg-background py-10 sm:py-12">
-        <div className="container-modern px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-6 lg:px-8">
           {/* Main Content Grid: 2/3 Left, 1/3 Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
             {/* Artwork Display - 2 Columns */}
             <div className="lg:col-span-2">

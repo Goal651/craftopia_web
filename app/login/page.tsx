@@ -80,13 +80,13 @@ export default function LoginPage() {
               transition={{ delay: 0.2, type: "spring" }}
               className="flex justify-center"
             >
-              <div className="h-20 w-20 bg-primary/10 rounded-2xl flex items-center justify-center shadow-inner">
-                <Palette className="w-10 h-10 text-primary" />
+              <div className="h-14 w-14 bg-primary/10 rounded flex items-center justify-center shadow-inner">
+                <Palette className="w-7 h-7 text-primary" />
               </div>
             </motion.div>
-            <div className="space-y-2">
-              <CardTitle className="text-3xl font-semibold tracking-tight text-foreground">Welcome <span className="text-gradient-primary">Back</span></CardTitle>
-              <CardDescription className="text-base text-muted-foreground">Sign in to your CRAFTOPIA account</CardDescription>
+            <div className="space-y-1.5">
+              <CardTitle className="text-2xl font-semibold tracking-tight text-foreground">Welcome <span className="text-gradient-primary">Back</span></CardTitle>
+              <CardDescription className="text-sm text-muted-foreground">Sign in to your CRAFTOPIA account</CardDescription>
             </div>
           </CardHeader>
 
@@ -145,12 +145,12 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full h-14 bg-background text-foreground btn-primary glow-primary font-semibold uppercase tracking-widest shadow-xl transition-all"
+                className="w-full h-11 bg-background text-foreground btn-primary glow-primary font-semibold uppercase tracking-widest text-xs shadow-xl transition-all"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     Signing in...
                   </div>
                 ) : (
