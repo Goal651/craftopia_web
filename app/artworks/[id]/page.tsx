@@ -19,11 +19,24 @@ import {
   Phone,
   Globe,
   AlertCircle,
-  RefreshCw
+  RefreshCw,
+  Edit,
+  Trash2,
+  MoreVertical
 } from "lucide-react"
 import Head from 'next/head'
 import { cn } from "@/lib/utils"
 import { ArtworkFullView } from "@/components/ui/artwork-full-view"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+} from "@/components/ui/alert-dialog"
+import { toast } from "sonner"
 
 export default function ArtworkDetailPage() {
   const params = useParams()
@@ -38,8 +51,14 @@ export default function ArtworkDetailPage() {
   const [showShareMenu, setShowShareMenu] = useState(false)
   const [copiedToClipboard, setCopiedToClipboard] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [showOwnerMenu, setShowOwnerMenu] = useState(false)
 
   const artworkId = Array.isArray(params.id) ? params.id[0] : params.id
+
+  // Check if current user is the owner of this artwork
+  const isOwner = user && artwork && user.id === artwork.artist_id
 
   // Initialize view tracking when user is available
   useEffect(() => {
@@ -48,6 +67,18 @@ export default function ArtworkDetailPage() {
       fetchViewStatus()
     }
   }, [user, artworkId])
+
+  // Close owner menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showOwnerMenu && !(event.target as Element).closest('.owner-menu')) {
+        setShowOwnerMenu(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showOwnerMenu])
 
   const fetchLikeStatus = async () => {
     try {
@@ -131,6 +162,37 @@ export default function ArtworkDetailPage() {
     } catch (err) {
       console.warn('Failed to increment view count:', err)
     }
+  }
+
+  const handleDeleteArtwork = async () => {
+    if (!artwork || !isOwner) return
+
+    setIsDeleting(true)
+    try {
+      const response = await fetch(`/api/artworks/${artwork.id}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        toast.success('Artwork deleted successfully')
+        router.push('/my-artworks')
+      } else {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to delete artwork')
+      }
+    } catch (error) {
+      console.error('Error deleting artwork:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to delete artwork')
+    } finally {
+      setIsDeleting(false)
+      setShowDeleteDialog(false)
+    }
+  }
+
+  const handleEditArtwork = () => {
+    if (!artwork || !isOwner) return
+    // Navigate to edit page or open edit modal
+    router.push(`/upload?edit=${artwork.id}`)
   }
 
   const handleShare = async (platform: string) => {
@@ -369,9 +431,50 @@ export default function ArtworkDetailPage() {
             <div className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-3">
-                  <Badge className="bg-primary/5 text-primary border-primary/20 px-2 py-0.5 uppercase tracking-widest text-[9px] font-black rounded">
-                    {artwork.category || "Fine Art"}
-                  </Badge>
+                  <div className="flex items-center justify-between">
+                    <Badge className="bg-primary/5 text-primary border-primary/20 px-2 py-0.5 uppercase tracking-widest text-[9px] font-black rounded">
+                      {artwork.category || "Fine Art"}
+                    </Badge>
+                    {isOwner && (
+                      <div className="relative owner-menu">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowOwnerMenu(!showOwnerMenu)}
+                          className="h-8 w-8 p-0 hover:bg-muted/20 text-muted-foreground hover:text-foreground"
+                        >
+                          <MoreVertical className="w-4 h-4" />
+                        </Button>
+                        
+                        {/* Owner Dropdown Menu */}
+                        {showOwnerMenu && (
+                          <div className="absolute right-0 top-full mt-1 glass-strong border border-border/50 bg-card shadow-xl rounded-lg overflow-hidden z-50 min-w-[120px]">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={handleEditArtwork}
+                              className="w-full justify-start gap-2 h-8 px-3 hover:bg-muted/20 text-xs"
+                            >
+                              <Edit className="w-3 h-3" />
+                              Edit
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setShowDeleteDialog(true)
+                                setShowOwnerMenu(false)
+                              }}
+                              className="w-full justify-start gap-2 h-8 px-3 hover:bg-destructive/10 text-destructive text-xs"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                              Delete
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                   <h1 className="text-2xl md:text-3xl font-black tracking-tight text-foreground leading-[1.2] break-words">
                     Artwork
                   </h1>
@@ -461,6 +564,35 @@ export default function ArtworkDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent className="glass-strong border-border/50">
+          <AlertDialogHeader>
+            <h3 className="text-lg font-semibold text-foreground">Delete Artwork</h3>
+            <AlertDialogDescription className="text-muted-foreground">
+              Are you sure you want to delete this artwork? This action cannot be undone and will permanently remove the artwork from your collection.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteArtwork}
+              disabled={isDeleting}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              {isDeleting ? (
+                <div className="flex items-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Deleting...
+                </div>
+              ) : (
+                'Delete Artwork'
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Simplified Full Screen View */}
       <ArtworkFullView
