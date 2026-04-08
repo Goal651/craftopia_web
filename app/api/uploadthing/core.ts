@@ -14,7 +14,7 @@ export const ourFileRouter = {
     imageUploader: f({ 
         image: { 
             maxFileSize: "8MB",
-            maxFileCount: 1,
+            maxFileCount: 10, // Allow up to 10 images per artwork
         }
     })
         .middleware(async ({ req }) => {

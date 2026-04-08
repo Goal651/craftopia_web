@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Upload, X, CheckCircle, AlertCircle, Edit } from 'lucide-react'
+import { Upload, X, CheckCircle } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -18,19 +18,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/contexts/AuthContext'
 import type { ArtworkRecord } from '@/types'
 import { useUploadThing } from "@/lib/uploadthing";
 
-// Validation schema
+// Validation schema - ONLY price, stock, and images
 const artworkUploadSchema = z.object({
   price: z.number().min(0, 'Price cannot be negative'),
   stock_quantity: z.number().min(0, 'Stock cannot be negative'),
@@ -45,7 +38,7 @@ interface ArtworkUploadFormProps {
   editingArtwork?: ArtworkRecord | null
 }
 
-export function ArtworkUploadFormFixed({ onSuccess, onError, editingArtwork }: ArtworkUploadFormProps) {
+export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: ArtworkUploadFormProps) {
   const { user } = useAuth()
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
@@ -160,18 +153,14 @@ export function ArtworkUploadFormFixed({ onSuccess, onError, editingArtwork }: A
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          title: data.title,
-          category: data.category,
-          medium: data.medium,
-          dimensions: data.dimensions,
-          year: data.year,
           price: data.price,
           stock_quantity: data.stock_quantity,
           image_url: imageUrl,
           images: additionalImages,
           artist_id: user.id,
           artist_name: user.display_name || user.email,
-          featured: data.featured
+          category: 'Artworks', // Default category
+          title: 'Artwork' // Default title
         })
       })
 
@@ -201,7 +190,7 @@ export function ArtworkUploadFormFixed({ onSuccess, onError, editingArtwork }: A
           {isEditMode ? 'Edit Artwork' : 'Upload New Artwork'}
         </CardTitle>
         <p className="text-sm text-muted-foreground mt-2">
-          Fill in the details below to showcase your art.
+          Upload your artwork images and set pricing information.
         </p>
       </CardHeader>
       <CardContent className="px-6 sm:px-8 py-6">
@@ -309,111 +298,6 @@ export function ArtworkUploadFormFixed({ onSuccess, onError, editingArtwork }: A
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">Title</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Enter artwork title"
-                        className="bg-muted/30 border-border/50 focus:bg-background transition-all"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">Category</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-muted/30 border-border/50 focus:bg-background transition-all">
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="painting">Painting</SelectItem>
-                        <SelectItem value="digital">Digital Art</SelectItem>
-                        <SelectItem value="sculpture">Sculpture</SelectItem>
-                        <SelectItem value="photography">Photography</SelectItem>
-                        <SelectItem value="mixed-media">Mixed Media</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="medium"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">Medium</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="e.g., Oil on Canvas, Digital, etc."
-                        className="bg-muted/30 border-border/50 focus:bg-background transition-all"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="dimensions"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">Dimensions</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder='e.g., 24" x 36"'
-                        className="bg-muted/30 border-border/50 focus:bg-background transition-all"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="year"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">Year (Optional)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="2024"
-                        className="bg-muted/30 border-border/50 focus:bg-background transition-all"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
                 name="price"
                 render={({ field }) => (
                   <FormItem>
@@ -423,16 +307,15 @@ export function ArtworkUploadFormFixed({ onSuccess, onError, editingArtwork }: A
                         type="number"
                         placeholder="0.00"
                         className="bg-muted/30 border-border/50 focus:bg-background transition-all"
-                        {...field}
+                        value={field.value}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
                 name="stock_quantity"
@@ -444,28 +327,11 @@ export function ArtworkUploadFormFixed({ onSuccess, onError, editingArtwork }: A
                         type="number"
                         placeholder="1"
                         className="bg-muted/30 border-border/50 focus:bg-background transition-all"
-                        {...field}
+                        value={field.value}
+                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                       />
                     </FormControl>
                     <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="featured"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={field.onChange}
-                        className="h-4 w-4 text-primary border-border focus:ring-primary"
-                      />
-                    </FormControl>
-                    <FormLabel className="text-sm font-medium">Featured Artwork</FormLabel>
                   </FormItem>
                 )}
               />
