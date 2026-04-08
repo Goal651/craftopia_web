@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArtworkUploadFormNew as ArtworkUploadForm } from '@/components/upload/artwork-upload-form'
+import { ArtworkUploadFormFixed as ArtworkUploadForm } from '@/components/upload/artwork-upload-form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

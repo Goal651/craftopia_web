@@ -9,7 +9,6 @@ import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import {
   Form,
   FormControl,
@@ -27,24 +26,15 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
 import { useAuth } from '@/contexts/AuthContext'
 import type { ArtworkRecord } from '@/types'
 import { useUploadThing } from "@/lib/uploadthing";
 
 // Validation schema
 const artworkUploadSchema = z.object({
-  title: z.string().optional(),
-  category: z.string().optional(),
-  medium: z.string().optional(),
-  dimensions: z.string().optional(),
-  year: z.number().optional(),
-  price: z.number()
-    .min(0, 'Price cannot be negative'),
-  stock_quantity: z.number()
-    .min(0, 'Stock cannot be negative'),
-  imageFiles: z.array(z.any()).optional(),
-  featured: z.boolean().optional()
+  price: z.number().min(0, 'Price cannot be negative'),
+  stock_quantity: z.number().min(0, 'Stock cannot be negative'),
+  imageFiles: z.array(z.any()).optional()
 })
 
 type ArtworkUploadFormValues = z.infer<typeof artworkUploadSchema>
@@ -55,10 +45,9 @@ interface ArtworkUploadFormProps {
   editingArtwork?: ArtworkRecord | null
 }
 
-export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: ArtworkUploadFormProps) {
+export function ArtworkUploadFormFixed({ onSuccess, onError, editingArtwork }: ArtworkUploadFormProps) {
   const { user } = useAuth()
   const [isUploading, setIsUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0)
   const [dragActive, setDragActive] = useState(false)
   const [previewUrls, setPreviewUrls] = useState<string[]>([])
   const isEditMode = !!editingArtwork
@@ -71,23 +60,14 @@ export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: Art
       toast.error(`Error uploading: ${e.message}`);
       setIsUploading(false);
     },
-    onUploadProgress: (p: number) => {
-      setUploadProgress(p);
-    },
   });
 
   const form = useForm<ArtworkUploadFormValues>({
     resolver: zodResolver(artworkUploadSchema),
     defaultValues: {
-      title: editingArtwork?.title || '',
-      category: editingArtwork?.category || '',
-      medium: editingArtwork?.medium || '',
-      dimensions: editingArtwork?.dimensions || '',
-      year: editingArtwork?.year || undefined,
       price: editingArtwork?.price || 0,
       stock_quantity: editingArtwork?.stock_quantity || 1,
-      imageFiles: undefined,
-      featured: editingArtwork?.featured || false
+      imageFiles: undefined
     }
   })
 
@@ -154,7 +134,6 @@ export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: Art
     }
 
     setIsUploading(true)
-    setUploadProgress(0)
 
     try {
       let imageUrl = editingArtwork?.image_url
@@ -162,7 +141,6 @@ export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: Art
 
       // Upload new images if files were provided
       if (data.imageFiles && data.imageFiles.length > 0) {
-        // 1. Upload all images to Uploadthing
         const uploadRes = await startUpload(data.imageFiles);
 
         if (!uploadRes || uploadRes.length === 0) {
@@ -174,7 +152,7 @@ export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: Art
         additionalImages = uploadRes.slice(1).map(img => img.url);
       }
 
-      // 2. Save metadata to MongoDB (create or update)
+      // Save metadata to MongoDB
       const endpoint = isEditMode ? `/api/artworks/${editingArtwork.id}` : '/api/artworks'
       const method = isEditMode ? 'PATCH' : 'POST'
 
@@ -213,7 +191,6 @@ export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: Art
       onError?.(error.message || 'Upload failed')
     } finally {
       setIsUploading(false)
-      setUploadProgress(0)
     }
   }
 
@@ -229,7 +206,7 @@ export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: Art
       </CardHeader>
       <CardContent className="px-6 sm:px-8 py-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="imageFiles"
@@ -240,10 +217,11 @@ export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: Art
                   </FormLabel>
                   <FormControl>
                     <div
-                      className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center transition-all duration-300 relative overflow-hidden ${dragActive
+                      className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center transition-all duration-300 relative overflow-hidden ${
+                        dragActive
                           ? 'border-primary bg-primary/5 scale-[0.99]'
                           : 'border-border hover:border-primary/40 hover:bg-muted/30'
-                        }`}
+                      }`}
                       onDragEnter={handleDrag}
                       onDragLeave={handleDrag}
                       onDragOver={handleDrag}
@@ -285,7 +263,7 @@ export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: Art
                           )}
                         </div>
                       ) : (
-                        <div className="space-y-6">
+                        <>
                           <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6 text-muted-foreground group-hover:text-primary transition-colors">
                             <Upload className="w-8 h-8" />
                           </div>
@@ -320,12 +298,15 @@ export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: Art
                       </Button>
                     </div>
                   </FormControl>
-                  <FormDescription className="text-xs sm:text-sm">Upload JPG, PNG, or WebP files up to 8MB each</FormDescription>
+                  <FormDescription className="text-xs sm:text-sm">
+                    Upload JPG, PNG, or WebP files up to 8MB each
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
+            />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
                 name="title"
@@ -343,145 +324,139 @@ export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: Art
                     <FormMessage />
                   </FormItem>
                 )}
-              </div>
+              />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Category</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="bg-muted/30 border-border/50 focus:bg-background transition-all">
-                            <SelectValue placeholder="Select category" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="painting">Painting</SelectItem>
-                          <SelectItem value="digital">Digital Art</SelectItem>
-                          <SelectItem value="sculpture">Sculpture</SelectItem>
-                          <SelectItem value="photography">Photography</SelectItem>
-                          <SelectItem value="mixed-media">Mixed Media</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                </FormField>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <FormField
-                  control={form.control}
-                  name="medium"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Medium</FormLabel>
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">Category</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="e.g., Oil on Canvas, Digital, etc."
-                          className="bg-muted/30 border-border/50 focus:bg-background transition-all"
-                          {...field}
-                        />
+                        <SelectTrigger className="bg-muted/30 border-border/50 focus:bg-background transition-all">
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                </FormField>
-              </div>
+                      <SelectContent>
+                        <SelectItem value="painting">Painting</SelectItem>
+                        <SelectItem value="digital">Digital Art</SelectItem>
+                        <SelectItem value="sculpture">Sculpture</SelectItem>
+                        <SelectItem value="photography">Photography</SelectItem>
+                        <SelectItem value="mixed-media">Mixed Media</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <FormField
-                  control={form.control}
-                  name="dimensions"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Dimensions</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder='e.g., 24" x 36"'
-                          className="bg-muted/30 border-border/50 focus:bg-background transition-all"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                </FormField>
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="medium"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">Medium</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="e.g., Oil on Canvas, Digital, etc."
+                        className="bg-muted/30 border-border/50 focus:bg-background transition-all"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <FormField
-                  control={form.control}
-                  name="year"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Year (Optional)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="2024"
-                          className="bg-muted/30 border-border/50 focus:bg-background transition-all"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                </FormField>
-              </div>
+              <FormField
+                control={form.control}
+                name="dimensions"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">Dimensions</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder='e.g., 24" x 36"'
+                        className="bg-muted/30 border-border/50 focus:bg-background transition-all"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <FormField
-                  control={form.control}
-                  name="price"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Price (RWF)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="0.00"
-                          className="bg-muted/30 border-border/50 focus:bg-background transition-all"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                </FormField>
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="year"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">Year (Optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="2024"
+                        className="bg-muted/30 border-border/50 focus:bg-background transition-all"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <FormField
-                  control={form.control}
-                  name="stock_quantity"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Stock Quantity</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="1"
-                          className="bg-muted/30 border-border/50 focus:bg-background transition-all"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                </FormField>
-              </div>
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">Price (RWF)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="0.00"
+                        className="bg-muted/30 border-border/50 focus:bg-background transition-all"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="stock_quantity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">Stock Quantity</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="1"
+                        className="bg-muted/30 border-border/50 focus:bg-background transition-all"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}
                 name="featured"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-3">
+                  <FormItem className="flex flex-row items-center space-x-3 space-y-0">
                     <FormControl>
                       <input
                         type="checkbox"
@@ -494,6 +469,7 @@ export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: Art
                   </FormItem>
                 )}
               />
+            </div>
 
             {isUploading && (
               <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -502,10 +478,11 @@ export function ArtworkUploadFormNew({ onSuccess, onError, editingArtwork }: Art
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                     <div>
                       <p className="text-lg font-medium">Uploading artwork...</p>
-                      <p className="text-sm text-muted-foreground">{uploadProgress}% complete</p>
+                      <p className="text-sm text-muted-foreground">Please wait</p>
                     </div>
                   </div>
                 </div>
+              </div>
             )}
 
             <div className="flex justify-end space-x-4 pt-6">

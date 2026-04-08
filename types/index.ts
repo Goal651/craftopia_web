@@ -18,6 +18,8 @@ export interface ArtworkRecord {
   dimensions?: string
   inStock?: boolean
   category?: string
+  title?: string
+  description?: string
 }
 
 export interface User {
