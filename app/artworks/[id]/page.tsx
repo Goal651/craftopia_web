@@ -22,7 +22,8 @@ import {
   RefreshCw,
   Edit,
   Trash2,
-  MoreVertical
+  MoreVertical,
+  MessageCircle
 } from "lucide-react"
 import Head from 'next/head'
 import { cn } from "@/lib/utils"
@@ -36,6 +37,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
 } from "@/components/ui/alert-dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { toast } from "sonner"
 
 export default function ArtworkDetailPage() {
@@ -587,12 +594,37 @@ export default function ArtworkDetailPage() {
 
                 {/* Primary Interaction Area */}
                 <div className="space-y-3 pt-2">
-                  <Button asChild className="w-full btn-primary h-12 rounded font-black text-sm uppercase tracking-widest shadow-md">
-                    <Link href={artist?.phone_number ? `tel:${artist.phone_number}` : "#"}>
-                      <Phone className="w-4 h-4 mr-2" />
-                      Contact via Phone
-                    </Link>
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button className="w-full btn-primary h-12 rounded font-black text-sm uppercase tracking-widest shadow-md">
+                        <Phone className="w-4 h-4 mr-2" />
+                        Contact Artist
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-48" align="center">
+                      {artist?.phone_number && (
+                        <DropdownMenuItem asChild>
+                          <Link href={`tel:${artist.phone_number}`} className="flex items-center gap-2">
+                            <Phone className="w-4 h-4" />
+                            Call via Phone
+                          </Link>
+                        </DropdownMenuItem>
+                      )}
+                      {artist?.phone_number && (
+                        <DropdownMenuItem asChild>
+                          <Link 
+                            href={`https://wa.me/${artist.phone_number.replace(/\D/g, '')}?text=Hi!%20I'm%20interested%20in%20your%20artwork%20on%20CRAFTOPIA`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                            Chat on WhatsApp
+                          </Link>
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
 
                   <div className="flex gap-3">
                     <Button

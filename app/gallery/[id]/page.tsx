@@ -14,7 +14,13 @@ import { ArtworkRecord } from "@/types/index"
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { BackButton } from "@/components/ui/back-button"
 import { ArtworkImage } from "@/components/ui/artwork-image"
-import { ArrowLeft, Eye, Heart, Share2, Calendar, User, AlertCircle, RefreshCw } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { ArrowLeft, Eye, Heart, Share2, Calendar, User, AlertCircle, RefreshCw, MessageCircle, Phone } from "lucide-react"
 
 export default function GalleryArtworkDetailPage() {
   const params = useParams()
@@ -411,11 +417,33 @@ export default function GalleryArtworkDetailPage() {
               </div>
 
               <div className="space-y-4">
-                <Button asChild size="lg" className="w-full btn-primary">
-                  <Link href={`/gallery/artist/${artwork.artist_id}`}>
-                    View More by {artwork.artist_name}
-                  </Link>
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button size="lg" className="w-full btn-primary">
+                      <Phone className="w-4 h-4 mr-2" />
+                      Contact Artist
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-48" align="center">
+                    <DropdownMenuItem asChild>
+                      <Link href={`/gallery/artist/${artwork.artist_id}`} className="flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        View More Artworks
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link 
+                        href={`https://wa.me/250788123456?text=Hi!%20I'm%20interested%20in%20your%20artwork%20on%20CRAFTOPIA`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        Chat on WhatsApp
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
 
               <Card className="glass border-0">

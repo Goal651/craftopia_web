@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import Link from "next/link"
-import { Eye, Heart, Star, Phone, ArrowUpRight, User2 } from "lucide-react"
+import { Eye, Heart, Star, Phone, ArrowUpRight, User2, MessageCircle } from "lucide-react"
 import { ArtworkRecord, User } from "@/types"
 import { ArtworkImage } from "./artwork-image"
 import { Badge } from "./badge"
@@ -239,6 +239,20 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
                   <a href={`tel:${artistInfo.phone_number}`}>
                     <Phone className="w-4 h-4 mr-2" />
                     Call Now
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="flex-1"
+                >
+                  <a 
+                    href={`https://wa.me/${artistInfo.phone_number.replace(/\D/g, '')}?text=Hi!%20I'm%20interested%20in%20your%20artwork%20on%20CRAFTOPIA`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    WhatsApp
                   </a>
                 </Button>
                 <Button
