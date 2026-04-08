@@ -378,7 +378,7 @@ export function ArtworkUploadForm({ onSuccess, onError, editingArtwork }: Artwor
             <Button
               type="submit"
               disabled={isUploading}
-              className="w-full btn-primary glow-primary py-7 text-lg font-bold uppercase tracking-widest transition-all"
+              className="w-full bg-background text-foreground btn-primary glow-primary py-7 font-semibold uppercase tracking-widest transition-all"
             >
               {isUploading ? (isEditMode ? "Updating..." : "Processing...") : (isEditMode ? "Save Changes" : "Publish Artwork")}
             </Button>

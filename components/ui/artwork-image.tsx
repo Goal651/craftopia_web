@@ -84,8 +84,8 @@ export function ArtworkImage({
           className="w-full h-full"
         />
         {/* Overlay to indicate this is a fallback */}
-        <div className="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-          <div className="glass rounded px-2 py-1 text-xs text-white/80">
+        <div className="absolute inset-0 bg-muted/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+          <div className="glass rounded px-2 py-1 text-xs text-muted-foreground">
             Generated Artwork
           </div>
         </div>

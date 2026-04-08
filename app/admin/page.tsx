@@ -273,11 +273,11 @@ export default function AdminPanel() {
                 <div className="p-2 bg-primary/10 rounded">
                   <ShieldCheck className="w-6 h-6 text-primary" />
                 </div>
-                <h1 className="text-4xl font-bold tracking-tight text-white">Admin Command Center</h1>
+                <h1 className="text-4xl font-bold tracking-tight text-foreground">Admin Command Center</h1>
               </div>
               <div className="flex items-center gap-3">
                 <p className="text-muted-foreground text-lg italic">Signed in as <span className="text-primary font-semibold">{user?.display_name || user?.email}</span></p>
-                <Button variant="ghost" size="icon" onClick={fetchData} disabled={loading} className="h-8 w-8 hover:bg-white/5">
+                <Button variant="ghost" size="icon" onClick={fetchData} disabled={loading} className="h-8 w-8 hover:bg-muted/20">
                   <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                 </Button>
               </div>
@@ -297,7 +297,7 @@ export default function AdminPanel() {
               { label: 'Active Artists', value: stats?.activeArtists, icon: TrendingUp, color: 'text-primary', bg: 'bg-primary/10' }
             ].map((stat, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
-                <Card className="glass-card border-0 overflow-hidden relative group hover:bg-white/5 transition-all duration-500">
+                <Card className="glass-card border-0 overflow-hidden relative group hover:bg-muted/20 transition-all duration-500">
                   <div className={`absolute top-0 right-0 w-32 h-32 ${stat.bg} blur-3xl opacity-20 -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700`} />
                   <CardContent className="p-8 space-y-4">
                     <div className={`w-14 h-14 ${stat.bg} rounded flex items-center justify-center shadow-inner`}>
@@ -305,7 +305,7 @@ export default function AdminPanel() {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{stat.label}</p>
-                      <p className="text-3xl font-bold text-white mt-1">{stat.value || 0}</p>
+                      <p className="text-3xl font-bold text-foreground mt-1">{stat.value || 0}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -316,13 +316,13 @@ export default function AdminPanel() {
           {/* Main Content with enhanced tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
             <TabsList className="glass-strong rounded p-1.5 grid w-full grid-cols-3 max-w-2xl">
-              <TabsTrigger value="overview" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-white">
+              <TabsTrigger value="overview" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                 Dashboard Overview
               </TabsTrigger>
               <TabsTrigger value="artworks" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-white">
                 Art Inventory
               </TabsTrigger>
-              <TabsTrigger value="users" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-white">
+              <TabsTrigger value="users" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                 User Network
               </TabsTrigger>
             </TabsList>
@@ -333,7 +333,7 @@ export default function AdminPanel() {
                 <Card className="glass-strong border-0 shadow-2xl">
                   <CardHeader className="flex flex-row items-center justify-between pb-8">
                     <div className="space-y-1">
-                      <CardTitle className="text-2xl font-bold text-white">Recent Movements</CardTitle>
+                      <CardTitle className="text-2xl font-bold text-foreground">Recent Movements</CardTitle>
                       <CardDescription className="text-muted-foreground">Latest uploads across the platform</CardDescription>
                     </div>
                     <Activity className="w-6 h-6 text-primary" />
@@ -351,7 +351,7 @@ export default function AdminPanel() {
                           <Plus className="w-6 h-6" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm text-white">
+                          <p className="text-sm text-foreground">
                             <span className="font-bold text-base block">{activity.title}</span>
                             <span className="text-muted-foreground italic text-xs">by</span> <span className="text-primary font-medium">{activity.artist_name}</span>
                           </p>
@@ -413,7 +413,7 @@ export default function AdminPanel() {
                 <CardHeader className="bg-white/5 border-b border-white/5 p-8">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                     <div className="space-y-1">
-                      <CardTitle className="text-2xl font-bold text-white">Art Inventory Management</CardTitle>
+                      <CardTitle className="text-2xl font-bold text-foreground">Art Inventory Management</CardTitle>
                       <CardDescription className="text-muted-foreground">Total of {artworks.length} items curated</CardDescription>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4">
@@ -496,7 +496,7 @@ export default function AdminPanel() {
                                       />
                                     </div>
                                     <div>
-                                      <div className="font-bold text-white text-lg line-clamp-1">{artwork.description}</div>
+                                      <div className="font-bold text-foreground text-lg line-clamp-1">{artwork.description}</div>
                                       <div className="text-sm text-primary font-medium flex items-center gap-1.5">
                                         <ShieldCheck className="w-3 h-3" />
                                         {artwork.artist_name}
@@ -505,7 +505,7 @@ export default function AdminPanel() {
                                   </div>
                                 </TableCell>
                                 <TableCell>
-                                  <div className="font-mono text-lg font-bold text-white">
+                                  <div className="font-mono text-lg font-bold text-foreground">
                                     {artwork.price ? `$${artwork.price.toLocaleString()}` : '--'}
                                   </div>
                                 </TableCell>
@@ -642,7 +642,7 @@ export default function AdminPanel() {
                 <CardHeader className="bg-white/5 border-b border-white/5 p-8">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                     <div className="space-y-1">
-                      <CardTitle className="text-2xl font-bold text-white">Citizen & Staff Network</CardTitle>
+                      <CardTitle className="text-2xl font-bold text-foreground">Citizen & Staff Network</CardTitle>
                       <CardDescription className="text-muted-foreground">{users.length} authenticated profiles managed</CardDescription>
                     </div>
                     <div className="relative group">
@@ -690,7 +690,7 @@ export default function AdminPanel() {
                                     )}
                                   </div>
                                   <div>
-                                    <div className="font-bold text-white text-lg">{u.display_name}</div>
+                                    <div className="font-bold text-foreground text-lg">{u.display_name}</div>
                                     <div className="text-sm text-muted-foreground flex items-center gap-1.5">
                                       <Mail className="w-3 h-3" />
                                       {u.email}
@@ -737,7 +737,7 @@ export default function AdminPanel() {
                                 </Badge>
                               </TableCell>
                               <TableCell>
-                                <div className="text-sm text-white font-medium">
+                                <div className="text-sm text-foreground font-medium">
                                   {new Date(u.createdAt || u.created_at || Date.now()).toLocaleDateString()}
                                 </div>
                               </TableCell>
@@ -794,7 +794,7 @@ export default function AdminPanel() {
       {/* Edit Artwork Modal */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className="glass-strong border-0 max-w-2xl shadow-2xl p-0 overflow-hidden">
-          <DialogHeader className="bg-white/5 p-8 border-b border-white/5">
+          <DialogHeader className="bg-muted/10 p-8 border-b border-border/50">
             <DialogTitle className="text-3xl font-bold text-white">Refine Masterpiece</DialogTitle>
             <CardDescription className="text-muted-foreground text-lg">Modify details for <span className="text-primary italic font-medium">{selectedArtwork?.description}</span></CardDescription>
           </DialogHeader>
@@ -803,28 +803,28 @@ export default function AdminPanel() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <Label htmlFor="title" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Masterpiece Title</Label>
-                  <Input name="title" defaultValue={selectedArtwork?.description} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-white" required />
+                  <Input name="title" defaultValue={selectedArtwork?.description} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="price" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Market Valuation ($)</Label>
-                  <Input name="price" type="number" defaultValue={selectedArtwork?.price} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-white font-mono text-lg" required />
+                  <Input name="price" type="number" defaultValue={selectedArtwork?.price} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground font-mono text-lg" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="medium" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Artistic Medium</Label>
-                  <Input name="medium" defaultValue={selectedArtwork?.medium} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-white" placeholder="e.g., Oil on Canvas" />
+                  <Input name="medium" defaultValue={selectedArtwork?.medium} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground" placeholder="e.g., Oil on Canvas" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="dimensions" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Spatial Dimensions</Label>
-                  <Input name="dimensions" defaultValue={selectedArtwork?.dimensions} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-white" placeholder='e.g., 24" x 36"' />
+                  <Input name="dimensions" defaultValue={selectedArtwork?.dimensions} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground" placeholder='e.g., 24" x 36"' />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Narrative & Description</Label>
-                <Textarea name="description" defaultValue={selectedArtwork?.description || ''} rows={5} className="glass border-0 focus:ring-2 focus:ring-primary/50 text-white leading-relaxed p-4" />
+                <Textarea name="description" defaultValue={selectedArtwork?.description || ''} rows={5} className="glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground leading-relaxed p-4" />
               </div>
             </div>
-            <DialogFooter className="bg-white/5 p-8 border-t border-white/5 gap-4">
-              <Button type="button" variant="ghost" onClick={() => setIsEditModalOpen(false)} className="px-8 h-14 text-lg hover:bg-white/5 text-muted-foreground hover:text-white">
+            <DialogFooter className="bg-muted/10 p-8 border-t border-border/50 gap-4">
+              <Button type="button" variant="ghost" onClick={() => setIsEditModalOpen(false)} className="px-8 h-14 text-lg hover:bg-muted/20 text-muted-foreground hover:text-foreground">
                 Abort Changes
               </Button>
               <Button type="submit" className="btn-primary px-10 h-14 text-lg shadow-xl shadow-primary/20">
@@ -843,7 +843,7 @@ export default function AdminPanel() {
             <UserPlus className="w-10 h-10 text-primary" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold text-white">System Expansion</h2>
+            <h2 className="text-3xl font-bold text-foreground">System Expansion</h2>
             <p className="text-muted-foreground text-lg italic">The administrative upload gateway is being optimized for batch processing.</p>
           </div>
           <div className="flex flex-col gap-4">
@@ -860,10 +860,10 @@ export default function AdminPanel() {
       {/* View Artwork Modal */}
       <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
         <DialogContent className="glass-strong border-0 max-w-4xl shadow-2xl p-0 overflow-hidden">
-          <DialogHeader className="bg-white/5 p-8 border-b border-white/5">
+          <DialogHeader className="bg-muted/10 p-8 border-b border-border/50">
             <div className="flex justify-between items-start">
               <div className="space-y-1">
-                <DialogTitle className="text-3xl font-bold text-white">{selectedArtwork?.description}</DialogTitle>
+                <DialogTitle className="text-3xl font-bold text-foreground">{selectedArtwork?.description}</DialogTitle>
                 <CardDescription className="text-primary text-lg font-medium flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4" />
                   {selectedArtwork?.artist_name}
@@ -880,17 +880,17 @@ export default function AdminPanel() {
                 className="object-cover"
               />
             </div>
-            <div className="p-8 space-y-8 bg-white/5 overflow-y-auto max-h-[600px]">
+            <div className="p-8 space-y-8 bg-muted/10 overflow-y-auto max-h-[600px]">
               <div className="space-y-4">
                 <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground border-b border-white/5 pb-2">Description</h4>
-                <p className="text-white leading-relaxed text-lg italic">
+                <p className="text-foreground leading-relaxed text-lg italic">
                   {selectedArtwork?.description || "No description provided for this masterpiece."}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-1">
                   <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Market Value</p>
-                  <p className="text-2xl font-bold text-white font-mono">
+                  <p className="text-2xl font-bold text-foreground font-mono">
                     {selectedArtwork?.price ? `$${selectedArtwork.price.toLocaleString()}` : "Price on Request"}
                   </p>
                 </div>
@@ -907,7 +907,7 @@ export default function AdminPanel() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Spatial Dimensions</p>
-                  <p className="text-lg text-white font-medium">{selectedArtwork?.dimensions || "Variable"}</p>
+                  <p className="text-lg text-foreground font-medium">{selectedArtwork?.dimensions || "Variable"}</p>
                 </div>
               </div>
               <div className="pt-4 border-t border-white/5 space-y-2">
@@ -916,7 +916,7 @@ export default function AdminPanel() {
               </div>
             </div>
           </div>
-          <DialogFooter className="bg-white/5 p-6 border-t border-white/5">
+          <DialogFooter className="bg-muted/10 p-6 border-t border-border/50">
             <Button onClick={() => setIsViewModalOpen(false)} className="btn-primary px-8">
               Conclude Inspection
             </Button>
@@ -951,7 +951,7 @@ export default function AdminPanel() {
           <div className="p-8 pt-16 space-y-8">
             <div className="flex justify-between items-start">
               <div className="space-y-1">
-                <h3 className="text-3xl font-bold text-white">{selectedUser?.display_name}</h3>
+                <h3 className="text-3xl font-bold text-foreground">{selectedUser?.display_name}</h3>
                 <p className="text-muted-foreground flex items-center gap-2">
                   <Mail className="w-4 h-4 text-primary" />
                   {selectedUser?.email}
@@ -967,17 +967,17 @@ export default function AdminPanel() {
             <div className="grid grid-cols-3 gap-4">
               <div className="glass p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
                 <Package className="w-5 h-5 text-primary mx-auto opacity-50" />
-                <p className="text-2xl font-bold text-white">{selectedUser?.artwork_count}</p>
+                <p className="text-2xl font-bold text-foreground">{selectedUser?.artwork_count}</p>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Artworks</p>
               </div>
               <div className="glass p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
                 <Eye className="w-5 h-5 text-emerald-400 mx-auto opacity-50" />
-                <p className="text-2xl font-bold text-white">{selectedUser?.total_views.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-foreground">{selectedUser?.total_views.toLocaleString()}</p>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Views</p>
               </div>
               <div className="glass p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
                 <Calendar className="w-5 h-5 text-purple-400 mx-auto opacity-50" />
-                <p className="text-lg font-bold text-white">
+                <p className="text-lg font-bold text-foreground">
                   {selectedUser?.createdAt ? new Date(selectedUser.createdAt).getFullYear() : '2024'}
                 </p>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Member Since</p>
@@ -1031,7 +1031,7 @@ export default function AdminPanel() {
               </div>
             </div>
           </div>
-          <DialogFooter className="bg-white/5 p-6 border-t border-white/5">
+          <DialogFooter className="bg-muted/10 p-6 border-t border-border/50">
             <Button onClick={() => setIsUserViewModalOpen(false)} variant="ghost" className="hover:bg-white/5">
               Close Profile
             </Button>

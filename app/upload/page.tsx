@@ -129,7 +129,7 @@ function UploadPageContent() {
             </Button>
 
             <div className="space-y-4">
-              <Badge className="glass px-4 py-1.5 border-primary/20 text-primary">Creator Space</Badge>
+              <Badge className="glass  bg-background px-4 py-1.5 border-primary/20 text-primary">Creator Space</Badge>
               <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
                 {editingArtwork ? 'Refine Your' : 'Share Your'} <span className="text-gradient-primary">Masterpiece</span>
               </h1>
@@ -156,12 +156,12 @@ function UploadPageContent() {
 export default function UploadPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-black p-4 pt-24">
+      <div className="min-h-screen bg-background p-4 pt-24">
         <div className="container mx-auto max-w-2xl">
-          <Card className="glass bg-white/5 backdrop-blur-xl border border-gray-800">
+          <Card className="glass-strong border-border/50">
             <CardContent className="p-8 text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-              <h1 className="text-xl font-bold text-white">Loading...</h1>
+              <h1 className="text-xl font-bold text-foreground">Loading...</h1>
             </CardContent>
           </Card>
         </div>

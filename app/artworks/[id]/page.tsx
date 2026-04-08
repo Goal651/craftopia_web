@@ -437,7 +437,7 @@ export default function ArtworkDetailPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8 }}
-                className="relative group"
+                className="relative group h-full flex flex-col items-center justify-center p-4 bg-muted/20 rounded-2xl"
               >
                 <div className="relative rounded-2xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] border border-border/50">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
@@ -646,10 +646,10 @@ export default function ArtworkDetailPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                <Card className="glass-card border border-white/10">
+                <Card className="glass-strong border border-border/50">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-6">
-                      <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                      <h3 className="text-xl font-semibold text-foreground flex items-center gap-2">
                         <MessageCircle className="w-5 h-5 text-primary" />
                         Comments ({comments.length})
                       </h3>
@@ -657,7 +657,7 @@ export default function ArtworkDetailPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => setShowComments(!showComments)}
-                        className="text-gray-400 hover:text-white"
+                        className="text-muted-foreground hover:text-foreground"
                       >
                         {showComments ? 'Hide' : 'Show'}
                       </Button>
@@ -793,15 +793,15 @@ export default function ArtworkDetailPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                <Card className="glass-card border border-white/10 overflow-hidden">
+                <Card className="glass-strong border border-border/50 overflow-hidden">
                   <CardContent className="p-6 space-y-6">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-xl font-semibold text-white">Details</h3>
+                      <h3 className="text-xl font-semibold text-foreground">Details</h3>
                       <Frame className="w-5 h-5 text-gray-400" />
                     </div>
 
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between py-3 border-b border-white/10">
+                      <div className="flex items-center justify-between py-3 border-b border-border/50">
                         <span className="text-gray-400 flex items-center gap-2">
                           <Tag className="w-4 h-4" />
                           Price
@@ -811,7 +811,7 @@ export default function ArtworkDetailPage() {
                         </span>
                       </div>
 
-                      <div className="flex items-center justify-between py-3 border-b border-white/10">
+                      <div className="flex items-center justify-between py-3 border-b border-border/50">
                         <span className="text-gray-400 flex items-center gap-2">
                           <Bookmark className="w-4 h-4" />
                           Availability
@@ -824,18 +824,18 @@ export default function ArtworkDetailPage() {
                         </span>
                       </div>
 
-                      <div className="flex items-center justify-between py-3 border-b border-white/10">
+                      <div className="flex items-center justify-between py-3 border-b border-border/50">
                         <span className="text-gray-400 flex items-center gap-2">
                           <Calendar className="w-4 h-4" />
                           Created
                         </span>
-                        <span className="text-white font-medium">
+                        <span className="text-foreground font-medium">
                           {formatDateSafe(artwork.createdAt, { format: 'medium' })}
                         </span>
                       </div>
 
 
-                      <div className="flex items-center justify-between py-3 border-b border-white/10">
+                      <div className="flex items-center justify-between py-3 border-b border-border/50">
                         <span className="text-gray-400 flex items-center gap-2">
                           <User className="w-4 h-4" />
                           Artist
@@ -849,23 +849,23 @@ export default function ArtworkDetailPage() {
                       </div>
 
                       {artwork.medium && (
-                        <div className="flex items-center justify-between py-3 border-b border-white/10">
+                        <div className="flex items-center justify-between py-3 border-b border-border/50">
                           <span className="text-gray-400">Medium</span>
-                          <span className="text-white font-medium">{artwork.medium}</span>
+                          <span className="text-foreground font-medium">{artwork.medium}</span>
                         </div>
                       )}
 
                       {artwork.dimensions && (
-                        <div className="flex items-center justify-between py-3 border-b border-white/10">
+                        <div className="flex items-center justify-between py-3 border-b border-border/50">
                           <span className="text-gray-400">Dimensions</span>
-                          <span className="text-white font-medium">{artwork.dimensions}</span>
+                          <span className="text-foreground font-medium">{artwork.dimensions}</span>
                         </div>
                       )}
 
                       {artwork.year && (
                         <div className="flex items-center justify-between py-3">
                           <span className="text-gray-400">Year</span>
-                          <span className="text-white font-medium">{artwork.year}</span>
+                          <span className="text-foreground font-medium">{artwork.year}</span>
                         </div>
                       )}
                     </div>
@@ -879,7 +879,7 @@ export default function ArtworkDetailPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                <Card className="glass-card border border-white/10">
+                <Card className="glass-strong border border-border/50">
                   <CardContent className="p-6 space-y-4">
                     <Button className="w-full btn-primary h-12 text-base font-medium">
                       <ExternalLink className="w-4 h-4 mr-2" />
@@ -914,7 +914,7 @@ export default function ArtworkDetailPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.6 }}
               >
-                <Card className="glass-card border border-white/10">
+                <Card className="glass-strong border border-border/50">
                   <CardContent className="p-6">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/60 p-0.5">
@@ -923,7 +923,7 @@ export default function ArtworkDetailPage() {
                         </div>
                       </div>
                       <div>
-                        <h4 className="text-lg font-semibold text-white">{artwork.artist_name}</h4>
+                        <h4 className="text-lg font-semibold text-foreground">{artwork.artist_name}</h4>
                         <p className="text-sm text-gray-400">Digital Artist</p>
                       </div>
                     </div>
@@ -947,7 +947,7 @@ export default function ArtworkDetailPage() {
               className="mt-20"
             >
               <div className="mb-8 text-center">
-                <h2 className="text-3xl font-bold text-white mb-4">Related Artworks</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-4">Related Artworks</h2>
                 <p className="text-gray-400 text-lg">Discover more pieces you might love</p>
               </div>
 
@@ -973,7 +973,7 @@ export default function ArtworkDetailPage() {
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </div>
                         <CardContent className="p-4">
-                          <h3 className="font-semibold text-white mb-2 group-hover:text-primary transition-colors line-clamp-1">
+                          <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-1">
                             {relatedArtwork.description}
                           </h3>
                           <p className="text-sm text-gray-400 mb-3">
