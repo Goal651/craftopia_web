@@ -228,54 +228,72 @@ export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: 
                       onDrop={handleDrop}
                     >
                       {previewUrls.length > 0 ? (
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <div className="space-y-6">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {previewUrls.map((url, index) => (
                               <div key={index} className="relative inline-block group">
-                                <div className="relative rounded-lg overflow-hidden shadow-2xl border border-border/50">
+                                <div className="relative rounded-lg overflow-hidden shadow-2xl border border-border/50 aspect-square">
                                   <img
                                     src={url}
                                     alt={`Preview ${index + 1}`}
-                                    className="w-full h-32 object-cover"
+                                    className="w-full h-full object-cover"
                                   />
                                 </div>
                                 <Button
                                   type="button"
                                   variant="destructive"
                                   size="icon"
-                                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                  className="absolute -top-3 -right-3 h-8 w-8 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
                                   onClick={() => removeImage(index)}
                                 >
-                                  <X className="w-3 h-3" />
+                                  <X className="w-4 h-4" />
                                 </Button>
                               </div>
                             ))}
                           </div>
-                          {previewUrls.length > 0 && (
+                          <div className="flex flex-wrap items-center justify-center gap-4">
                             <Button
                               type="button"
-                              variant="outline"
-                              onClick={clearAllImages}
-                              className="mt-4"
+                              variant="secondary"
+                              onClick={() => document.getElementById('file-upload')?.click()}
+                              className="px-6"
                             >
-                              Clear All Images
+                              <Upload className="w-4 h-4 mr-2" />
+                              Add More Images
                             </Button>
-                          )}
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={clearAllImages}
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                            >
+                              <X className="w-4 h-4 mr-2" />
+                              Remove All Images
+                            </Button>
+                          </div>
                         </div>
                       ) : (
-                        <>
-                          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6 text-muted-foreground group-hover:text-primary transition-colors">
+                        <div className="py-4">
+                          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 text-primary transition-colors">
                             <Upload className="w-8 h-8" />
                           </div>
-                          <div>
-                            <p className="text-base font-medium text-foreground mb-1">
+                          <div className="mb-6">
+                            <p className="text-lg font-medium text-foreground mb-1">
                               Drag and drop your images
                             </p>
-                            <p className="text-sm text-muted-foreground mb-6">
-                              or click to browse your files
+                            <p className="text-sm text-muted-foreground">
+                              Images will be shown in high quality on your profile
                             </p>
                           </div>
-                        </>
+                          <Button
+                            type="button"
+                            variant="default"
+                            className="px-8 h-12 text-base shadow-lg hover:shadow-primary/20 transition-all font-semibold"
+                            onClick={() => document.getElementById('file-upload')?.click()}
+                          >
+                            Select Artwork Files
+                          </Button>
+                        </div>
                       )}
                       <input
                         type="file"
@@ -288,14 +306,6 @@ export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: 
                         className="hidden"
                         id="file-upload"
                       />
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        className="px-6 py-2 h-10"
-                        onClick={() => document.getElementById('file-upload')?.click()}
-                      >
-                        Browse Files
-                      </Button>
                     </div>
                   </FormControl>
                   <FormDescription className="text-xs sm:text-sm">
@@ -369,7 +379,7 @@ export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: 
                 onClick={() => form.reset()}
                 disabled={isUploading}
               >
-                Clear Form
+                Reset Form
               </Button>
               <Button
                 type="submit"
@@ -379,12 +389,12 @@ export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: 
                 {isUploading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    {isEditMode ? 'Updating...' : 'Uploading...'}
+                    {isEditMode ? 'Updating...' : 'Publishing...'}
                   </>
                 ) : (
                   <>
                     <CheckCircle className="w-4 h-4 mr-2" />
-                    {isEditMode ? 'Update Artwork' : 'Upload Artwork'}
+                    {isEditMode ? 'Save Changes' : 'Publish Artwork'}
                   </>
                 )}
               </Button>
