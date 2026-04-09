@@ -182,7 +182,7 @@ export default function ArtworksPage() {
             </div>
 
             {/* Filter Controls */}
-            <div className="glass-strong rounded-2xl p-6 md:p-8 border border-border/50 shadow-2xl">
+            <div className="glass-strong rounded p-6 md:p-8 border border-border/50 shadow-2xl">
               <div className="flex flex-col gap-4">
                 {/* Filters Row */}
                 <div className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4">
@@ -252,19 +252,6 @@ export default function ArtworksPage() {
                       aria-label="Grid view"
                     >
                       <Grid className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant={viewMode === "list" ? "default" : "outline"}
-                      size="icon"
-                      onClick={() => setViewMode("list")}
-                      className={
-                        viewMode === "list"
-                          ? "btn-primary h-11 w-11"
-                          : "glass border-0 text-muted-foreground hover:text-foreground hover:bg-white/10 h-11 w-11"
-                      }
-                      aria-label="List view"
-                    >
-                      <List className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
