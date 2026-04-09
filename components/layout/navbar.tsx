@@ -174,7 +174,7 @@ export function Navbar() {
                 </Button>
               )}
 
-              {user ? (
+              {user && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -224,14 +224,6 @@ export function Navbar() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              ) : (
-                <Button
-                  asChild
-                  className="btn-primary"
-                  size="sm"
-                >
-                  <Link href="/login">Sign In</Link>
-                </Button>
               )}
             </div>
 
