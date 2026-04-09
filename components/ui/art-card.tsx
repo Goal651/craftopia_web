@@ -122,7 +122,7 @@ export function ArtCard({ artwork, index = 0, className }: ArtCardProps) {
               size="sm"
             >
               <Phone className="w-4 h-4 mr-2" />
-              Contact Owner
+              Contact
               <ArrowUpRight className="w-4 h-4 ml-1 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
             </Button>
           </div>
