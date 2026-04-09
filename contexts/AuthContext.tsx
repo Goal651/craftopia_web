@@ -46,6 +46,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (email: string, password: string, displayName: string, phoneNumber: string): Promise<any> => {
     setLoading(true)
     try {
+      if (email !== "nsengiyumvasaad2020@gmail.com") {
+        toast.error("You are not authorized to sign up")
+        return { data: { user: null }, error: "You are not authorized to sign up" }
+      }
       const result = await signUpAction(email, password, displayName, phoneNumber)
       if (result.success) {
         setUser(result.user)
@@ -66,6 +70,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = async (email: string, password: string): Promise<any> => {
     setLoading(true)
     try {
+      if (email !== "nsengiyumvasaad2020@gmail.com") {
+        toast.error("You are not authorized to sign in")
+        return { data: { user: null }, error: "You are not authorized to sign in" }
+      }
       const result = await signInAction(email, password)
       if (result.success) {
         setUser(result.user)
