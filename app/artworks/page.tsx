@@ -1,18 +1,16 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
-import Image from "next/image"
 import Head from 'next/head'
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ProductModal } from "@/components/product-modal"
 import { useArt } from "@/contexts/ArtContext"
 import { ArtCard } from "@/components/ui/art-card"
 import { LiveVisualSearch } from "@/components/ui/live-visual-search"
-import { Search, Grid, List, Filter, RefreshCw, Loader2 } from "lucide-react"
+import { Search, Grid, Filter, RefreshCw, Loader2 } from "lucide-react"
 
 export default function ArtworksPage() {
   const { artworks, loading } = useArt()
@@ -95,9 +93,7 @@ export default function ArtworksPage() {
     }
   }, [filteredAndSortedArtworks])
 
-  const toggleWishlist = (artworkId: string) => {
-    setWishlist((prev) => (prev.includes(artworkId) ? prev.filter((id) => id !== artworkId) : [...prev, artworkId]))
-  }
+
 
   const categories = ["all", "painting", "digital", "sculpture", "photography"]
   const priceRanges = [
