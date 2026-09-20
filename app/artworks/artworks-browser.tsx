@@ -22,35 +22,10 @@ const CATEGORIES = [
     { value: "other", label: "Other" },
 ]
 
-const PRICE_RANGES = [
-    { value: "all", label: "Any Price" },
-    { value: "under-50k", label: "Under RWF 50,000" },
-    { value: "50k-150k", label: "RWF 50,000 – 150,000" },
-    { value: "150k-500k", label: "RWF 150,000 – 500,000" },
-    { value: "over-500k", label: "Over RWF 500,000" },
-]
-
 const SORT_OPTIONS = [
     { value: "newest", label: "Newest" },
-    { value: "price-low", label: "Price: Low to High" },
-    { value: "price-high", label: "Price: High to Low" },
     { value: "title", label: "Title A-Z" },
 ]
-
-function matchesPrice(price: number, range: string): boolean {
-    switch (range) {
-        case "under-50k":
-            return price < 50000
-        case "50k-150k":
-            return price >= 50000 && price <= 150000
-        case "150k-500k":
-            return price > 150000 && price <= 500000
-        case "over-500k":
-            return price > 500000
-        default:
-            return true
-    }
-}
 
 export function ArtworksBrowser() {
     const router = useRouter()
@@ -59,7 +34,6 @@ export function ArtworksBrowser() {
 
     const searchTerm = searchParams.get("search") || ""
     const categoryFilter = searchParams.get("category") || "all"
-    const priceFilter = searchParams.get("price") || "all"
     const sortBy = searchParams.get("sort") || "newest"
 
     const [searchInput, setSearchInput] = useState(searchTerm)
@@ -99,17 +73,11 @@ export function ArtworksBrowser() {
                 normalizedCategory.replace(/-/g, "") === categoryFilter.replace(/-/g, "") ||
                 (categoryFilter === "digital-art" && normalizedCategory.includes("digital"))
 
-            const priceOk = matchesPrice(artwork.price || 0, priceFilter)
-
-            return matchesSearch && matchesCategory && priceOk
+            return matchesSearch && matchesCategory
         })
 
         filtered.sort((a, b) => {
             switch (sortBy) {
-                case "price-low":
-                    return (a.price || 0) - (b.price || 0)
-                case "price-high":
-                    return (b.price || 0) - (a.price || 0)
                 case "title":
                     return (a.title || "").localeCompare(b.title || "")
                 case "newest":
@@ -119,9 +87,9 @@ export function ArtworksBrowser() {
         })
 
         return filtered
-    }, [artworks, searchTerm, categoryFilter, priceFilter, sortBy])
+    }, [artworks, searchTerm, categoryFilter, sortBy])
 
-    const hasActiveFilters = searchTerm || categoryFilter !== "all" || priceFilter !== "all"
+    const hasActiveFilters = searchTerm || categoryFilter !== "all"
 
     const clearFilters = () => {
         router.replace("/artworks", { scroll: false })
@@ -163,7 +131,7 @@ export function ArtworksBrowser() {
                                 aria-label="Search artworks"
                             />
                         </div>
-                        <div className="grid grid-cols-3 gap-2 md:flex">
+                        <div className="grid grid-cols-2 gap-2 md:flex">
                             <Select value={categoryFilter} onValueChange={(v) => setParam("category", v)}>
                                 <SelectTrigger className="h-11 w-full md:w-40" aria-label="Filter by category">
                                     <SelectValue placeholder="Category" />
@@ -172,19 +140,6 @@ export function ArtworksBrowser() {
                                     {CATEGORIES.map((c) => (
                                         <SelectItem key={c.value} value={c.value}>
                                             {c.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-
-                            <Select value={priceFilter} onValueChange={(v) => setParam("price", v)}>
-                                <SelectTrigger className="h-11 w-full md:w-44" aria-label="Filter by price">
-                                    <SelectValue placeholder="Price" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {PRICE_RANGES.map((r) => (
-                                        <SelectItem key={r.value} value={r.value}>
-                                            {r.label}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>

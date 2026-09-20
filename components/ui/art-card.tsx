@@ -4,7 +4,6 @@ import Link from "next/link"
 import { ArtworkRecord } from "@/types"
 import { ArtworkImage } from "./artwork-image"
 import { cn } from "@/lib/utils"
-import { formatRwf } from "@/lib/auth-client"
 import { Images } from "lucide-react"
 
 interface ArtCardProps {
@@ -63,7 +62,7 @@ export function ArtCard({ artwork, className }: ArtCardProps) {
         <p className="text-xs text-muted-foreground truncate">by {artwork.artist_name}</p>
         <div className="flex items-center justify-between pt-1.5">
           <span className="text-sm font-semibold text-foreground">
-            {artwork.price > 0 ? formatRwf(artwork.price) : "Ask for price"}
+            Ask for price
           </span>
           {artwork.stock_quantity > 0 ? (
             <span className="text-[10px] uppercase tracking-wider text-emerald-700 font-semibold">

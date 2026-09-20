@@ -55,6 +55,16 @@ export function Navbar() {
     setIsOpen(false)
   }, [pathname])
 
+  // Lock body scroll while the mobile menu is open.
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden"
+      return () => {
+        document.body.style.overflow = ""
+      }
+    }
+  }, [isOpen])
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     const q = searchQuery.trim()
@@ -199,12 +209,12 @@ export function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex lg:hidden items-center gap-1">
+          <div className="flex lg:hidden items-center gap-2">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="text-muted-foreground hover:text-foreground"
+              className="h-10 w-10 text-muted-foreground hover:text-foreground"
               aria-label="Toggle theme"
             >
               {mounted && (theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />)}
@@ -213,8 +223,9 @@ export function Navbar() {
               variant="ghost"
               size="icon"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-muted-foreground hover:text-foreground"
-              aria-label="Toggle menu"
+              className="h-10 w-10 text-muted-foreground hover:text-foreground"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </Button>
@@ -222,10 +233,19 @@ export function Navbar() {
         </div>
       </div>
 
+      {/* Mobile Menu backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-x-0 bottom-0 top-16 z-40 bg-black/30 backdrop-blur-[2px] lg:hidden animate-in fade-in duration-200"
+          onClick={() => setIsOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="lg:hidden border-t border-border bg-background">
-          <div className="px-4 py-4 space-y-3">
+        <div className="relative z-50 lg:hidden border-t border-border bg-background shadow-xl max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="px-4 py-4 space-y-2">
             {/* Mobile Search */}
             <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -245,13 +265,13 @@ export function Navbar() {
                 key={item.name}
                 href={item.href}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center space-x-3 px-3 py-2 rounded transition-colors ${
+                className={`flex items-center space-x-3 rounded px-4 py-3 text-base transition-colors ${
                   pathname === item.href
                     ? "bg-accent text-accent-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 }`}
               >
-                <item.icon className="w-4 h-4" />
+                <item.icon className="w-5 h-5" />
                 <span className="font-medium">{item.name}</span>
               </Link>
             ))}
@@ -262,17 +282,17 @@ export function Navbar() {
                 <Link
                   href="/my-artworks"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center space-x-3 px-3 py-2 rounded text-muted-foreground hover:text-foreground hover:bg-muted"
+                  className="flex items-center space-x-3 rounded px-4 py-3 text-base text-muted-foreground hover:text-foreground hover:bg-muted"
                 >
-                  <Brush className="w-4 h-4" />
+                  <Brush className="w-5 h-5" />
                   <span className="font-medium">My Studio</span>
                 </Link>
                 <Link
                   href="/upload"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center space-x-3 px-3 py-2 rounded text-muted-foreground hover:text-foreground hover:bg-muted"
+                  className="flex items-center space-x-3 rounded px-4 py-3 text-base text-muted-foreground hover:text-foreground hover:bg-muted"
                 >
-                  <ShoppingBag className="w-4 h-4" />
+                  <ShoppingBag className="w-5 h-5" />
                   <span className="font-medium">Upload Art</span>
                 </Link>
               </>
@@ -289,18 +309,18 @@ export function Navbar() {
                   <Link
                     href="/profile"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center space-x-3 px-3 py-2 rounded text-muted-foreground hover:text-foreground hover:bg-muted"
+                    className="flex items-center space-x-3 rounded px-4 py-3 text-base text-muted-foreground hover:text-foreground hover:bg-muted"
                   >
-                    <User className="w-4 h-4" />
+                    <User className="w-5 h-5" />
                     <span>Profile</span>
                   </Link>
                   {isAdmin() && (
                     <Link
                       href="/admin"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center space-x-3 px-3 py-2 rounded text-muted-foreground hover:text-foreground hover:bg-muted"
+                      className="flex items-center space-x-3 rounded px-4 py-3 text-base text-muted-foreground hover:text-foreground hover:bg-muted"
                     >
-                      <Settings className="w-4 h-4" />
+                      <Settings className="w-5 h-5" />
                       <span>Admin Panel</span>
                     </Link>
                   )}
@@ -309,9 +329,9 @@ export function Navbar() {
                       signOut()
                       setIsOpen(false)
                     }}
-                    className="flex items-center space-x-3 px-3 py-2 rounded text-destructive hover:bg-destructive/10 w-full text-left"
+                    className="flex items-center space-x-3 rounded px-4 py-3 text-base text-destructive hover:bg-destructive/10 w-full text-left"
                   >
-                    <LogOut className="w-4 h-4" />
+                    <LogOut className="w-5 h-5" />
                     <span>Logout</span>
                   </button>
                 </div>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import dbConnect from '@/lib/db/mongodb'
 import Order from '@/lib/db/models/Order'
 import { getSession, isAdminUser } from '@/lib/auth'
+import { getMobileSession } from '@/lib/mobile-auth'
 
 const allowedStatuses = ['new', 'contacted', 'delivered', 'cancelled'] as const
 type OrderStatus = (typeof allowedStatuses)[number]
@@ -11,7 +12,7 @@ export async function PATCH(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const session = await getSession()
+        const session = (await getSession()) ?? getMobileSession(request)
         if (!session) {
             return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
         }

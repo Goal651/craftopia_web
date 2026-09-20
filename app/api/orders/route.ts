@@ -4,6 +4,7 @@ import dbConnect from '@/lib/db/mongodb'
 import Artwork from '@/lib/db/models/Artwork'
 import Order from '@/lib/db/models/Order'
 import { getSession, isAdminUser } from '@/lib/auth'
+import { getMobileSession } from '@/lib/mobile-auth'
 
 const orderSchema = z.object({
     artwork_id: z.string().min(1, 'Artwork is required'),
@@ -66,9 +67,9 @@ export async function POST(request: NextRequest) {
 }
 
 /** Authenticated: artists see orders for their artworks; admins see all. */
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
-        const session = await getSession()
+        const session = (await getSession()) ?? getMobileSession(request)
         if (!session) {
             return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
         }

@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ArtworkRecord } from "@/types/index"
 import { ArtworkGallery } from "@/components/ui/artwork-gallery"
 import { useAuth } from "@/contexts/AuthContext"
-import { formatRwf, whatsappLink, siteUrl, SITE } from "@/lib/auth-client"
+import { whatsappLink, siteUrl, SITE } from "@/lib/auth-client"
 import {
   Heart,
   Share2,
@@ -396,7 +396,7 @@ export function ArtworkDetailClient({ artworkId }: { artworkId: string }) {
                 <div className="rounded border border-border bg-muted/5 p-4 flex flex-col items-center justify-center text-center">
                   <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-muted-foreground mb-2">Price</span>
                   <span className="text-xl font-bold text-foreground">
-                    {artwork.price > 0 ? formatRwf(artwork.price) : "Ask"}
+                    Ask for price
                   </span>
                 </div>
                 <div className="rounded border border-border bg-muted/5 p-4 flex flex-col items-center justify-center text-center">
@@ -541,7 +541,6 @@ export function ArtworkDetailClient({ artworkId }: { artworkId: string }) {
               <DialogHeader>
                 <DialogTitle>Order "{title}"</DialogTitle>
                 <DialogDescription>
-                  {artwork.price > 0 && `${formatRwf(artwork.price)} · `}
                   Fill in your details and the artist will contact you to arrange payment and delivery.
                 </DialogDescription>
               </DialogHeader>

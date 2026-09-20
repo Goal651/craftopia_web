@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import dbConnect from '@/lib/db/mongodb'
 import Artwork from '@/lib/db/models/Artwork'
 import { getSession } from '@/lib/auth'
+import { getMobileSession } from '@/lib/mobile-auth'
 
 export async function GET(request: NextRequest) {
     try {
@@ -68,7 +69,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
-        const session = await getSession()
+        const session = (await getSession()) ?? getMobileSession(request)
         if (!session) {
             return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
         }

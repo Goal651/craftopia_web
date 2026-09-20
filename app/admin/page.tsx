@@ -51,7 +51,6 @@ import {
   UserCheck,
   ShieldCheck,
   UserPlus,
-  MoreVertical,
   ChevronRight,
   Activity,
   Calendar
@@ -514,7 +513,7 @@ export default function AdminPanel() {
                                   </div>
                                 </TableCell>
                                 <TableCell className="text-right pr-10">
-                                  <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
+                                  <div className="flex items-center justify-end gap-3">
                                     <Button
                                       variant="ghost"
                                       size="icon"
@@ -566,7 +565,7 @@ export default function AdminPanel() {
                                       </AlertDialogContent>
                                     </AlertDialog>
                                   </div>
-                                  <MoreVertical className="w-5 h-5 text-muted-foreground group-hover:hidden ml-auto" />
+
                                 </TableCell>
                               </motion.tr>
                             ))}
@@ -597,7 +596,7 @@ export default function AdminPanel() {
                             variant="dashboard"
                             showActions={false}
                           />
-                          <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 scale-90 group-hover:scale-100">
+                          <div className="absolute top-4 right-4 flex flex-col gap-2">
                             <Button
                               size="icon"
                               className="bg-black/60 hover:bg-primary/40 border-0 shadow-2xl backdrop-blur-xl"

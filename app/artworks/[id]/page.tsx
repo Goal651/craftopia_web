@@ -23,9 +23,9 @@ export async function generateMetadata(
 
     const title = artwork.title && artwork.title !== "Artwork" ? artwork.title : "Untitled"
     const url = `${siteUrl()}/artworks/${id}`
-    const description = `${title} by ${artwork.artist_name}. ${
-        artwork.price > 0 ? `Original artwork at RWF ${Number(artwork.price).toLocaleString()}.` : ""
-    } ${artwork.description || ""}`.trim().slice(0, 200)
+    const description = `${title} by ${artwork.artist_name}. ${artwork.description || ""}`
+        .trim()
+        .slice(0, 200)
 
     return {
         title: `${title} by ${artwork.artist_name}`,
