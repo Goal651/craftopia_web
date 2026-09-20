@@ -2,128 +2,71 @@
 
 import { useState, useCallback } from "react"
 import Image from "next/image"
-import { ArtworkGenerator } from "./artwork-generator"
+import { ImageOff } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface ArtworkImageProps {
   src?: string
   alt: string
   title: string
-  category?: string
   width?: number
   height?: number
   fill?: boolean
   className?: string
   priority?: boolean
   sizes?: string
-  aspectRatio?: string
-  variant?: 'galleryCard' | 'artworkDetail' | 'hero' | 'avatar'
-  enableOptimizations?: boolean
-  showLoadingTime?: boolean
-  maxRetries?: number
   onLoad?: () => void
   onError?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void
 }
 
-export function ArtworkImage({ 
-  src, 
-  alt, 
-  title, 
-  width = 400, 
+export function ArtworkImage({
+  src,
+  alt,
+  title,
+  width = 400,
   height = 400,
   fill = false,
   className = "",
   priority = false,
   sizes,
-  aspectRatio,
-  variant = 'galleryCard',
-  enableOptimizations = true,
-  showLoadingTime = false,
-  maxRetries = 2,
   onLoad,
   onError
 }: ArtworkImageProps) {
-  const [imageError, setImageError] = useState(false)
-  const [showFallback, setShowFallback] = useState(false)
-
-  // Convert category to artwork style for fallback generator
-  const getArtworkStyle = (cat: string): "abstract" | "digital" | "painting" | "sculpture" | "photography" | "mixed" => {
-    const lowerCat = cat.toLowerCase()
-    if (lowerCat.includes('digital')) return 'digital'
-    if (lowerCat.includes('paint')) return 'painting'
-    if (lowerCat.includes('sculpt')) return 'sculpture'
-    if (lowerCat.includes('photo')) return 'photography'
-    if (lowerCat.includes('mixed')) return 'mixed'
-    return 'abstract'
-  }
-
-  // Generate a seed from the title for consistent artwork generation
-  const seed = title
+  const [hasError, setHasError] = useState(false)
 
   const handleImageError = useCallback((event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    setImageError(true)
-    setShowFallback(true)
+    setHasError(true)
     onError?.(event)
   }, [onError])
 
   const handleImageLoad = useCallback(() => {
-    setImageError(false)
-    setShowFallback(false)
     onLoad?.()
   }, [onLoad])
 
-  // If no src provided or image failed to load after retries, show generated artwork
-  if (!src || showFallback) {
+  // No source or failed load: neutral placeholder tile
+  if (!src || hasError) {
     return (
-      <div className={cn("relative overflow-hidden", className)}>
-        <ArtworkGenerator
-          seed={seed}
-          width={width}
-          height={height}
-          style={'sculpture'}
-          className="w-full h-full"
-        />
-        {/* Overlay to indicate this is a fallback */}
-        <div className="absolute inset-0 bg-muted/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-          <div className="glass rounded px-2 py-1 text-xs text-muted-foreground">
-            Generated Artwork
-          </div>
-        </div>
+      <div
+        className={cn(
+          "relative flex items-center justify-center bg-muted/30 border border-border/50",
+          className
+        )}
+        aria-label={title}
+      >
+        <ImageOff className="w-8 h-8 text-muted-foreground/50" />
       </div>
     )
   }
 
-  // Use optimized responsive image if optimizations are enabled
-  if (enableOptimizations) {
-    return (
-      <Image
-        src={src || ''}
-        alt={alt}
-        title={title}
-        width={width}
-        height={height}
-        fill={fill}
-        className={className}
-        priority={priority}
-        sizes={sizes}
-        onLoad={handleImageLoad}
-        onError={handleImageError}
-      />
-    )
-  }
-
-  // Fallback to basic image
   return (
     <Image
-      src={src || ''}
+      src={src}
       alt={alt}
       title={title}
-      width={width}
-      height={height}
-      fill={fill}
+      {...(fill ? { fill: true } : { width, height })}
       className={className}
-      sizes={sizes}
       priority={priority}
+      sizes={sizes}
       onLoad={handleImageLoad}
       onError={handleImageError}
     />

@@ -1,163 +1,144 @@
-"use client"
-
-import { useState } from "react"
-import Image from "next/image"
-import { motion } from "framer-motion"
+import type { Metadata } from "next"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Award, Calendar, MapPin, Mail, Phone, Instagram, Facebook, Twitter, ExternalLink } from "lucide-react"
+import { Heart, Package, MessageCircle, MapPin, Phone } from "lucide-react"
+import { SITE } from "@/lib/auth-client"
+
+export const metadata: Metadata = {
+    title: "About Us",
+    description:
+        "CRAFTOPIA is a Kigali-based online gallery connecting Rwandan artists with buyers. Learn who we are, how ordering works, and how we deliver original art across Rwanda.",
+}
+
+const VALUES = [
+    {
+        icon: Heart,
+        title: "Original work only",
+        description:
+            "Every piece in the gallery is a real, one-of-a-kind artwork made by a Rwandan artist. No prints, no mass production.",
+    },
+    {
+        icon: MessageCircle,
+        title: "Talk to a real person",
+        description:
+            "When you order, the artist reaches out personally to arrange payment and delivery. No middlemen, no call centers.",
+    },
+    {
+        icon: Package,
+        title: "Delivered with care",
+        description:
+            "We package every piece properly and deliver across Kigali and the rest of Rwanda, straight to your door.",
+    },
+]
 
 export default function AboutPage() {
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+    return (
+        <div className="bg-background py-14 sm:py-20">
+            <div className="container mx-auto px-6 max-w-4xl space-y-14">
+                {/* Header */}
+                <header className="text-center space-y-5">
+                    <h1 className="font-display text-3xl md:text-5xl font-semibold tracking-tight heading-flourish inline-block">
+                        About {SITE.name}
+                    </h1>
+                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                        We help Rwandan artists show their work to the world — and help you
+                        bring a piece of that work into your home.
+                    </p>
+                </header>
 
-  // This would typically come from your admin-managed content
-  const aboutContent = {
-    biography:
-      "Elena Vasquez is a contemporary artist whose work explores the intersection of emotion and form. With over 15 years of experience, her pieces have been featured in galleries worldwide and are collected by art enthusiasts globally. Born in Barcelona, Spain, Elena's artistic journey began at the prestigious School of Fine Arts, where she developed her unique style that blends traditional techniques with modern digital innovation.",
-    mission:
-      "To create art that transcends traditional boundaries and speaks to the human soul through color, form, and emotion. My work aims to bridge the gap between the physical and digital worlds, creating pieces that resonate with contemporary audiences while honoring classical artistic traditions.",
-    achievements: [
-      "International Contemporary Art Award 2023",
-      "Gallery of Modern Art Solo Exhibition 2022",
-      "Artist of the Year 2021 - Contemporary Arts Foundation",
-      "Digital Art Innovation Prize 2020",
-      "Featured in Art Monthly Magazine 2019",
-      "Emerging Artist Grant Recipient 2018",
-    ],
-    exhibitions: [
-      { title: "Ethereal Visions", venue: "Metropolitan Gallery, New York", year: "2024" },
-      { title: "Contemporary Voices", venue: "Modern Art Museum, Los Angeles", year: "2023" },
-      { title: "Digital Renaissance", venue: "Tech Art Center, San Francisco", year: "2023" },
-      { title: "Emerging Artists Showcase", venue: "International Art Fair, Miami", year: "2022" },
-      { title: "Color and Form", venue: "Barcelona Contemporary Gallery", year: "2021" },
-      { title: "New Perspectives", venue: "London Art Week", year: "2020" },
-    ],
-    contactInfo: {
-      email: "elena@artisangallery.com",
-      phone: "+1 (555) 987-6543",
-      address: "123 Artist Studio, Barcelona, Spain",
-    },
-    socialMedia: {
-      instagram: "@elenavasquezart",
-      facebook: "Elena Vasquez Art",
-      twitter: "@elenavasquez",
-    },
-    profileImage: "/images/elena-portrait.jpg",
-    studioImages: ["/images/studio-1.jpg", "/images/studio-2.jpg", "/images/studio-3.jpg"],
-  }
+                {/* Story */}
+                <section className="space-y-4">
+                    <h2 className="font-display text-2xl font-semibold">Our story</h2>
+                    <div className="space-y-4 text-muted-foreground leading-relaxed">
+                        <p>
+                            {SITE.name} started with a simple problem: talented artists in Rwanda had
+                            beautiful work sitting in their studios, and no easy way for the people who
+                            would love it to actually find it and buy it.
+                        </p>
+                        <p>
+                            So we built a home for their art. Artists upload their pieces with real
+                            photos and fair prices. You browse the collection, order what you love,
+                            and we handle the rest — the artist contacts you, you agree on payment,
+                            and the artwork is delivered to your address.
+                        </p>
+                        <p>
+                            Every purchase goes directly to the artist who made it. That&apos;s the whole point.
+                        </p>
+                    </div>
+                </section>
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  }
+                {/* Values */}
+                <section className="space-y-6">
+                    <h2 className="font-display text-2xl font-semibold">What we believe</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        {VALUES.map((value) => (
+                            <Card key={value.title}>
+                                <CardContent className="p-6 space-y-3">
+                                    <div className="w-11 h-11 rounded-full bg-secondary/10 text-secondary flex items-center justify-center">
+                                        <value.icon className="w-5 h-5" />
+                                    </div>
+                                    <h3 className="font-semibold text-foreground">{value.title}</h3>
+                                    <p className="text-sm text-muted-foreground leading-relaxed">
+                                        {value.description}
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </section>
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-      },
-    },
-  }
+                {/* Contact */}
+                <section className="space-y-5">
+                    <h2 className="font-display text-2xl font-semibold">Talk to us</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <Card>
+                            <CardContent className="p-5 space-y-2">
+                                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Call or WhatsApp</p>
+                                {SITE.phones.map((phone) => (
+                                    <a
+                                        key={phone}
+                                        href={`tel:${phone.replace(/\s/g, "")}`}
+                                        className="flex items-center gap-2 text-foreground hover:text-secondary transition-colors"
+                                    >
+                                        <Phone className="w-4 h-4 text-secondary" />
+                                        {phone}
+                                    </a>
+                                ))}
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardContent className="p-5 space-y-2">
+                                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Visit</p>
+                                <p className="flex items-center gap-2 text-foreground">
+                                    <MapPin className="w-4 h-4 text-secondary" />
+                                    {SITE.location}
+                                </p>
+                                <p className="text-sm text-muted-foreground">Visits by appointment · {SITE.hours}</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </section>
 
-  return (
-    <div className="min-h-screen bg-background py-16 sm:py-24 lg:py-32">
-      <div className="container mx-auto px-4 py-12">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-16 lg:space-y-24"
-        >
-          {/* Hero Section */}
-          <motion.section variants={itemVariants} className="text-center space-y-6">
-            <div className="space-y-4">
-              <Badge className="glass px-6 py-2 border-primary/20 text-primary">About CRAFTOPIA</Badge>
-              <h1 className="text-4xl lg:text-7xl font-semibold tracking-tight text-foreground">
-                Revolutionizing <span className="text-gradient-primary">Digital Art</span>
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
-                CRAFTOPIA is a premier digital sanctuary dedicated to the fusion of artistic soul and technical precision.
-              </p>
+                {/* CTA */}
+                <section className="bg-accent rounded-xl px-8 py-12 text-center">
+                    <h2 className="font-display text-2xl md:text-3xl font-semibold mb-3">
+                        Ready to find your piece?
+                    </h2>
+                    <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
+                        Browse the collection and order something you love — or reach out if you&apos;re
+                        an artist who wants to join.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                        <Button asChild className="btn-primary h-11 px-8">
+                            <Link href="/artworks">Browse artworks</Link>
+                        </Button>
+                        <Button asChild variant="outline" className="h-11 px-8 border-border">
+                            <Link href="/contact">Contact us</Link>
+                        </Button>
+                    </div>
+                </section>
             </div>
-          </motion.section>
-
-          {/* Main Content */}
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-            {/* Artist Image */}
-            <motion.div variants={itemVariants} className="space-y-6">
-              <div className="relative aspect-[4/5] rounded overflow-hidden shadow-2xl">
-                <Image
-                  src={aboutContent.profileImage || "/placeholder.svg"}
-                  alt="Elena Vasquez"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </div>
-
-
-            </motion.div>
-
-            {/* Biography and Mission */}
-            <motion.div variants={itemVariants} className="space-y-8">
-              <div className="space-y-4">
-                <h2 className="text-2xl lg:text-3xl font-light text-foreground">Biography</h2>
-                <p className="text-muted-foreground leading-relaxed">{aboutContent.biography}</p>
-              </div>
-
-              <Separator />
-
-              <div className="space-y-4">
-                <h2 className="text-2xl lg:text-3xl font-light text-foreground">Mission</h2>
-                <p className="text-muted-foreground leading-relaxed">{aboutContent.mission}</p>
-              </div>
-
-              {/* Contact Information */}
-              <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-foreground">Get in Touch</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Mail className="w-5 h-5 text-primary" />
-                    <span className="text-muted-foreground">hello@craftopia.com</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-5 h-5 text-primary" />
-                    <span className="text-muted-foreground">+1 (555) 000-1234</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-primary" />
-                    <span className="text-muted-foreground">San Francisco, CA</span>
-                  </div>
-                </div>
-
-                {/* Social Media */}
-                <div className="flex items-center gap-4 pt-6">
-                  <Button variant="secondary" size="icon" className="w-11 h-11 transition-all hover:scale-110">
-                    <Instagram className="w-5 h-5" />
-                  </Button>
-                  <Button variant="secondary" size="icon" className="w-11 h-11 transition-all hover:scale-110">
-                    <Facebook className="w-5 h-5" />
-                  </Button>
-                  <Button variant="secondary" size="icon" className="w-11 h-11 transition-all hover:scale-110">
-                    <Twitter className="w-5 h-5" />
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
-      </div>
-    </div>
-  )
+        </div>
+    )
 }

@@ -2,44 +2,49 @@
 
 import dbConnect from "@/lib/db/mongodb"
 import User from "@/lib/db/models/User"
-import { cookies } from "next/headers"
+import {
+    setSessionCookie,
+    clearSessionCookie,
+    getSession,
+    type SessionUser,
+} from "@/lib/auth"
 import crypto from "crypto"
 
-// Simple salt for hashing - in a real app this should be in .env
+// Salt for password hashing — override with AUTH_SALT in .env
 const SALT = process.env.AUTH_SALT || "craftopia-default-salt"
 
 const hashPassword = (password: string) => {
-    return crypto.pbkdf2Sync(password, SALT, 1000, 64, 'sha512').toString('hex')
+    return crypto.pbkdf2Sync(password, SALT, 1000, 64, "sha512").toString("hex")
 }
+
+const toSessionUser = (user: any): SessionUser => ({
+    id: user._id.toString(),
+    email: user.email,
+    display_name: user.display_name,
+    phone_number: user.phone_number,
+    role: user.role,
+})
 
 export async function signInAction(email: string, password: string) {
     try {
         await dbConnect()
-        const user = await User.findOne({ email })
+        const user = await User.findOne({ email: email.toLowerCase().trim() })
 
         if (!user) {
-            return { error: "User not found" }
+            return { error: "Invalid email or password" }
+        }
+
+        if (user.status === "suspended") {
+            return { error: "This account has been suspended" }
         }
 
         const hashedPassword = hashPassword(password)
         if (user.password !== hashedPassword) {
-            return { error: "Invalid credentials" }
-        }
-        const sessionUser = {
-            ...user._doc,
-            id: user._id.toString()
+            return { error: "Invalid email or password" }
         }
 
-
-
-        const cookies_data = await cookies()
-
-        cookies_data.set("session", JSON.stringify(sessionUser), {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            maxAge: 60 * 60 * 24 * 7, // 1 week
-            path: "/",
-        })
+        const sessionUser = toSessionUser(user)
+        await setSessionCookie(sessionUser)
 
         return { success: true, user: sessionUser }
     } catch (error) {
@@ -48,63 +53,18 @@ export async function signInAction(email: string, password: string) {
     }
 }
 
-export async function signUpAction(email: string, password: string, displayName: string, phoneNumber: string) {
-    try {
-        await dbConnect()
-        const existingUser = await User.findOne({ email })
-
-        if (existingUser) {
-            return { error: "User already exists" }
-        }
-
-        const hashedPassword = hashPassword(password)
-        const user = await User.create({
-            email,
-            phone_number: phoneNumber,
-            password: hashedPassword,
-            display_name: displayName,
-        })
-
-        const sessionUser = {
-            ...user._doc,
-            id: user._id.toString()
-        }
-        const cookies_data = await cookies()
-
-        cookies_data.set("session", JSON.stringify(sessionUser), {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            maxAge: 60 * 60 * 24 * 7, // 1 week
-            path: "/",
-        })
-
-        return { success: true, user: sessionUser }
-    } catch (error) {
-        console.error("Sign up error:", error)
-        return { error: "Failed to create account. Please try again." }
-    }
-}
-
 export async function signOutAction() {
-    const cookies_data = await cookies()
-    cookies_data.delete("session")
+    await clearSessionCookie()
     return { success: true }
 }
 
-export async function getSessionAction() {
-    const cookies_data = await cookies()
-    const session = cookies_data.get("session")
-    if (!session) return null
-    try {
-        return JSON.parse(session.value)
-    } catch {
-        return null
-    }
+export async function getSessionAction(): Promise<SessionUser | null> {
+    return getSession()
 }
 
 export async function updateProfileAction(displayName: string, bio?: string) {
     try {
-        const session = await getSessionAction()
+        const session = await getSession()
         if (!session) return { error: "Not authenticated" }
 
         await dbConnect()
@@ -115,18 +75,9 @@ export async function updateProfileAction(displayName: string, bio?: string) {
         )
 
         if (!updatedUser) return { error: "User not found" }
-        const sessionUser = {
-            ...updatedUser.toObject(),
-            id: updatedUser.toObject().id.toString()
-        }
-  
-        const cookies_data = await cookies()
-        cookies_data.set("session", JSON.stringify(sessionUser), {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            maxAge: 60 * 60 * 24 * 7,
-            path: "/",
-        })
+
+        const sessionUser = toSessionUser(updatedUser)
+        await setSessionCookie(sessionUser)
 
         return { success: true, user: sessionUser }
     } catch (error) {

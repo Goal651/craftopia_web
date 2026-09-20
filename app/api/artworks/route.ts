@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import dbConnect from '@/lib/db/mongodb'
 import Artwork from '@/lib/db/models/Artwork'
+import { getSession } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
     try {
@@ -11,6 +12,7 @@ export async function GET(request: NextRequest) {
         const limit = parseInt(searchParams.get('limit') || '12')
         const category = searchParams.get('category')
         const artistId = searchParams.get('artistId')
+        const search = searchParams.get('search')?.trim()
 
         const skip = (page - 1) * limit
         const filter: any = {}
@@ -21,6 +23,11 @@ export async function GET(request: NextRequest) {
 
         if (artistId) {
             filter.artist_id = artistId
+        }
+
+        if (search) {
+            const rx = { $regex: search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' }
+            filter.$or = [{ title: rx }, { artist_name: rx }, { medium: rx }]
         }
 
         const [artworks, totalItems] = await Promise.all([
@@ -61,10 +68,15 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
+        const session = await getSession()
+        if (!session) {
+            return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+        }
+
         await dbConnect()
         const body = await request.json()
 
-        const { title, description, category, image_url, images, medium, dimensions, year, artist_id, artist_name, price, stock_quantity, featured } = body
+        const { title, description, category, image_url, images, medium, dimensions, year, artist_id, artist_name, price, stock_quantity } = body
 
         if (!image_url || !artist_id || !artist_name) {
             return NextResponse.json(
@@ -73,10 +85,15 @@ export async function POST(request: NextRequest) {
             )
         }
 
+        // Artists can only publish as themselves
+        if (artist_id !== session.id && !isAdminUserCheck(session)) {
+            return NextResponse.json({ error: 'Not allowed' }, { status: 403 })
+        }
+
         const newArtwork = await Artwork.create({
-            title: title || '',
+            title: (title || '').trim() || 'Untitled',
             description,
-            category: category || 'Artworks',
+            category: category || 'Artwork',
             image_url,
             images: images || [],
             medium,
@@ -86,7 +103,7 @@ export async function POST(request: NextRequest) {
             artist_name,
             price: price || 0,
             stock_quantity: stock_quantity || 1,
-            featured: featured || false,
+            featured: false,
             view_count: 0
         })
 
@@ -106,4 +123,12 @@ export async function POST(request: NextRequest) {
             { status: 500 }
         )
     }
+}
+
+function isAdminUserCheck(session: { email: string; role?: string } | null): boolean {
+    if (!session) return false
+    if (session.role === 'admin') return true
+    const list = (process.env.ADMIN_EMAILS || 'nsengiyumvasaad2020@gmail.com,bugiriwilson651@gmail.com')
+        .split(',').map((e) => e.trim().toLowerCase()).filter(Boolean)
+    return list.includes(session.email.toLowerCase())
 }

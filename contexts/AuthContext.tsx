@@ -4,15 +4,12 @@ import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
 import { toast } from "sonner"
 
-
-import { signInAction, signUpAction, signOutAction, getSessionAction, updateProfileAction } from "@/lib/actions/user.actions"
+import { signInAction, signOutAction, getSessionAction, updateProfileAction } from "@/lib/actions/user.actions"
+import { isAdminEmail } from "@/lib/auth-client"
 import { User } from "@/types"
-
-
 
 interface AuthContextType {
   user: User | null
-  signUp: (email: string, password: string, displayName: string, phoneNumber: string) => Promise<any>
   signIn: (email: string, password: string) => Promise<any>
   signOut: () => Promise<void>
   updateProfile: (displayName: string, bio?: string) => Promise<{ success: boolean; error?: string }>
@@ -43,37 +40,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initAuth()
   }, [])
 
-  const signUp = async (email: string, password: string, displayName: string, phoneNumber: string): Promise<any> => {
-    setLoading(true)
-    try {
-      if (email !== "nsengiyumvasaad2020@gmail.com") {
-        toast.error("You are not authorized to sign up")
-        return { data: { user: null }, error: "You are not authorized to sign up" }
-      }
-      const result = await signUpAction(email, password, displayName, phoneNumber)
-      if (result.success) {
-        setUser(result.user)
-        toast.success("Account created successfully!")
-        return { data: { user: result.user }, error: null }
-      } else {
-        toast.error(result.error)
-        return { data: { user: null }, error: result.error }
-      }
-    } catch (error) {
-      toast.error("An unexpected error occurred")
-      return { data: { user: null }, error: "An unexpected error occurred" }
-    } finally {
-      setLoading(false)
-    }
-  }
-
   const signIn = async (email: string, password: string): Promise<any> => {
     setLoading(true)
     try {
-      if (email !== "nsengiyumvasaad2020@gmail.com") {
-        toast.error("You are not authorized to sign in")
-        return { data: { user: null }, error: "You are not authorized to sign in" }
-      }
       const result = await signInAction(email, password)
       if (result.success) {
         setUser(result.user)
@@ -128,15 +97,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const isAdmin = (): boolean => {
-    const adminEmails = ["admin@artgallery.com", "admin@craftopia.com", "bugiriwilson651@gmail.com"]
-    return user ? adminEmails.includes(user.email) : false
+    return user ? isAdminEmail(user.email) || user.role === "admin" : false
   }
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        signUp,
         signIn,
         signOut,
         updateProfile,

@@ -1,0 +1,17 @@
+{
+  "name": "CRAFTOPIA — Original art from Rwandan artists",
+  "short_name": "CRAFTOPIA",
+  "description": "Browse and order original artworks from Rwandan artists, delivered to your door.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#c2542e",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -231,11 +231,11 @@ export default function AdminPanel() {
     return (
       <div className="min-h-screen pt-32 pb-20 flex items-center justify-center bg-background">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-          <Card className="glass-strong border-0 p-12 text-center max-w-md shadow-2xl">
+          <Card className="border-0 p-12 text-center max-w-md shadow-2xl">
             <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <ShieldCheck className="w-10 h-10 text-red-500" />
             </div>
-            <h1 className="text-3xl font-semibold mb-4 text-white">Access Denied</h1>
+            <h1 className="text-3xl font-semibold mb-4 text-foreground">Access Denied</h1>
             <p className="text-muted-foreground mb-8 text-lg">You don't have administrative privileges to access this panel.</p>
             <Button asChild className="btn-primary w-full py-6 text-lg">
               <a href="/">Return to Homepage</a>
@@ -295,7 +295,7 @@ export default function AdminPanel() {
               { label: 'Active Artists', value: stats?.activeArtists, icon: TrendingUp, color: 'text-primary', bg: 'bg-primary/10' }
             ].map((stat, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
-                <Card className="glass-card border-0 overflow-hidden relative group hover:bg-muted/20 transition-all duration-500">
+                <Card className="border-0 overflow-hidden relative group hover:bg-muted/20 transition-all duration-500">
                   <div className={`absolute top-0 right-0 w-32 h-32 ${stat.bg} blur-3xl opacity-20 -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700`} />
                   <CardContent className="p-8 space-y-4">
                     <div className={`w-14 h-14 ${stat.bg} rounded flex items-center justify-center shadow-inner`}>
@@ -313,11 +313,11 @@ export default function AdminPanel() {
 
           {/* Main Content with enhanced tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-            <TabsList className="glass-strong rounded p-1.5 grid w-full grid-cols-3 max-w-2xl">
+            <TabsList className="rounded p-1.5 grid w-full grid-cols-3 max-w-2xl">
               <TabsTrigger value="overview" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                 Dashboard Overview
               </TabsTrigger>
-              <TabsTrigger value="artworks" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-white">
+              <TabsTrigger value="artworks" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-foreground">
                 Art Inventory
               </TabsTrigger>
               <TabsTrigger value="users" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
@@ -328,7 +328,7 @@ export default function AdminPanel() {
             {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <Card className="glass-strong border-0 shadow-2xl">
+                <Card className="border-0 shadow-2xl">
                   <CardHeader className="flex flex-row items-center justify-between pb-8">
                     <div className="space-y-1">
                       <CardTitle className="text-2xl font-semibold text-foreground">Recent Movements</CardTitle>
@@ -343,7 +343,7 @@ export default function AdminPanel() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.05 }}
-                        className="flex items-center gap-4 p-4 glass rounded hover:bg-white/5 transition-colors group"
+                        className="flex items-center gap-4 p-4 rounded hover:bg-white/5 transition-colors group"
                       >
                         <div className="w-12 h-12 rounded bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                           <Plus className="w-6 h-6" />
@@ -356,22 +356,22 @@ export default function AdminPanel() {
                         </div>
                         <div className="text-right">
                           <p className="text-xs text-muted-foreground mb-1">{new Date(activity.createdAt || activity.created_at).toLocaleDateString()}</p>
-                          <ChevronRight className="w-4 h-4 text-white/20 ml-auto group-hover:text-primary transition-colors" />
+                          <ChevronRight className="w-4 h-4 text-foreground/20 ml-auto group-hover:text-primary transition-colors" />
                         </div>
                       </motion.div>
                     )) : (
                       <div className="text-center py-12 space-y-4">
-                        <Package className="w-12 h-12 text-white/5 mx-auto" />
+                        <Package className="w-12 h-12 text-foreground/5 mx-auto" />
                         <p className="text-muted-foreground">No recent activity found.</p>
                       </div>
                     )}
                   </CardContent>
                 </Card>
 
-                <Card className="glass-strong border-0 shadow-2xl">
+                <Card className="border-0 shadow-2xl">
                   <CardHeader className="flex flex-row items-center justify-between pb-8">
                     <div className="space-y-1">
-                      <CardTitle className="text-2xl font-semibold text-white">Creative Landscape</CardTitle>
+                      <CardTitle className="text-2xl font-semibold text-foreground">Creative Landscape</CardTitle>
                       <CardDescription className="text-muted-foreground">Distribution by artwork category</CardDescription>
                     </div>
                     <PieChart className="w-6 h-6 text-primary" />
@@ -383,7 +383,7 @@ export default function AdminPanel() {
                       return (
                         <div key={cat.id} className="space-y-2">
                           <div className="flex justify-between items-center text-sm font-medium">
-                            <span className="text-white flex items-center gap-2">
+                            <span className="text-foreground flex items-center gap-2">
                               <div className={`w-2 h-2 rounded-full bg-primary opacity-${100 - (i * 10)}`} />
                               {cat.label}
                             </span>
@@ -407,7 +407,7 @@ export default function AdminPanel() {
 
             {/* Artworks Tab */}
             <TabsContent value="artworks" className="space-y-6">
-              <Card className="glass-strong border-0 shadow-2xl overflow-hidden">
+              <Card className="border-0 shadow-2xl overflow-hidden">
                 <CardHeader className="bg-white/5 border-b border-white/5 p-8">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                     <div className="space-y-1">
@@ -415,7 +415,7 @@ export default function AdminPanel() {
                       <CardDescription className="text-muted-foreground">Total of {artworks.length} items curated</CardDescription>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4">
-                      <div className="flex items-center glass p-1 rounded">
+                      <div className="flex items-center p-1 rounded">
                         <Button
                           variant={viewMode === "table" ? "secondary" : "ghost"}
                           size="sm"
@@ -441,14 +441,14 @@ export default function AdminPanel() {
                           placeholder="Filter art or artist..."
                           value={searchTerm}
                           onChange={(e) => setSearchTerm(e.target.value)}
-                          className="pl-10 h-12 glass border-0 w-64 focus:ring-2 focus:ring-primary/50"
+                          className="pl-10 h-12 border-0 w-64 focus:ring-2 focus:ring-primary/50"
                         />
                       </div>
                       <Select value={filterCategory} onValueChange={setFilterCategory}>
-                        <SelectTrigger className="h-12 glass border-0 w-48 font-medium">
+                        <SelectTrigger className="h-12 border-0 w-48 font-medium">
                           <SelectValue placeholder="All Genres" />
                         </SelectTrigger>
-                        <SelectContent className="glass-strong border-0">
+                        <SelectContent className="border-0">
                           <SelectItem value="all">All Genres</SelectItem>
                           {allCategories.map(cat => (
                             <SelectItem key={cat.id} value={cat.id}>{cat.label}</SelectItem>
@@ -518,7 +518,7 @@ export default function AdminPanel() {
                                     <Button
                                       variant="ghost"
                                       size="icon"
-                                      className="glass w-10 h-10 hover:bg-emerald-500/20 hover:text-emerald-400 border-0"
+                                      className="w-10 h-10 hover:bg-emerald-500/20 hover:text-emerald-400 border-0"
                                       onClick={() => {
                                         setSelectedArtwork(artwork)
                                         setIsViewModalOpen(true)
@@ -529,7 +529,7 @@ export default function AdminPanel() {
                                     <Button
                                       variant="ghost"
                                       size="icon"
-                                      className="glass w-10 h-10 hover:bg-primary/20 hover:text-primary border-0"
+                                      className="w-10 h-10 hover:bg-primary/20 hover:text-primary border-0"
                                       onClick={() => {
                                         setSelectedArtwork(artwork)
                                         setIsEditModalOpen(true)
@@ -542,20 +542,20 @@ export default function AdminPanel() {
                                         <Button
                                           variant="ghost"
                                           size="icon"
-                                          className="glass w-10 h-10 hover:bg-red-500/20 hover:text-red-500 border-0"
+                                          className="w-10 h-10 hover:bg-red-500/20 hover:text-red-500 border-0"
                                         >
                                           <Trash2 className="w-5 h-5" />
                                         </Button>
                                       </AlertDialogTrigger>
-                                      <AlertDialogContent className="glass-strong border-0 shadow-2xl scale-105">
+                                      <AlertDialogContent className="border-0 shadow-2xl scale-105">
                                         <AlertDialogHeader>
-                                          <DialogTitle className="text-2xl text-white font-semibold">Incinerate Masterpiece?</DialogTitle>
+                                          <DialogTitle className="text-2xl text-foreground font-semibold">Incinerate Masterpiece?</DialogTitle>
                                           <AlertDialogDescription className="text-muted-foreground text-lg py-4">
-                                            This action is irreversible. <span className="text-white font-semibold">"Artwork"</span> will be permanently purged from the global archives.
+                                            This action is irreversible. <span className="text-foreground font-semibold">"Artwork"</span> will be permanently purged from the global archives.
                                           </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter className="gap-4">
-                                          <AlertDialogCancel className="glass border-0 py-6 text-lg">Retain Artwork</AlertDialogCancel>
+                                          <AlertDialogCancel className="border-0 py-6 text-lg">Retain Artwork</AlertDialogCancel>
                                           <AlertDialogAction
                                             onClick={() => handleDeleteArtwork(artwork.id)}
                                             className="bg-red-600 hover:bg-red-700 py-6 text-lg font-semibold shadow-lg shadow-red-600/20"
@@ -600,7 +600,7 @@ export default function AdminPanel() {
                           <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 scale-90 group-hover:scale-100">
                             <Button
                               size="icon"
-                              className="glass bg-black/60 hover:bg-primary/40 border-0 shadow-2xl backdrop-blur-xl"
+                              className="bg-black/60 hover:bg-primary/40 border-0 shadow-2xl backdrop-blur-xl"
                               onClick={() => {
                                 setSelectedArtwork(artwork)
                                 setIsEditModalOpen(true)
@@ -610,17 +610,17 @@ export default function AdminPanel() {
                             </Button>
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button size="icon" className="glass bg-black/60 hover:bg-red-500/40 border-0 shadow-2xl backdrop-blur-xl">
+                                <Button size="icon" className="bg-black/60 hover:bg-red-500/40 border-0 shadow-2xl backdrop-blur-xl">
                                   <Trash2 className="w-4 h-4" />
                                 </Button>
                               </AlertDialogTrigger>
-                              <AlertDialogContent className="glass-strong border-0 shadow-2xl">
+                              <AlertDialogContent className="border-0 shadow-2xl">
                                 <AlertDialogHeader>
                                   <DialogTitle>Purge Artwork?</DialogTitle>
                                   <AlertDialogDescription>Permanently remove this item from the collection.</AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel className="glass border-0">Abort</AlertDialogCancel>
+                                  <AlertDialogCancel className="border-0">Abort</AlertDialogCancel>
                                   <AlertDialogAction onClick={() => handleDeleteArtwork(artwork.id)} className="bg-red-600 hover:bg-red-700 font-semibold">Purge</AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
@@ -636,7 +636,7 @@ export default function AdminPanel() {
 
             {/* Users Tab */}
             <TabsContent value="users" className="space-y-6">
-              <Card className="glass-strong border-0 shadow-2xl overflow-hidden">
+              <Card className="border-0 shadow-2xl overflow-hidden">
                 <CardHeader className="bg-white/5 border-b border-white/5 p-8">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                     <div className="space-y-1">
@@ -649,7 +649,7 @@ export default function AdminPanel() {
                         placeholder="Locate user by name or email..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 h-12 glass border-0 w-80 focus:ring-2 focus:ring-primary/50"
+                        className="pl-10 h-12 border-0 w-80 focus:ring-2 focus:ring-primary/50"
                       />
                     </div>
                   </div>
@@ -680,7 +680,7 @@ export default function AdminPanel() {
                             >
                               <TableCell className="p-6">
                                 <div className="flex items-center gap-4">
-                                  <div className="w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-white font-semibold text-xl overflow-hidden shadow-2xl shadow-primary/10 border-2 border-white/5">
+                                  <div className="w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-foreground font-semibold text-xl overflow-hidden shadow-2xl shadow-primary/10 border-2 border-white/5">
                                     {u.avatar_url ? (
                                       <img src={u.avatar_url} alt={u.display_name} className="w-full h-full object-cover" />
                                     ) : (
@@ -701,10 +701,10 @@ export default function AdminPanel() {
                                   defaultValue={u.role}
                                   onValueChange={(val: any) => handleUpdateUser(u.id, { role: val })}
                                 >
-                                  <SelectTrigger className="glass border-0 h-9 px-3 text-xs font-semibold uppercase tracking-widest w-32">
+                                  <SelectTrigger className="border-0 h-9 px-3 text-xs font-semibold uppercase tracking-widest w-32">
                                     <SelectValue />
                                   </SelectTrigger>
-                                  <SelectContent className="glass-strong border-0">
+                                  <SelectContent className="border-0">
                                     <SelectItem value="user" className="text-xs uppercase font-semibold tracking-widest">Citizen</SelectItem>
                                     <SelectItem value="staff" className="text-xs uppercase font-semibold tracking-widest text-secondary">Staff</SelectItem>
                                     <SelectItem value="admin" className="text-xs uppercase font-semibold tracking-widest text-primary">Admin</SelectItem>
@@ -713,7 +713,7 @@ export default function AdminPanel() {
                               </TableCell>
                               <TableCell>
                                 <div className="flex flex-col gap-1">
-                                  <div className="flex items-center gap-2 text-sm text-white font-medium">
+                                  <div className="flex items-center gap-2 text-sm text-foreground font-medium">
                                     <Package className="w-3 h-3 text-primary" />
                                     {u.artwork_count} Artworks
                                   </div>
@@ -744,7 +744,7 @@ export default function AdminPanel() {
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="glass h-10 px-4 hover:bg-emerald-500/20 hover:text-emerald-500 border-0 flex items-center gap-2"
+                                    className="h-10 px-4 hover:bg-emerald-500/20 hover:text-emerald-500 border-0 flex items-center gap-2"
                                     onClick={() => {
                                       setSelectedUser(u)
                                       setIsUserViewModalOpen(true)
@@ -757,7 +757,7 @@ export default function AdminPanel() {
                                     <Button
                                       variant="ghost"
                                       size="sm"
-                                      className="glass h-10 px-4 hover:bg-red-500/20 hover:text-red-500 border-0 flex items-center gap-2"
+                                      className="h-10 px-4 hover:bg-red-500/20 hover:text-red-500 border-0 flex items-center gap-2"
                                       onClick={() => handleUpdateUser(u.id, { status: 'suspended' })}
                                     >
                                       <UserX className="w-4 h-4" />
@@ -767,7 +767,7 @@ export default function AdminPanel() {
                                     <Button
                                       variant="ghost"
                                       size="sm"
-                                      className="glass h-10 px-4 hover:bg-emerald-500/20 hover:text-emerald-500 border-0 flex items-center gap-2"
+                                      className="h-10 px-4 hover:bg-emerald-500/20 hover:text-emerald-500 border-0 flex items-center gap-2"
                                       onClick={() => handleUpdateUser(u.id, { status: 'active' })}
                                     >
                                       <UserCheck className="w-4 h-4" />
@@ -791,9 +791,9 @@ export default function AdminPanel() {
 
       {/* Edit Artwork Modal */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className="glass-strong border-0 max-w-2xl shadow-2xl p-0 overflow-hidden">
+        <DialogContent className="border-0 max-w-2xl shadow-2xl p-0 overflow-hidden">
           <DialogHeader className="bg-muted/10 p-8 border-b border-border/50">
-            <DialogTitle className="text-3xl font-semibold text-white">Refine Masterpiece</DialogTitle>
+            <DialogTitle className="text-3xl font-semibold text-foreground">Refine Masterpiece</DialogTitle>
             <CardDescription className="text-muted-foreground text-lg">Modify details for <span className="text-primary italic font-medium">Artwork</span></CardDescription>
           </DialogHeader>
           <form onSubmit={handleUpdateArtwork}>
@@ -801,24 +801,24 @@ export default function AdminPanel() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <Label htmlFor="title" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Masterpiece Title</Label>
-                  <Input name="title" defaultValue="Artwork" className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground" required />
+                  <Input name="title" defaultValue="Artwork" className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="price" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Market Valuation (RWF)</Label>
-                  <Input name="price" type="number" defaultValue={selectedArtwork?.price} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground font-mono text-lg" required />
+                  <Input name="price" type="number" defaultValue={selectedArtwork?.price} className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground font-mono text-lg" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="medium" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Artistic Medium</Label>
-                  <Input name="medium" defaultValue={selectedArtwork?.medium} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground" placeholder="e.g., Oil on Canvas" />
+                  <Input name="medium" defaultValue={selectedArtwork?.medium} className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" placeholder="e.g., Oil on Canvas" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="dimensions" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Spatial Dimensions</Label>
-                  <Input name="dimensions" defaultValue={selectedArtwork?.dimensions} className="h-12 glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground" placeholder='e.g., 24" x 36"' />
+                  <Input name="dimensions" defaultValue={selectedArtwork?.dimensions} className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" placeholder='e.g., 24" x 36"' />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Narrative & Description</Label>
-                <Textarea name="description" defaultValue='' rows={5} className="glass border-0 focus:ring-2 focus:ring-primary/50 text-foreground leading-relaxed p-4" />
+                <Textarea name="description" defaultValue='' rows={5} className="border-0 focus:ring-2 focus:ring-primary/50 text-foreground leading-relaxed p-4" />
               </div>
             </div>
             <DialogFooter className="bg-muted/10 p-8 border-t border-border/50 gap-4">
@@ -836,7 +836,7 @@ export default function AdminPanel() {
 
       {/* Add Artwork Modal Placeholder - Reuse logic from edit or link to upload page */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-        <DialogContent className="glass-strong border-0 max-w-2xl shadow-2xl p-12 text-center space-y-8">
+        <DialogContent className="border-0 max-w-2xl shadow-2xl p-12 text-center space-y-8">
           <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
             <UserPlus className="w-10 h-10 text-primary" />
           </div>
@@ -848,7 +848,7 @@ export default function AdminPanel() {
             <Button asChild className="btn-primary py-8 text-xl font-semibold shadow-2xl shadow-primary/20">
               <a href="/upload">Proceed to Universal Upload Gateway</a>
             </Button>
-            <Button variant="ghost" onClick={() => setIsAddModalOpen(false)} className="h-14 text-muted-foreground hover:text-white text-lg">
+            <Button variant="ghost" onClick={() => setIsAddModalOpen(false)} className="h-14 text-muted-foreground hover:text-foreground text-lg">
               Remain in Command Center
             </Button>
           </div>
@@ -857,7 +857,7 @@ export default function AdminPanel() {
 
       {/* View Artwork Modal */}
       <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
-        <DialogContent className="glass-strong border-0 max-w-4xl shadow-2xl p-0 overflow-hidden">
+        <DialogContent className="border-0 max-w-4xl shadow-2xl p-0 overflow-hidden">
           <DialogHeader className="bg-muted/10 p-8 border-b border-border/50">
             <div className="flex justify-between items-start">
               <div className="space-y-1">
@@ -901,7 +901,7 @@ export default function AdminPanel() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Artistic Medium</p>
-                  <p className="text-lg text-white font-medium">{selectedArtwork?.medium || "Mixed Media"}</p>
+                  <p className="text-lg text-foreground font-medium">{selectedArtwork?.medium || "Mixed Media"}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Spatial Dimensions</p>
@@ -924,10 +924,10 @@ export default function AdminPanel() {
 
       {/* View User Modal */}
       <Dialog open={isUserViewModalOpen} onOpenChange={setIsUserViewModalOpen}>
-        <DialogContent className="glass-strong border-0 max-w-2xl shadow-2xl p-0 overflow-hidden">
+        <DialogContent className="border-0 max-w-2xl shadow-2xl p-0 overflow-hidden">
           <div className="relative h-32 bg-gradient-to-r from-primary/20 to-secondary/20 border-b border-white/5">
             <div className="absolute -bottom-12 left-8">
-              <div className="w-24 h-24 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-white font-semibold text-4xl overflow-hidden shadow-2xl border-4 border-background">
+              <div className="w-24 h-24 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-foreground font-semibold text-4xl overflow-hidden shadow-2xl border-4 border-background">
                 {selectedUser?.avatar_url ? (
                   <img src={selectedUser.avatar_url} alt={selectedUser.display_name} className="w-full h-full object-cover" />
                 ) : (
@@ -963,17 +963,17 @@ export default function AdminPanel() {
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-              <div className="glass p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
+              <div className="p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
                 <Package className="w-5 h-5 text-primary mx-auto opacity-50" />
                 <p className="text-2xl font-semibold text-foreground">{selectedUser?.artwork_count}</p>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Artworks</p>
               </div>
-              <div className="glass p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
+              <div className="p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
                 <Eye className="w-5 h-5 text-emerald-400 mx-auto opacity-50" />
                 <p className="text-2xl font-semibold text-foreground">{selectedUser?.total_views.toLocaleString()}</p>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Views</p>
               </div>
-              <div className="glass p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
+              <div className="p-4 rounded text-center space-y-1 group hover:bg-white/5 transition-colors">
                 <Calendar className="w-5 h-5 text-purple-400 mx-auto opacity-50" />
                 <p className="text-lg font-semibold text-foreground">
                   {selectedUser?.createdAt ? new Date(selectedUser.createdAt).getFullYear() : '2024'}

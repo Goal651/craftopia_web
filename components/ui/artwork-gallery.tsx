@@ -44,7 +44,7 @@ export function ArtworkGallery({ images, mainImage, alt, className }: ArtworkGal
   // Don't show gallery controls if only one image
   if (allImages.length === 1) {
     return (
-      <div className={cn("relative rounded-lg overflow-hidden glass border border-border shadow-md bg-muted/5 aspect-[4/3] max-h-[500px] flex items-center justify-center p-4", className)}>
+      <div className={cn("relative rounded-lg overflow-hidden border border-border shadow-md bg-muted/5 aspect-[4/3] max-h-[500px] flex items-center justify-center p-4", className)}>
         <img
           src={currentImage}
           alt={alt}
@@ -57,7 +57,7 @@ export function ArtworkGallery({ images, mainImage, alt, className }: ArtworkGal
   return (
     <>
       {/* Main Gallery */}
-      <div className={cn("relative rounded-lg overflow-hidden glass border border-border shadow-md bg-muted/5 aspect-[4/3] max-h-[500px] flex items-center justify-center p-4", className)}>
+      <div className={cn("relative rounded-lg overflow-hidden border border-border shadow-md bg-muted/5 aspect-[4/3] max-h-[500px] flex items-center justify-center p-4", className)}>
         <motion.img
           key={currentImage}
           src={currentImage}

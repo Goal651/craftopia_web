@@ -50,7 +50,7 @@ function UploadPageContent() {
     return (
       <div className="min-h-screen bg-background p-6 pt-24 sm:pt-32 flex items-center justify-center">
         <div className="w-full max-w-2xl">
-          <Card className="glass-strong border-border/50">
+          <Card className="border-border/50">
             <CardContent className="p-12 text-center">
               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-6"></div>
               <h1 className="text-xl font-medium text-foreground">Loading artwork...</h1>
@@ -65,7 +65,7 @@ function UploadPageContent() {
     return (
       <div className="min-h-screen bg-background p-6 pt-24 sm:pt-32 flex items-center justify-center">
         <div className="w-full max-w-2xl">
-          <Card className="glass-strong border-border/50">
+          <Card className="border-border/50">
             <CardContent className="p-12 text-center">
               <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
                 <CheckCircle className="w-12 h-12 text-green-500" />
@@ -80,7 +80,7 @@ function UploadPageContent() {
               <div className="space-y-4 max-w-xs mx-auto">
                 <Button
                   onClick={() => router.push(`/artworks/${uploadedArtwork.id}`)}
-                  className="w-full btn-primary glow-primary py-6 text-base"
+                  className="w-full btn-primary py-6 text-base"
                 >
                   View Artwork
                 </Button>
@@ -88,7 +88,7 @@ function UploadPageContent() {
                 <Button
                   variant="outline"
                   onClick={() => router.push('/gallery')}
-                  className="w-full glass border-border hover:bg-muted py-6 text-base"
+                  className="w-full border-border hover:bg-muted py-6 text-base"
                 >
                   Browse Gallery
                 </Button>
@@ -129,9 +129,9 @@ function UploadPageContent() {
           </Button>
 
           <div className="space-y-4">
-            <Badge className="glass  bg-background px-4 py-1.5 border-primary/20 text-primary">Creator Space</Badge>
+            <Badge className=" bg-background px-4 py-1.5 border-primary/20 text-primary">Creator Space</Badge>
             <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-foreground">
-              {editingArtwork ? 'Refine Your' : 'Share Your'} <span className="text-gradient-primary">Masterpiece</span>
+              {editingArtwork ? 'Refine Your' : 'Share Your'} <span className="text-secondary">Masterpiece</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
               {editingArtwork
@@ -158,7 +158,7 @@ export default function UploadPage() {
     <Suspense fallback={
       <div className="min-h-screen bg-background p-4 pt-24">
         <div className="container mx-auto max-w-2xl">
-          <Card className="glass-strong border-border/50">
+          <Card className="border-border/50">
             <CardContent className="p-8 text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
               <h1 className="text-xl font-semibold text-foreground">Loading...</h1>

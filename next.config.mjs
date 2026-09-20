@@ -1,24 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      { protocol: "https", hostname: "utfs.io" },
+      { protocol: "https", hostname: "*.utfs.io" },
+      { protocol: "https", hostname: "uploadthing.com" },
+      { protocol: "https", hostname: "images.unsplash.com" },
+    ],
   },
-  // Increase timeout for file uploads (UploadThing)
-  api: {
-    responseLimit: false,
-    bodyParser: {
-      sizeLimit: '20mb',
-    },
-    external: {
-      url: 'https://uploadthing.com',
-    },
-  },
-  // Increase body size limit for uploads
-  serverExternalPackages: ['uploadthing'],
+  serverExternalPackages: ["uploadthing"],
 }
 
 export default nextConfig

@@ -104,7 +104,7 @@ export default function ProfilePage() {
   if (profileLoading || authLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center container-padding">
-        <Card className="w-full max-w-md glass-strong border-border/50">
+        <Card className="w-full max-w-md border-border/50">
           <CardContent className="flex flex-col items-center justify-center p-12">
             <div className="relative mb-6">
               <div className="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
@@ -121,7 +121,7 @@ export default function ProfilePage() {
   if (profileError) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center container-padding">
-        <Card className="w-full max-w-md glass-strong border-destructive/20 border">
+        <Card className="w-full max-w-md border-destructive/20 border">
           <CardContent className="flex flex-col items-center justify-center p-12 text-center">
             <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mb-6">
               <User className="w-8 h-8 text-destructive" />
@@ -148,7 +148,7 @@ export default function ProfilePage() {
           className="space-y-12"
         >
           {/* Profile Header */}
-          <Card className="glass-strong border-border/50 overflow-hidden relative group">
+          <Card className="border-border/50 overflow-hidden relative group">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-primary opacity-50" />
             <CardHeader className="text-center pt-12 pb-10">
               <div className="flex justify-center mb-6">
@@ -178,7 +178,7 @@ export default function ProfilePage() {
 
           {/* User Statistics */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="glass-strong border-border/50 group hover:border-primary/30 transition-all duration-300">
+            <Card className="border-border/50 group hover:border-primary/30 transition-all duration-300">
               <CardContent className="p-8">
                 <div className="flex items-center justify-between">
                   <div>
@@ -194,7 +194,7 @@ export default function ProfilePage() {
               </CardContent>
             </Card>
 
-            <Card className="glass-strong border-border/50 group hover:border-secondary/30 transition-all duration-300">
+            <Card className="border-border/50 group hover:border-secondary/30 transition-all duration-300">
               <CardContent className="p-8">
                 <div className="flex items-center justify-between">
                   <div>
@@ -212,7 +212,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Profile Information */}
-          <Card className="glass-strong border-border/50 overflow-hidden">
+          <Card className="border-border/50 overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between px-8 pt-8">
               <CardTitle className="text-2xl font-semibold tracking-tight text-foreground">Profile Information</CardTitle>
               <Button
@@ -220,7 +220,7 @@ export default function ProfilePage() {
                 size="sm"
                 onClick={() => setIsEditing(!isEditing)}
                 disabled={isSaving}
-                className="glass-strong border-primary/20 text-primary hover:bg-primary/10 transition-all font-semibold h-10 px-6 rounded-full group"
+                className="border-primary/20 text-primary hover:bg-primary/10 transition-all font-semibold h-10 px-6 rounded-full group"
               >
                 {isSaving ? (
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -234,34 +234,34 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent className="space-y-8 p-8">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-300">
+                <Label htmlFor="email" className="text-muted-foreground">
                   Email Address
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
                     value={user.email}
                     disabled
-                    className="pl-10 glass border-0 text-gray-400 cursor-not-allowed"
+                    className="pl-10 border-0 text-muted-foreground cursor-not-allowed"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="displayName" className="text-gray-300">
+                <Label htmlFor="displayName" className="text-muted-foreground">
                   Display Name *
                 </Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="displayName"
                     type="text"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     disabled={!isEditing || isSaving}
-                    className={`pl-10 glass border-0 text-white ${!isEditing ? "cursor-not-allowed text-gray-400" : "focus:ring-2 focus:ring-blue-500/50"
+                    className={`pl-10 border-0 text-foreground ${!isEditing ? "cursor-not-allowed text-muted-foreground" : "focus:ring-2 focus:ring-blue-500/50"
                       }`}
                     placeholder="Enter your display name"
                     required
@@ -270,7 +270,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="bio" className="text-gray-300">
+                <Label htmlFor="bio" className="text-muted-foreground">
                   Bio
                 </Label>
                 <Textarea
@@ -278,12 +278,12 @@ export default function ProfilePage() {
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   disabled={!isEditing || isSaving}
-                  className={`glass border-0 text-white min-h-[100px] ${!isEditing ? "cursor-not-allowed text-gray-400" : "focus:ring-2 focus:ring-blue-500/50"
+                  className={`border-0 text-foreground min-h-[100px] ${!isEditing ? "cursor-not-allowed text-muted-foreground" : "focus:ring-2 focus:ring-blue-500/50"
                     }`}
                   placeholder="Tell us about yourself..."
                   maxLength={500}
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   {bio.length}/500 characters
                 </p>
               </div>
@@ -308,7 +308,7 @@ export default function ProfilePage() {
                     variant="ghost"
                     onClick={handleCancel}
                     disabled={isSaving}
-                    className="text-gray-400 hover:text-white"
+                    className="text-muted-foreground hover:text-foreground"
                   >
                     Cancel
                   </Button>
@@ -318,33 +318,33 @@ export default function ProfilePage() {
           </Card>
 
           {/* Account Settings */}
-          <Card className="glass-strong border-0">
+          <Card className="border-0">
             <CardHeader>
-              <CardTitle className="text-xl text-white">Account Settings</CardTitle>
+              <CardTitle className="text-xl text-foreground">Account Settings</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 glass rounded">
+              <div className="flex items-center justify-between p-4 rounded">
                 <div>
-                  <h3 className="font-medium text-white">Account Status</h3>
-                  <p className="text-sm text-gray-400">Your account is active and verified</p>
+                  <h3 className="font-medium text-foreground">Account Status</h3>
+                  <p className="text-sm text-muted-foreground">Your account is active and verified</p>
                 </div>
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
               </div>
 
-              <div className="flex items-center justify-between p-4 glass rounded">
+              <div className="flex items-center justify-between p-4 rounded">
                 <div>
-                  <h3 className="font-medium text-white">Member Since</h3>
-                  <p className="text-sm text-gray-400">
+                  <h3 className="font-medium text-foreground">Member Since</h3>
+                  <p className="text-sm text-muted-foreground">
                     {formatDateSafe(profile?.created_at, { format: 'medium' })}
                   </p>
                 </div>
               </div>
 
               {profile?.updated_at && profile.updated_at !== profile.created_at && (
-                <div className="flex items-center justify-between p-4 glass rounded">
+                <div className="flex items-center justify-between p-4 rounded">
                   <div>
-                    <h3 className="font-medium text-white">Last Updated</h3>
-                    <p className="text-sm text-gray-400">
+                    <h3 className="font-medium text-foreground">Last Updated</h3>
+                    <p className="text-sm text-muted-foreground">
                       {formatDateSafe(profile.updated_at, { format: 'medium' })}
                     </p>
                   </div>

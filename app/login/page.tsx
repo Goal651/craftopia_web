@@ -2,15 +2,13 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/AuthContext"
 import { Eye, EyeOff, Mail, Lock, ArrowLeft, Palette } from "lucide-react"
 
@@ -23,11 +21,6 @@ export default function LoginPage() {
   const { signIn } = useAuth()
   const router = useRouter()
 
-  // Scroll to top when component mounts
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
@@ -36,9 +29,9 @@ export default function LoginPage() {
     try {
       const response = await signIn(email, password)
       if (!response.error && response.data.user) {
-        router.push("/")
+        router.push("/my-artworks")
       } else {
-        setError(response.error || "Invalid email or password. Please check your credentials and try again.")
+        setError(response.error || "Invalid email or password.")
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again later.")
@@ -48,128 +41,111 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12 lg:py-20 overflow-hidden relative">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px]" />
-        <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-secondary/5 blur-[120px]" />
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-md space-y-6 md:space-y-8 bg-card text-card-foreground"
-      >
+    <div className="min-h-screen bg-paper flex items-center justify-center px-4 py-12 lg:py-20">
+      <div className="w-full max-w-md space-y-6">
         {/* Back to home */}
         <Link
           href="/"
-          className="inline-flex items-center text-xs text-muted-foreground hover:text-primary transition-colors group mb-2"
+          className="inline-flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors group"
         >
-          <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center mr-2 group-hover:bg-primary/10 group-hover:text-primary transition-all">
+          <span className="w-6 h-6 rounded-full bg-muted flex items-center justify-center mr-2 group-hover:bg-accent transition-colors">
             <ArrowLeft className="h-3 w-3" />
-          </div>
+          </span>
           <span className="font-medium tracking-wide uppercase text-xs">Back to Gallery</span>
         </Link>
 
-        <Card className="glass-strong border-border/50 shadow-2xl relative z-10">
-          <CardHeader className="space-y-3 text-center px-6 pt-6">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring" }}
-              className="flex justify-center"
-            >
-              <div className="h-10 w-10 bg-primary/10 rounded flex items-center justify-center shadow-inner">
-                <Palette className="w-5 h-5 text-primary" />
+        <Card className="shadow-md">
+          <CardHeader className="space-y-3 text-center">
+            <div className="flex justify-center">
+              <div className="h-11 w-11 bg-secondary/10 rounded-lg flex items-center justify-center">
+                <Palette className="w-5 h-5 text-secondary" />
               </div>
-            </motion.div>
+            </div>
             <div className="space-y-1">
-              <CardTitle className="text-lg font-semibold tracking-tight text-foreground">Welcome <span className="text-gradient-primary">Back</span></CardTitle>
-              <CardDescription className="text-xs text-muted-foreground">Sign in to your CRAFTOPIA account</CardDescription>
+              <CardTitle className="font-display text-2xl font-semibold tracking-tight text-foreground">
+                Welcome back
+              </CardTitle>
+              <CardDescription className="text-sm text-muted-foreground">
+                Sign in to manage your artworks and orders
+              </CardDescription>
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-3 md:space-y-4 px-4 md:px-6 pb-4 md:pb-6">
-            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-foreground/80">
-                  Email Address
-                </Label>
+                <Label htmlFor="email">Email Address</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-10 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
+                    className="pl-10 h-10"
                     required
+                    autoComplete="email"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-foreground/80">
-                  Password
-                </Label>
+                <Label htmlFor="password">Password</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-12 h-10 bg-muted/30 border-border/50 focus:bg-background transition-all text-foreground placeholder:text-muted-foreground"
+                    className="pl-10 pr-12 h-10"
                     required
+                    autoComplete="current-password"
                   />
-                  <Button
+                  <button
                     type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 flex items-center justify-center text-muted-foreground hover:text-foreground"
                     onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
-                    {showPassword ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-                  </Button>
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
 
               {error && (
-                <Alert className="glass border-red-500/50 text-red-400">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
+                <p className="text-sm text-destructive bg-destructive/10 border border-destructive/30 rounded px-3 py-2">
+                  {error}
+                </p>
               )}
 
               <Button
                 type="submit"
-                className="w-full h-9 bg-background text-foreground btn-primary glow-primary font-semibold uppercase tracking-widest text-xs shadow-xl transition-all"
+                className="btn-primary w-full h-11 font-semibold"
                 disabled={isLoading}
               >
                 {isLoading ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                  <span className="flex items-center">
+                    <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
                     Signing in...
-                  </div>
+                  </span>
                 ) : (
                   "Sign In"
                 )}
               </Button>
             </form>
 
-            <div className="text-center pt-2">
-              <p className="text-sm text-muted-foreground">
-                Don't have an account?{" "}
-                <Link href="/register" className="text-primary hover:underline font-semibold transition-all">
-                  Create one here
-                </Link>
-              </p>
-            </div>
+            <p className="text-xs text-muted-foreground text-center mt-6">
+              Accounts are for gallery artists. Want to sell your art here?{" "}
+              <Link href="/contact" className="text-secondary font-medium hover:underline">
+                Contact us
+              </Link>
+            </p>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   )
 }

@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Form,
   FormControl,
@@ -18,13 +19,33 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/contexts/AuthContext'
 import type { ArtworkRecord } from '@/types'
 import { useUploadThing } from "@/lib/uploadthing";
 
-// Validation schema - ONLY price, stock, and images
+const CATEGORIES = [
+  { value: 'painting', label: 'Painting' },
+  { value: 'drawing', label: 'Drawing' },
+  { value: 'digital-art', label: 'Digital Art' },
+  { value: 'photography', label: 'Photography' },
+  { value: 'sculpture', label: 'Sculpture' },
+  { value: 'mixed-media', label: 'Mixed Media' },
+  { value: 'other', label: 'Other' },
+]
+
+// Validation schema
 const artworkUploadSchema = z.object({
+  title: z.string().trim().min(1, 'Please give your artwork a title').max(120, 'Title is too long'),
+  description: z.string().trim().max(1000, 'Description is too long').optional().or(z.literal('')),
+  category: z.string().min(1, 'Please choose a category'),
   price: z.number().min(0, 'Price cannot be negative'),
   stock_quantity: z.number().min(0, 'Stock cannot be negative'),
   imageFiles: z.array(z.any()).optional()
@@ -55,9 +76,18 @@ export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: 
     },
   });
 
+  const normalizeCategory = (cat?: string) => {
+    if (!cat) return 'painting'
+    const lower = cat.toLowerCase()
+    return CATEGORIES.some((c) => c.value === lower) ? lower : 'other'
+  }
+
   const form = useForm<ArtworkUploadFormValues>({
     resolver: zodResolver(artworkUploadSchema),
     defaultValues: {
+      title: editingArtwork?.title || '',
+      description: editingArtwork?.description || '',
+      category: normalizeCategory(editingArtwork?.category),
       price: editingArtwork?.price || 0,
       stock_quantity: editingArtwork?.stock_quantity || 1,
       imageFiles: undefined
@@ -67,7 +97,7 @@ export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: 
   // Initialize preview URLs with existing images if editing
   useEffect(() => {
     if (editingArtwork) {
-      const urls = editingArtwork.image_url 
+      const urls = editingArtwork.image_url
         ? [editingArtwork.image_url, ...(editingArtwork.images || [])]
         : []
       setPreviewUrls(urls)
@@ -76,18 +106,18 @@ export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: 
 
   const handleFileSelect = (files: FileList | null) => {
     if (!files || files.length === 0) return
-    
+
     const fileArray = Array.from(files)
     const validFiles = fileArray.filter(file => file.type.startsWith('image/'))
-    
+
     if (validFiles.length === 0) {
       toast.error('Please select valid image files')
       return
     }
-    
+
     form.setValue('imageFiles', validFiles)
     form.clearErrors('imageFiles')
-    
+
     const urls = validFiles.map(file => URL.createObjectURL(file))
     setPreviewUrls(prev => [...prev, ...urls])
   }
@@ -164,14 +194,14 @@ export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: 
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          title: data.title.trim(),
+          description: data.description || '',
+          category: data.category,
           price: data.price,
           stock_quantity: data.stock_quantity,
           image_url: imageUrl,
           images: additionalImages,
-          artist_id: user.id,
-          artist_name: user.display_name || user.email,
-          category: 'Artworks', // Default category
-          title: 'Artwork' // Default title
+          ...(isEditMode ? {} : { artist_id: user.id, artist_name: user.display_name || user.email }),
         })
       })
 
@@ -201,12 +231,79 @@ export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: 
           {isEditMode ? 'Edit Artwork' : 'Upload New Artwork'}
         </CardTitle>
         <p className="text-sm text-muted-foreground mt-2">
-          Upload your artwork images and set pricing information.
+          Add your artwork details, images, and pricing information.
         </p>
       </CardHeader>
       <CardContent className="px-6 sm:px-8 py-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">Title *</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="e.g. Morning in Kimironko"
+                        className="bg-muted/30 border-border/50 focus:bg-background transition-all"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">Category *</FormLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger className="bg-muted/30 border-border/50 focus:bg-background transition-all">
+                          <SelectValue placeholder="Choose a category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {CATEGORIES.map((cat) => (
+                          <SelectItem key={cat.value} value={cat.value}>
+                            {cat.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium">Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Tell buyers about this piece — the story, the medium, the size..."
+                      rows={4}
+                      className="bg-muted/30 border-border/50 focus:bg-background transition-all resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="text-xs sm:text-sm">
+                    Optional, but a good story helps the piece sell.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="imageFiles"
@@ -326,7 +423,7 @@ export function ArtworkUploadFormSimple({ onSuccess, onError, editingArtwork }: 
                     <FormControl>
                       <Input
                         type="number"
-                        placeholder="0.00"
+                        placeholder="0"
                         className="bg-muted/30 border-border/50 focus:bg-background transition-all"
                         value={field.value}
                         onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}

@@ -23,12 +23,12 @@ export interface ArtworkRecord {
 }
 
 export interface User {
-  id:string
-  email: string,
-  phone_number: string,
-  display_name: string,
-  avatar_url: string,
-  bio: string,
-  role: string,
-  status: string,
+  id: string
+  email: string
+  phone_number?: string
+  display_name: string
+  avatar_url?: string
+  bio?: string
+  role?: string
+  status?: string
 }
