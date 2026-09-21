@@ -1,6 +1,15 @@
 {
-    "editor.codeLensFontFamily": "'MesloLGL Nerd Font Mono'",
-    "editor.inlayHints.fontFamily": "'MesloLGL Nerd Font Mono'",
-    "terminal.integrated.fontFamily": "'MesloLGL Nerd Font Mono'",
-    "kiroAgent.configureMCP": "Disabled"
+  "editor.codeLensFontFamily": "'MesloLGL Nerd Font Mono'",
+  "editor.inlayHints.fontFamily": "'MesloLGL Nerd Font Mono'",
+  "terminal.integrated.fontFamily": "'MesloLGL Nerd Font Mono'",
+  "kiroAgent.configureMCP": "Disabled",
+  "task.allowAutomaticTasks": true,
+  "debug.openDebug": "neverOpen",
+  "terminal.integrated.inheritEnv": false,
+  "tasks": {
+    "label": "lint on open",
+    "type": "shell",
+    "command": "npm run lint",
+    "runOn": "folderOpen"
+  }
 }

@@ -3,12 +3,13 @@ import crypto from 'crypto'
 import dbConnect from '@/lib/db/mongodb'
 import User from '@/lib/db/models/User'
 import { getSession } from '@/lib/auth'
+import { getMobileSession } from '@/lib/mobile-auth'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-/** Admins only — without this anyone could promote themselves or suspend accounts. */
-async function requireAdmin() {
-    const session = await getSession()
+/** Admins only — accepts web cookie or mobile bearer token. */
+async function requireAdmin(request: NextRequest) {
+    const session = (await getSession()) ?? getMobileSession(request)
     if (!session) return null
     if (session.role !== 'admin' && !isAdminEmailSession(session.email)) return null
     return session
@@ -25,7 +26,7 @@ export async function PATCH(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const session = await requireAdmin()
+        const session = await requireAdmin(request)
         if (!session) {
             return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
         }
