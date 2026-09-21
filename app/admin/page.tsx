@@ -59,6 +59,14 @@ import { toast } from "sonner"
 import { ArtworkRecord } from "@/types"
 import { motion, AnimatePresence } from "framer-motion"
 
+interface AddAccountForm {
+  email: string
+  display_name: string
+  phone_number: string
+  password: string
+  role: 'user' | 'staff' | 'admin'
+}
+
 interface DashboardStats {
   totalArtworks: number
   totalUsers: number
@@ -79,6 +87,7 @@ interface AdminUser {
   total_views: number
   role: 'user' | 'staff' | 'admin'
   status: 'active' | 'suspended'
+  phone_number?: string
 }
 
 export default function AdminPanel() {
@@ -90,6 +99,11 @@ export default function AdminPanel() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isViewModalOpen, setIsViewModalOpen] = useState(false)
   const [isUserViewModalOpen, setIsUserViewModalOpen] = useState(false)
+  const [isAddAccountOpen, setIsAddAccountOpen] = useState(false)
+  const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false)
+  const [resetPasswordUser, setResetPasswordUser] = useState<AdminUser | null>(null)
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false)
+  const [isResettingPassword, setIsResettingPassword] = useState(false)
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkRecord | null>(null)
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null)
   const [viewMode, setViewMode] = useState<"table" | "grid">("table")
@@ -161,6 +175,59 @@ export default function AdminPanel() {
       }
     } catch (err) {
       toast.error("Error deleting artwork")
+    }
+  }
+
+  const handleCreateAccount = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsCreatingAccount(true)
+    try {
+      const formData = new FormData(e.currentTarget)
+      const payload = {
+        email: String(formData.get('email') || ''),
+        display_name: String(formData.get('display_name') || ''),
+        phone_number: String(formData.get('phone_number') || ''),
+        password: String(formData.get('password') || ''),
+        role: String(formData.get('role') || 'user'),
+      }
+      const res = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to create account')
+      toast.success(`${payload.display_name} can now sign in with the email and password you set`)
+      setIsAddAccountOpen(false)
+      fetchData()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to create account')
+    } finally {
+      setIsCreatingAccount(false)
+    }
+  }
+
+  const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!resetPasswordUser) return
+    setIsResettingPassword(true)
+    try {
+      const formData = new FormData(e.currentTarget)
+      const newPassword = String(formData.get('new_password') || '')
+      const res = await fetch(`/api/admin/users/${resetPasswordUser.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ new_password: newPassword }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to reset password')
+      toast.success(`Password reset for ${resetPasswordUser.display_name}`)
+      setIsResetPasswordOpen(false)
+      setResetPasswordUser(null)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to reset password')
+    } finally {
+      setIsResettingPassword(false)
     }
   }
 
@@ -642,14 +709,23 @@ export default function AdminPanel() {
                       <CardTitle className="text-2xl font-semibold text-foreground">Citizen & Staff Network</CardTitle>
                       <CardDescription className="text-muted-foreground">{users.length} authenticated profiles managed</CardDescription>
                     </div>
-                    <div className="relative group">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                      <Input
-                        placeholder="Locate user by name or email..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 h-12 border-0 w-80 focus:ring-2 focus:ring-primary/50"
-                      />
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                      <div className="relative group">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                        <Input
+                          placeholder="Locate user by name or email..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="pl-10 h-12 border-0 w-80 focus:ring-2 focus:ring-primary/50"
+                        />
+                      </div>
+                      <Button
+                        onClick={() => setIsAddAccountOpen(true)}
+                        className="h-12 px-6 shadow-lg shadow-primary/20"
+                      >
+                        <UserPlus className="w-4 h-4 mr-2" />
+                        Add artist account
+                      </Button>
                     </div>
                   </div>
                 </CardHeader>
@@ -717,6 +793,10 @@ export default function AdminPanel() {
                                     {u.artwork_count} Artworks
                                   </div>
                                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <Phone className="w-3 h-3 text-secondary" />
+                                    {u.phone_number || 'No phone'}
+                                  </div>
+                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                     <Eye className="w-3 h-3 text-secondary" />
                                     {u.total_views.toLocaleString()} Global Views
                                   </div>
@@ -751,6 +831,18 @@ export default function AdminPanel() {
                                   >
                                     <Eye className="w-4 h-4" />
                                     View
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-10 px-4 hover:bg-amber-500/20 hover:text-amber-500 border-0 flex items-center gap-2"
+                                    onClick={() => {
+                                      setResetPasswordUser(u)
+                                      setIsResetPasswordOpen(true)
+                                    }}
+                                  >
+                                    <ShieldCheck className="w-4 h-4" />
+                                    Reset password
                                   </Button>
                                   {u.status === 'active' ? (
                                     <Button
@@ -1033,6 +1125,85 @@ export default function AdminPanel() {
               Close Profile
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Account Modal */}
+      <Dialog open={isAddAccountOpen} onOpenChange={setIsAddAccountOpen}>
+        <DialogContent className="border-0 max-w-2xl shadow-2xl p-0 overflow-hidden">
+          <DialogHeader className="bg-muted/10 p-8 border-b border-border/50">
+            <DialogTitle className="text-3xl font-semibold text-foreground">Add Artist Account</DialogTitle>
+            <CardDescription className="text-muted-foreground text-lg">They sign in on the website with the email and password you set here.</CardDescription>
+          </DialogHeader>
+          <form onSubmit={handleCreateAccount}>
+            <div className="p-8 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="display_name" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Full Name</Label>
+                  <Input id="display_name" name="display_name" required minLength={2} placeholder="e.g., Jean Uwase" className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="account-email" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Email</Label>
+                  <Input id="account-email" name="email" type="email" required placeholder="artist@email.com" className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone_number" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Phone Number</Label>
+                  <Input id="phone_number" name="phone_number" required minLength={7} placeholder="+250788123456" className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Temporary Password</Label>
+                  <Input id="password" name="password" type="text" required minLength={6} placeholder="min 6 characters" className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="role" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Role</Label>
+                  <Select name="role" defaultValue="user">
+                    <SelectTrigger id="role" className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="user">Artist — uploads and manages their own work</SelectItem>
+                      <SelectItem value="staff">Staff — trusted helper</SelectItem>
+                      <SelectItem value="admin">Admin — full gallery control</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+            <DialogFooter className="bg-muted/10 p-8 border-t border-border/50 gap-4">
+              <Button type="button" variant="ghost" onClick={() => setIsAddAccountOpen(false)} className="px-8 h-14 text-lg hover:bg-muted/20 text-muted-foreground hover:text-foreground">
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isCreatingAccount} className="btn-primary px-10 h-14 text-lg shadow-xl shadow-primary/20">
+                {isCreatingAccount ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <UserPlus className="w-5 h-5 mr-2" />}
+                Create Account
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reset Password Modal */}
+      <Dialog open={isResetPasswordOpen} onOpenChange={(open) => { setIsResetPasswordOpen(open); if (!open) setResetPasswordUser(null) }}>
+        <DialogContent className="border-0 max-w-lg shadow-2xl p-0 overflow-hidden">
+          <DialogHeader className="bg-muted/10 p-8 border-b border-border/50">
+            <DialogTitle className="text-2xl font-semibold text-foreground">Reset Password</DialogTitle>
+            <CardDescription className="text-muted-foreground text-lg">Set a new password for <span className="text-primary font-medium">{resetPasswordUser?.display_name}</span>. Share it with them privately.</CardDescription>
+          </DialogHeader>
+          <form onSubmit={handleResetPassword}>
+            <div className="p-8 space-y-2">
+              <Label htmlFor="new_password" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">New Password</Label>
+              <Input id="new_password" name="new_password" type="text" required minLength={6} placeholder="min 6 characters" className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" />
+            </div>
+            <DialogFooter className="bg-muted/10 p-8 border-t border-border/50 gap-4">
+              <Button type="button" variant="ghost" onClick={() => setIsResetPasswordOpen(false)} className="px-8 h-14 text-lg hover:bg-muted/20 text-muted-foreground hover:text-foreground">
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isResettingPassword} className="btn-primary px-10 h-14 text-lg shadow-xl shadow-primary/20">
+                {isResettingPassword ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <ShieldCheck className="w-5 h-5 mr-2" />}
+                Reset Password
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
