@@ -4,15 +4,16 @@ import dbConnect from '@/lib/db/mongodb'
 import User from '@/lib/db/models/User'
 import Artwork from '@/lib/db/models/Artwork'
 import { getSession } from '@/lib/auth'
+import { getMobileSession } from '@/lib/mobile-auth'
 
 const hashPassword = (password: string) =>
     crypto.pbkdf2Sync(password, process.env.AUTH_SALT || 'craftopia-default-salt', 1000, 64, 'sha512').toString('hex')
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-/** Admins only — without this anyone could list accounts or promote themselves. */
-async function requireAdmin() {
-    const session = await getSession()
+/** Admins only — without this anyone could list accounts or promote themselves. Accepts web cookie or mobile bearer token. */
+async function requireAdmin(request: NextRequest) {
+    const session = (await getSession()) ?? getMobileSession(request)
     if (!session) return null
     if (session.role !== 'admin' && !isAdminEmailSession(session.email)) return null
     return session
@@ -26,7 +27,7 @@ function isAdminEmailSession(email: string): boolean {
 
 export async function GET(request: NextRequest) {
     try {
-        const session = await requireAdmin()
+        const session = await requireAdmin(request)
         if (!session) {
             return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
         }
@@ -76,7 +77,7 @@ export async function GET(request: NextRequest) {
 /** Create a new artist / staff / admin account (admin panel "Add account"). */
 export async function POST(request: NextRequest) {
     try {
-        const session = await requireAdmin()
+        const session = await requireAdmin(request)
         if (!session) {
             return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
         }
