@@ -283,9 +283,15 @@ export default function AdminPanel() {
   }
 
   const filteredArtworks = artworks.filter((artwork) => {
+    const term = searchTerm.toLowerCase()
     const matchesSearch =
-      artwork.artist_name.toLowerCase().includes(searchTerm.toLowerCase())
-    return matchesSearch
+      (artwork.title || '').toLowerCase().includes(term) ||
+      (artwork.artist_name || '').toLowerCase().includes(term) ||
+      (artwork.medium || '').toLowerCase().includes(term)
+    const matchesCategory =
+      filterCategory === 'all' ||
+      (artwork.category || '').toLowerCase() === filterCategory
+    return matchesSearch && matchesCategory
   })
 
   const filteredUsers = users.filter((u) =>
@@ -387,7 +393,7 @@ export default function AdminPanel() {
                 Art Inventory
               </TabsTrigger>
               <TabsTrigger value="users" className="rounded py-3 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                User Network
+                People
               </TabsTrigger>
             </TabsList>
 
@@ -450,7 +456,7 @@ export default function AdminPanel() {
                         <div key={cat.id} className="space-y-2">
                           <div className="flex justify-between items-center text-sm font-medium">
                             <span className="text-foreground flex items-center gap-2">
-                              <div className={`w-2 h-2 rounded-full bg-primary opacity-${100 - (i * 10)}`} />
+                              <div className={`w-2 h-2 rounded-full bg-primary ${['opacity-100', 'opacity-90', 'opacity-80', 'opacity-70', 'opacity-60', 'opacity-50', 'opacity-40'][i % 7]}`} />
                               {cat.label}
                             </span>
                             <span className="text-muted-foreground">{count} pieces</span>
@@ -706,7 +712,7 @@ export default function AdminPanel() {
                 <CardHeader className="bg-white/5 border-b border-white/5 p-8">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                     <div className="space-y-1">
-                      <CardTitle className="text-2xl font-semibold text-foreground">Citizen & Staff Network</CardTitle>
+                      <CardTitle className="text-2xl font-semibold text-foreground">People</CardTitle>
                       <CardDescription className="text-muted-foreground">{users.length} authenticated profiles managed</CardDescription>
                     </div>
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
@@ -729,150 +735,131 @@ export default function AdminPanel() {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="p-0">
-                  <div className="overflow-x-auto p-2">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="border-white/5 hover:bg-transparent">
-                          <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider p-6">Individual</TableHead>
-                          <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider">Classification</TableHead>
-                          <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider">Portfolio</TableHead>
-                          <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider">Status</TableHead>
-                          <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider">Joined</TableHead>
-                          <TableHead className="text-muted-foreground font-semibold uppercase tracking-wider text-right pr-10">Command</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <AnimatePresence mode="popLayout">
-                          {filteredUsers.map((u) => (
-                            <motion.tr
-                              layout
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              key={u.id}
-                              className="border-white/5 hover:bg-white/5 transition-all duration-300 group"
+                <CardContent className="p-4 sm:p-6">
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <AnimatePresence mode="popLayout">
+                      {filteredUsers.map((u) => (
+                        <motion.div
+                          layout
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0 }}
+                          key={u.id}
+                          className="rounded-xl border border-white/5 bg-white/5 p-5 space-y-4 hover:bg-white/10 transition-colors"
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="w-12 h-12 shrink-0 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-foreground font-semibold text-xl overflow-hidden shadow-lg border-2 border-white/5">
+                              {u.avatar_url ? (
+                                <img src={u.avatar_url} alt={u.display_name} className="w-full h-full object-cover" />
+                              ) : (
+                                u.display_name?.charAt(0).toUpperCase() || '?'
+                              )}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="font-semibold text-foreground truncate">{u.display_name}</div>
+                              <div className="text-xs text-muted-foreground flex items-center gap-1.5 min-w-0">
+                                <Mail className="w-3 h-3 shrink-0" />
+                                <span className="truncate">{u.email}</span>
+                              </div>
+                              <div className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                                <Phone className="w-3 h-3 shrink-0 text-secondary" />
+                                {u.phone_number || 'No phone'}
+                              </div>
+                            </div>
+                            <Badge
+                              variant="outline"
+                              className={`shrink-0 text-[10px] font-semibold uppercase tracking-widest py-1 px-2 ${u.status === 'active'
+                                ? 'border-primary/30 text-primary bg-primary/5'
+                                : 'border-destructive/30 text-destructive bg-destructive/5'
+                                }`}
                             >
-                              <TableCell className="p-6">
-                                <div className="flex items-center gap-4">
-                                  <div className="w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-foreground font-semibold text-xl overflow-hidden shadow-2xl shadow-primary/10 border-2 border-white/5">
-                                    {u.avatar_url ? (
-                                      <img src={u.avatar_url} alt={u.display_name} className="w-full h-full object-cover" />
-                                    ) : (
-                                      u.display_name?.charAt(0).toUpperCase() || '?'
-                                    )}
-                                  </div>
-                                  <div>
-                                    <div className="font-semibold text-foreground text-lg">{u.display_name}</div>
-                                    <div className="text-sm text-muted-foreground flex items-center gap-1.5">
-                                      <Mail className="w-3 h-3" />
-                                      {u.email}
-                                    </div>
-                                  </div>
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                <Select
-                                  defaultValue={u.role}
-                                  onValueChange={(val: any) => handleUpdateUser(u.id, { role: val })}
+                              {u.status}
+                            </Badge>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground flex-wrap">
+                            <span className="flex items-center gap-1.5 font-medium text-foreground">
+                              <Package className="w-3 h-3 text-primary" />
+                              {u.artwork_count} artworks
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                              <Eye className="w-3 h-3 text-secondary" />
+                              {u.total_views.toLocaleString()} views
+                            </span>
+                            <span>Joined {new Date(u.createdAt || u.created_at || Date.now()).toLocaleDateString()}</span>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-2 pt-1">
+                            <Select
+                              value={u.role}
+                              onValueChange={(val: any) => handleUpdateUser(u.id, { role: val })}
+                            >
+                              <SelectTrigger className="border-0 h-9 px-3 text-xs font-semibold uppercase tracking-widest w-36">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="border-0">
+                                <SelectItem value="user" className="text-xs uppercase font-semibold tracking-widest">Artist</SelectItem>
+                                <SelectItem value="staff" className="text-xs uppercase font-semibold tracking-widest text-secondary">Staff</SelectItem>
+                                <SelectItem value="admin" className="text-xs uppercase font-semibold tracking-widest text-primary">Admin</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <div className="flex items-center gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                title="View profile"
+                                className="w-9 h-9 hover:bg-emerald-500/20 hover:text-emerald-500 border-0"
+                                onClick={() => {
+                                  setSelectedUser(u)
+                                  setIsUserViewModalOpen(true)
+                                }}
+                              >
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                title="Reset password"
+                                className="w-9 h-9 hover:bg-amber-500/20 hover:text-amber-500 border-0"
+                                onClick={() => {
+                                  setResetPasswordUser(u)
+                                  setIsResetPasswordOpen(true)
+                                }}
+                              >
+                                <ShieldCheck className="w-4 h-4" />
+                              </Button>
+                              {u.status === 'active' ? (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  title="Suspend account"
+                                  className="w-9 h-9 hover:bg-red-500/20 hover:text-red-500 border-0"
+                                  onClick={() => handleUpdateUser(u.id, { status: 'suspended' })}
                                 >
-                                  <SelectTrigger className="border-0 h-9 px-3 text-xs font-semibold uppercase tracking-widest w-32">
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent className="border-0">
-                                    <SelectItem value="user" className="text-xs uppercase font-semibold tracking-widest">Citizen</SelectItem>
-                                    <SelectItem value="staff" className="text-xs uppercase font-semibold tracking-widest text-secondary">Staff</SelectItem>
-                                    <SelectItem value="admin" className="text-xs uppercase font-semibold tracking-widest text-primary">Admin</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex flex-col gap-1">
-                                  <div className="flex items-center gap-2 text-sm text-foreground font-medium">
-                                    <Package className="w-3 h-3 text-primary" />
-                                    {u.artwork_count} Artworks
-                                  </div>
-                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    <Phone className="w-3 h-3 text-secondary" />
-                                    {u.phone_number || 'No phone'}
-                                  </div>
-                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    <Eye className="w-3 h-3 text-secondary" />
-                                    {u.total_views.toLocaleString()} Global Views
-                                  </div>
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                <Badge
-                                  variant="outline"
-                                  className={`text-[10px] font-semibold uppercase tracking-widest py-1 px-3 ${u.status === 'active'
-                                    ? 'border-primary/30 text-primary bg-primary/5'
-                                    : 'border-destructive/30 text-destructive bg-destructive/5'
-                                    }`}
+                                  <UserX className="w-4 h-4" />
+                                </Button>
+                              ) : (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  title="Restore account"
+                                  className="w-9 h-9 hover:bg-emerald-500/20 hover:text-emerald-500 border-0"
+                                  onClick={() => handleUpdateUser(u.id, { status: 'active' })}
                                 >
-                                  {u.status}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <div className="text-sm text-foreground font-medium">
-                                  {new Date(u.createdAt || u.created_at || Date.now()).toLocaleDateString()}
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-right pr-10">
-                                <div className="flex items-center justify-end gap-2">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-10 px-4 hover:bg-emerald-500/20 hover:text-emerald-500 border-0 flex items-center gap-2"
-                                    onClick={() => {
-                                      setSelectedUser(u)
-                                      setIsUserViewModalOpen(true)
-                                    }}
-                                  >
-                                    <Eye className="w-4 h-4" />
-                                    View
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-10 px-4 hover:bg-amber-500/20 hover:text-amber-500 border-0 flex items-center gap-2"
-                                    onClick={() => {
-                                      setResetPasswordUser(u)
-                                      setIsResetPasswordOpen(true)
-                                    }}
-                                  >
-                                    <ShieldCheck className="w-4 h-4" />
-                                    Reset password
-                                  </Button>
-                                  {u.status === 'active' ? (
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="h-10 px-4 hover:bg-red-500/20 hover:text-red-500 border-0 flex items-center gap-2"
-                                      onClick={() => handleUpdateUser(u.id, { status: 'suspended' })}
-                                    >
-                                      <UserX className="w-4 h-4" />
-                                      Suspend
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="h-10 px-4 hover:bg-emerald-500/20 hover:text-emerald-500 border-0 flex items-center gap-2"
-                                      onClick={() => handleUpdateUser(u.id, { status: 'active' })}
-                                    >
-                                      <UserCheck className="w-4 h-4" />
-                                      Restore
-                                    </Button>
-                                  )}
-                                </div>
-                              </TableCell>
-                            </motion.tr>
-                          ))}
-                        </AnimatePresence>
-                      </TableBody>
-                    </Table>
+                                  <UserCheck className="w-4 h-4" />
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
                   </div>
+                  {filteredUsers.length === 0 && (
+                    <div className="text-center py-16 text-muted-foreground">
+                      No accounts match your search.
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
@@ -887,29 +874,42 @@ export default function AdminPanel() {
             <DialogTitle className="text-3xl font-semibold text-foreground">Refine Masterpiece</DialogTitle>
             <CardDescription className="text-muted-foreground text-lg">Modify details for <span className="text-primary italic font-medium">Artwork</span></CardDescription>
           </DialogHeader>
-          <form onSubmit={handleUpdateArtwork}>
+          <form key={selectedArtwork?.id ?? 'none'} onSubmit={handleUpdateArtwork}>
             <div className="p-8 space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <Label htmlFor="title" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Masterpiece Title</Label>
-                  <Input name="title" defaultValue="Artwork" className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" required />
+                  <Input name="title" defaultValue={selectedArtwork?.title?.trim() || 'Untitled'} className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="price" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Market Valuation (RWF)</Label>
-                  <Input name="price" type="number" defaultValue={selectedArtwork?.price} className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground font-mono text-lg" required />
+                  <Input name="price" type="number" min={0} defaultValue={selectedArtwork?.price ?? 0} className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground font-mono text-lg" required />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Category</Label>
+                  <Select name="category" defaultValue={(selectedArtwork?.category || 'other').toLowerCase()}>
+                    <SelectTrigger className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {allCategories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id}>{cat.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="medium" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Artistic Medium</Label>
-                  <Input name="medium" defaultValue={selectedArtwork?.medium} className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" placeholder="e.g., Oil on Canvas" />
+                  <Input name="medium" defaultValue={selectedArtwork?.medium || ''} className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" placeholder="e.g., Oil on Canvas" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="dimensions" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Spatial Dimensions</Label>
-                  <Input name="dimensions" defaultValue={selectedArtwork?.dimensions} className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" placeholder='e.g., 24" x 36"' />
+                  <Input name="dimensions" defaultValue={selectedArtwork?.dimensions || ''} className="h-12 border-0 focus:ring-2 focus:ring-primary/50 text-foreground" placeholder='e.g., 24" x 36"' />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Narrative & Description</Label>
-                <Textarea name="description" defaultValue='' rows={5} className="border-0 focus:ring-2 focus:ring-primary/50 text-foreground leading-relaxed p-4" />
+                <Textarea name="description" defaultValue={selectedArtwork?.description || ''} rows={5} className="border-0 focus:ring-2 focus:ring-primary/50 text-foreground leading-relaxed p-4" />
               </div>
             </div>
             <DialogFooter className="bg-muted/10 p-8 border-t border-border/50 gap-4">
@@ -1049,7 +1049,7 @@ export default function AdminPanel() {
               <Badge className={`text-xs font-semibold uppercase py-1.5 px-4 tracking-widest ${selectedUser?.role === 'admin' ? 'bg-primary shadow-lg shadow-primary/20' :
                 selectedUser?.role === 'staff' ? 'bg-secondary' : 'bg-white/10'
                 }`}>
-                {selectedUser?.role}
+                {selectedUser?.role === 'user' ? 'artist' : selectedUser?.role}
               </Badge>
             </div>
 
