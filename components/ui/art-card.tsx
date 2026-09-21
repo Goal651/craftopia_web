@@ -17,22 +17,22 @@ interface ArtCardProps {
 }
 
 export function ArtCard({ artwork, className }: ArtCardProps) {
-  const title = artwork.title && artwork.title !== "Artwork" ? artwork.title : "Untitled"
-
+  // Titles and uploader names are not shown publicly.
   return (
     <Link
       href={`/artworks/${artwork.id}`}
       className={cn(
-        "group block bg-card rounded-lg overflow-hidden border border-border shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5",
+        "group block bg-card rounded-xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1",
         className
       )}
     >
-      {/* Image */}
-      <div className="relative overflow-hidden aspect-[4/5] bg-muted/20">
+      {/* Framed image */}
+      <div className="p-2.5 pb-0">
+        <div className="relative overflow-hidden rounded-md aspect-[4/5] bg-muted/20">
         <ArtworkImage
           src={artwork.image_url}
-          alt={`${title} by ${artwork.artist_name}`}
-          title={title}
+          alt="Original artwork"
+          title="Original Artwork"
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
@@ -52,24 +52,26 @@ export function ArtCard({ artwork, className }: ArtCardProps) {
             </span>
           </div>
         )}
+        </div>
       </div>
 
       {/* Content */}
-      <div className="p-4 space-y-1.5">
-        <h3 className="font-display text-base font-semibold text-foreground truncate group-hover:text-secondary transition-colors">
-          {title}
-        </h3>
-        <p className="text-xs text-muted-foreground truncate">by {artwork.artist_name}</p>
-        <div className="flex items-center justify-between pt-1.5">
+      <div className="px-4 pt-2.5 pb-4 space-y-1">
+        <p className="text-[11px] uppercase tracking-widest text-muted-foreground">
+          {(artwork.category || "Artwork").replace(/-/g, " ")}
+        </p>
+        <div className="flex items-center justify-between">
           <span className="text-sm font-semibold text-foreground">
             Ask for price
           </span>
           {artwork.stock_quantity > 0 ? (
-            <span className="text-[10px] uppercase tracking-wider text-emerald-700 font-semibold">
+            <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-emerald-700 font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
               Available
             </span>
           ) : (
-            <span className="text-[10px] uppercase tracking-wider text-destructive font-semibold">
+            <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-destructive font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-destructive" aria-hidden="true" />
               Sold
             </span>
           )}

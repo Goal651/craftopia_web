@@ -92,13 +92,19 @@ export function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
+                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                   pathname === item.href
-                    ? "bg-accent text-accent-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    ? "text-secondary"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {item.name}
+                {pathname === item.href && (
+                  <span
+                    className="absolute inset-x-4 -bottom-[13px] h-0.5 rounded-full bg-secondary"
+                    aria-hidden="true"
+                  />
+                )}
               </Link>
             ))}
 
@@ -107,14 +113,20 @@ export function Navbar() {
                 <div className="w-px h-6 bg-border mx-2" />
                 <Link
                   href="/my-artworks"
-                  className={`px-4 py-2 text-sm font-medium rounded transition-colors flex items-center gap-2 ${
+                  className={`relative px-4 py-2 text-sm font-medium rounded-md transition-colors flex items-center gap-2 ${
                     pathname === "/my-artworks"
-                      ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      ? "text-secondary"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <Brush className="w-4 h-4" />
                   My Studio
+                  {pathname === "/my-artworks" && (
+                    <span
+                      className="absolute inset-x-4 -bottom-[13px] h-0.5 rounded-full bg-secondary"
+                      aria-hidden="true"
+                    />
+                  )}
                 </Link>
               </>
             )}

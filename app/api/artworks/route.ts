@@ -26,9 +26,10 @@ export async function GET(request: NextRequest) {
             filter.artist_id = artistId
         }
 
+        // Search no longer matches the uploader's name (hidden from the public).
         if (search) {
             const rx = { $regex: search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' }
-            filter.$or = [{ title: rx }, { artist_name: rx }, { medium: rx }]
+            filter.$or = [{ title: rx }, { medium: rx }, { category: rx }]
         }
 
         const [artworks, totalItems] = await Promise.all([
@@ -42,9 +43,12 @@ export async function GET(request: NextRequest) {
 
         const totalPages = Math.ceil(totalItems / limit)
 
+        // Title + uploader name are hidden from the public; owners/admins still get them.
+        const session = (await getSession()) ?? getMobileSession(request)
+
         return NextResponse.json({
             artworks: artworks.map((art: any) => ({
-                ...art,
+                ...sanitizeArtwork(art, session),
                 id: art._id.toString(),
                 _id: undefined,
                 __v: undefined
@@ -132,4 +136,11 @@ function isAdminUserCheck(session: { email: string; role?: string } | null): boo
     const list = (process.env.ADMIN_EMAILS || 'nsengiyumvasaad2020@gmail.com,bugiriwilson651@gmail.com')
         .split(',').map((e) => e.trim().toLowerCase()).filter(Boolean)
     return list.includes(session.email.toLowerCase())
+}
+
+/** Remove title + uploader name unless the requester owns the artwork or is an admin. */
+function sanitizeArtwork(art: any, session: { id: string; email: string; role?: string } | null) {
+    if (session && (session.id === art.artist_id || isAdminUserCheck(session))) return art
+    const { title, artist_name, ...rest } = art
+    return rest
 }

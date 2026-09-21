@@ -20,8 +20,12 @@ export async function GET(
             )
         }
 
+        // Title + uploader name are hidden from the public; owners/admins still get them.
+        const session = (await getSession()) ?? getMobileSession(request)
+        const isOwnerOrAdmin = session && (session.id === artwork.artist_id || isAdminUser(session))
+
         return NextResponse.json({
-            ...artwork,
+            ...(isOwnerOrAdmin ? artwork : { ...artwork, title: undefined, artist_name: undefined }),
             id: artwork._id.toString(),
             _id: undefined,
             __v: undefined

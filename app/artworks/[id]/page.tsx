@@ -21,24 +21,25 @@ export async function generateMetadata(
         return { title: `Artwork not found` }
     }
 
-    const title = artwork.title && artwork.title !== "Artwork" ? artwork.title : "Untitled"
+    // Titles and uploader names are hidden publicly, so metadata stays generic.
+    const title = "Original Artwork"
     const url = `${siteUrl()}/artworks/${id}`
-    const description = `${title} by ${artwork.artist_name}. ${artwork.description || ""}`
+    const description = `${title} from the ${SITE.name} gallery. ${artwork.description || ""}`
         .trim()
         .slice(0, 200)
 
     return {
-        title: `${title} by ${artwork.artist_name}`,
+        title,
         description,
         openGraph: {
-            title: `${title} by ${artwork.artist_name}`,
+            title,
             description,
             url,
             images: artwork.image_url ? [{ url: artwork.image_url }] : undefined,
         },
         twitter: {
             card: "summary_large_image",
-            title: `${title} by ${artwork.artist_name}`,
+            title,
             description,
             images: artwork.image_url ? [artwork.image_url] : undefined,
         },

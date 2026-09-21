@@ -30,10 +30,11 @@ export async function GET(
 
         const totalViews = totalViewsResult.length > 0 ? totalViewsResult[0].totalViews : 0
 
+        // Privacy: uploader profiles are no longer public. Only the phone number
+        // (for the contact buttons) and their artwork stats are exposed.
         return NextResponse.json({
-            ...artist,
             id: artist._id.toString(),
-            _id: undefined,
+            phone_number: artist.phone_number ?? null,
             artwork_count: artworkCount,
             total_views: totalViews
         })

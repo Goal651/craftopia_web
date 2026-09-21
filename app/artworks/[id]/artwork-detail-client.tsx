@@ -107,6 +107,7 @@ export function ArtworkDetailClient({ artworkId }: { artworkId: string }) {
       const data = await response.json()
       setArtwork(data)
 
+      // The gallery shows the artwork's phone contact buttons (name stays private).
       if (data.artist_id) {
         fetchArtist(data.artist_id)
       }
@@ -246,7 +247,7 @@ export function ArtworkDetailClient({ artworkId }: { artworkId: string }) {
   }
 
   const whatsappBuyerMessage = artwork
-    ? `Hi! I just ordered "${artwork.title || 'Untitled'}" on ${SITE.name}. Let me know how to pay and when it can be delivered.`
+    ? `Hi! I just ordered a piece on ${SITE.name}. Let me know how to pay and when it can be delivered.`
     : ""
 
   useEffect(() => {
@@ -255,7 +256,8 @@ export function ArtworkDetailClient({ artworkId }: { artworkId: string }) {
     }
   }, [artworkId, fetchArtwork])
 
-  const title = artwork?.title && artwork.title !== "Artwork" ? artwork.title : "Untitled"
+  // Titles and uploader names are no longer shown publicly.
+  const title = "Original Artwork"
 
   if (loading) {
     return (
@@ -332,11 +334,14 @@ export function ArtworkDetailClient({ artworkId }: { artworkId: string }) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <ArtworkGallery
-                images={artwork.images}
-                mainImage={artwork.image_url}
-                alt={`${title} by ${artwork.artist_name}`}
-              />
+              {/* Gallery-wall presentation: soft mat + shadow around the piece */}
+              <div className="frame-mat rounded-xl">
+                <ArtworkGallery
+                  images={artwork.images}
+                  mainImage={artwork.image_url}
+                  alt={title}
+                />
+              </div>
             </motion.div>
 
             {artwork.description && (
@@ -385,10 +390,9 @@ export function ArtworkDetailClient({ artworkId }: { artworkId: string }) {
                 <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground leading-[1.2] break-words">
                   {title}
                 </h1>
-                <p className="text-sm text-muted-foreground">
-                  by <span className="text-foreground font-semibold">{artwork.artist_name}</span>
-                  {artwork.year ? ` · ${artwork.year}` : ""}
-                </p>
+                {artwork.year ? (
+                  <p className="text-sm text-muted-foreground">{artwork.year}</p>
+                ) : null}
               </div>
 
               {/* Details Grid */}
@@ -399,12 +403,19 @@ export function ArtworkDetailClient({ artworkId }: { artworkId: string }) {
                     Ask for price
                   </span>
                 </div>
-                <div className="rounded border border-border bg-muted/5 p-4 flex flex-col items-center justify-center text-center">
+                <div className="rounded-lg border border-border bg-muted/5 p-4 flex flex-col items-center justify-center text-center">
                   <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-muted-foreground mb-2">Availability</span>
                   <span className={cn(
-                    "text-xl font-bold",
-                    soldOut ? "text-destructive" : "text-emerald-600"
+                    "flex items-center gap-2 text-xl font-bold",
+                    soldOut ? "text-destructive" : "text-secondary"
                   )}>
+                    <span
+                      className={cn(
+                        "w-2 h-2 rounded-full",
+                        soldOut ? "bg-destructive" : "bg-secondary"
+                      )}
+                      aria-hidden="true"
+                    />
                     {soldOut ? "Sold" : "Available"}
                   </span>
                 </div>
@@ -472,7 +483,7 @@ export function ArtworkDetailClient({ artworkId }: { artworkId: string }) {
                           <a
                             href={whatsappLink(
                               artist.phone_number,
-                              `Hi! I'm interested in "${title}" on ${SITE.name}. Is it still available?`
+                              `Hi! I'm interested in a piece on ${SITE.name}. Is it still available?`
                             )}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -539,7 +550,7 @@ export function ArtworkDetailClient({ artworkId }: { artworkId: string }) {
           ) : (
             <>
               <DialogHeader>
-                <DialogTitle>Order "{title}"</DialogTitle>
+                <DialogTitle>Order this piece</DialogTitle>
                 <DialogDescription>
                   Fill in your details and the artist will contact you to arrange payment and delivery.
                 </DialogDescription>

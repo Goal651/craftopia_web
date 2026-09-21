@@ -22,10 +22,7 @@ const CATEGORIES = [
     { value: "other", label: "Other" },
 ]
 
-const SORT_OPTIONS = [
-    { value: "newest", label: "Newest" },
-    { value: "title", label: "Title A-Z" },
-]
+
 
 export function ArtworksBrowser() {
     const router = useRouter()
@@ -34,7 +31,6 @@ export function ArtworksBrowser() {
 
     const searchTerm = searchParams.get("search") || ""
     const categoryFilter = searchParams.get("category") || "all"
-    const sortBy = searchParams.get("sort") || "newest"
 
     const [searchInput, setSearchInput] = useState(searchTerm)
 
@@ -57,12 +53,13 @@ export function ArtworksBrowser() {
         const term = searchTerm.trim().toLowerCase()
 
         const filtered = artworks.filter((artwork) => {
+            // Titles and uploader names are hidden publicly — search works on
+            // style/medium/description instead.
             const matchesSearch =
                 !term ||
-                (artwork.title || "").toLowerCase().includes(term) ||
-                artwork.artist_name.toLowerCase().includes(term) ||
                 (artwork.category || "").toLowerCase().includes(term) ||
-                (artwork.medium || "").toLowerCase().includes(term)
+                (artwork.medium || "").toLowerCase().includes(term) ||
+                (artwork.description || "").toLowerCase().includes(term)
 
             const normalizedCategory = (artwork.category || "").toLowerCase()
 
@@ -76,18 +73,13 @@ export function ArtworksBrowser() {
             return matchesSearch && matchesCategory
         })
 
+        // Artworks arrive from the API newest-first.
         filtered.sort((a, b) => {
-            switch (sortBy) {
-                case "title":
-                    return (a.title || "").localeCompare(b.title || "")
-                case "newest":
-                default:
-                    return new Date(b.createdAt || b.created_at || 0).getTime() - new Date(a.createdAt || a.created_at || 0).getTime()
-            }
+            return new Date(b.createdAt || b.created_at || 0).getTime() - new Date(a.createdAt || a.created_at || 0).getTime()
         })
 
         return filtered
-    }, [artworks, searchTerm, categoryFilter, sortBy])
+    }, [artworks, searchTerm, categoryFilter])
 
     const hasActiveFilters = searchTerm || categoryFilter !== "all"
 
@@ -116,7 +108,7 @@ export function ArtworksBrowser() {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input
                                 type="search"
-                                placeholder="Search by title, artist, style..."
+                                placeholder="Search by style, medium..."
                                 value={searchInput}
                                 onChange={(e) => {
                                     setSearchInput(e.target.value)
@@ -145,18 +137,7 @@ export function ArtworksBrowser() {
                                 </SelectContent>
                             </Select>
 
-                            <Select value={sortBy} onValueChange={(v) => setParam("sort", v)}>
-                                <SelectTrigger className="h-11 w-full md:w-40" aria-label="Sort artworks">
-                                    <SelectValue placeholder="Sort" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {SORT_OPTIONS.map((o) => (
-                                        <SelectItem key={o.value} value={o.value}>
-                                            {o.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+
                         </div>
                     </div>
 

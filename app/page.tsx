@@ -59,28 +59,47 @@ export default function HomePage() {
     <div className="bg-paper">
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="container mx-auto px-6 pt-16 pb-14 md:pt-24 md:pb-20">
+        {/* Soft pigment-wash color fields */}
+        <div className="hero-field hero-field-terracotta w-[520px] h-[520px] -top-40 -left-32" aria-hidden="true" />
+        <div className="hero-field hero-field-sand w-[420px] h-[420px] top-10 right-[-120px]" aria-hidden="true" />
+        <div className="hero-field hero-field-olive w-[380px] h-[380px] bottom-[-160px] left-1/3" aria-hidden="true" />
+
+        {/* Floating mini-frames framing the headline */}
+        <div
+          aria-hidden="true"
+          className="hidden lg:block frame-mat rounded-lg absolute left-[6%] top-24 w-28 rotate-[-8deg] opacity-80 pointer-events-none"
+        >
+          <div className="aspect-[4/5] rounded bg-gradient-to-br from-secondary/25 via-accent to-muted" />
+        </div>
+        <div
+          aria-hidden="true"
+          className="hidden lg:block frame-mat rounded-lg absolute right-[7%] bottom-16 w-24 rotate-[7deg] opacity-80 pointer-events-none"
+        >
+          <div className="aspect-[4/5] rounded bg-gradient-to-br from-accent via-secondary/20 to-muted" />
+        </div>
+
+        <div className="relative container mx-auto px-6 pt-20 pb-16 md:pt-28 md:pb-24">
           <div className="max-w-3xl mx-auto text-center space-y-6">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-secondary">
               {SITE.tagline}
             </p>
-            <h1 className="font-display text-4xl md:text-6xl font-semibold tracking-tight text-foreground leading-[1.1]">
+            <h1 className="font-display text-5xl md:text-7xl font-semibold tracking-tight text-foreground leading-[1.05]">
               Art with a story,
               <br />
-              made in <span className="text-secondary">Rwanda</span>
+              made in <span className="text-secondary italic">Rwanda</span>
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto">
+            <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto text-balance">
               A curated gallery of original works by local artists. Find a piece you love,
               order it in a minute, and we deliver it to your door.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-              <Button asChild size="lg" className="btn-primary h-12 px-8 text-base font-semibold shadow-md">
+              <Button asChild size="lg" className="btn-primary h-12 px-8 text-base font-semibold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <Link href="/artworks">
                   Browse the collection
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="h-12 px-8 text-base border-border">
+              <Button asChild variant="outline" size="lg" className="h-12 px-8 text-base border-border bg-card/60 backdrop-blur-sm">
                 <Link href="/about">Our story</Link>
               </Button>
             </div>
@@ -93,11 +112,12 @@ export default function HomePage() {
         <div className="container mx-auto px-6 py-12 md:py-16">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {STEPS.map((step, i) => (
-              <div key={step.title} className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-secondary/10 text-secondary flex items-center justify-center">
+              <div key={step.title} className="relative flex items-start gap-4">
+                <span className="ghost-numeral" aria-hidden="true">{i + 1}</span>
+                <div className="relative flex-shrink-0 w-12 h-12 rounded-full bg-secondary/10 text-secondary flex items-center justify-center">
                   <step.icon className="w-5 h-5" />
                 </div>
-                <div className="space-y-1.5">
+                <div className="relative space-y-1.5">
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                     Step {i + 1}
                   </p>
@@ -172,7 +192,7 @@ export default function HomePage() {
                 <Link
                   key={cat.name}
                   href={`/artworks?category=${cat.name}`}
-                  className="group flex items-center gap-2 border border-border bg-card rounded-full px-5 py-2.5 text-sm font-medium hover:border-secondary hover:text-secondary transition-colors"
+                  className="group flex items-center gap-2 border border-border bg-card rounded-full px-5 py-2.5 text-sm font-medium shadow-sm hover:shadow hover:border-secondary hover:text-secondary hover:-translate-y-0.5 transition-all"
                 >
                   {cat.label}
                   <span className="text-xs text-muted-foreground group-hover:text-secondary/70">
